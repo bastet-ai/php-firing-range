@@ -1,8 +1,8 @@
 {
- "heap_ref": 260857131270560,
- "req_count": 662,
- "crash_count": 86,
- "updated": "18:19:37Z",
+ "heap_ref": 260857131266464,
+ "req_count": 70,
+ "crash_count": 38,
+ "updated": "18:29:29Z",
  "elf_candidates": [
   [
    260857128747008,
@@ -67,5 +67,14 @@
  ],
  "elf_base": 260857165119488,
  "eg": 260857180991040,
- "pltgot": 260857180848104
+ "pltgot": 260857180848104,
+ "libc_base": 260857187270656,
+ "system_addr": 260857187570368,
+ "ce_stdclass": 202331732239728,
+ "gpfoff": 192,
+ "gpfoff_ev": {
+  "std_object_handlers": "0xed3f8b99e2d0",
+  "zend_std_get_properties_for": "0xed3f8afa8a88"
+ },
+ "exfil_ev": {}
 }

