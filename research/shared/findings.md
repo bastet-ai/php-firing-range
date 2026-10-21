@@ -189,3 +189,41 @@ reclaim genuinely misses on this build too. Diagnosis:
    stall window). Once we know the freed address, groom becomes a distance
    calculation instead of a sweep. This is exactly the engineering the
    14:00Z patch-diff will illuminate (fix shows the exact free site).
+
+## Allocator trace: ground truth of their chain on OUR build (13:1xZ)
+Instrumented our own php-src (P2S_TRACE: _emalloc/_efree logging + callback
+event + PROGRESS-UPDATE markers; php -S, Zend MM ON, min_freq=0, auto_start).
+THEir 62,929-byte body fires the FULL event sequence on aarch64 php 8.3.36:
+  EVT0 start -> EVT1 x2 (PHPSESSID + progress name) -> EVT2 FILE_START f
+  -> UPDATE -> EVT3 x2 + UPDATE (mid-upload) -> EVT4 FILE_END
+  -> EVT1 x149 (t[] groom) -> EVT2 FILE_START g -> UPDATE -> EVT4 -> EVT5
+Key measurements:
+ * t[] parts allocate zend_strings of size 320 (their claim: 288->313->320
+   bin; WE measure the alloc request at 320 exactly).
+ * Between mid-upload update and file2: 1225 frees, 916 same-address
+   reclaims. BUT reclamation sizes are tiny (5,9,10,11,20,39,40) - parser
+   scratch, NOT the 320-byte bins. The 320-byte t[] allocs land on FRESH
+   pages, not on freed tree memory.
+ * The 4th UPDATE (file2 FILE_START) shows only ~6 frees: the progress data
+   tree is NOT destroyed on our build at min_freq=0. SEPARATE_ARRAY +
+   Z_TRY_ADDREF keep refcounts >0, so zend_hash_update never dtors the old
+   entry. => the stale-pointer precondition (freed tree) DOES NOT MATERIALIZE
+   under these ini settings on stock 8.3.36.
+ * Their docs say second update "after min_freq (1s)" dtors the previous
+   tree through HashTable.pDestructor. On our run at min_freq=0 it doesn't.
+   Two live hypotheses for their build: (a) min_freq=1 + stall changes which
+   update destroys (time-gated path returns BEFORE addref?), (b) lsphp
+   post-decode session-var separation (php_session_initialize re-read) frees
+   the array between caching (session.c:3186) and the stale FILE_DATA store
+   (session.c:3245).
+Hardcoded address set for OUR php83 prod target (from fingerprints + nm):
+  zend_call_function = libphp.so bias + 0x45bd4c  (live bias 0xe21fde850000,
+  VA 0xe21fdecabd4c - STABLE across requests in the same apache worker,
+  rotates per worker recycle: P2S-style leak still needed at fire time).
+  stale_reference would be the Bucket array of the progress data HT
+  (nTableSize 8 -> 272B alloc class) - visible in trace as ~0xf85fdb4xxxx
+  region. Groom class that reclaims it: sizes 320 DO exist in-stream.
+NEXT (post-drop, patch shows exact free site): reproduce the destroy path by
+running with min_freq=1 + 1.4s stall in the trace and check whether the 4th
+update frees the data array; if yes, groom targeting = distance calc from
+leaked heap base to the freed Bucket array.
