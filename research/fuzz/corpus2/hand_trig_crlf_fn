@@ -1,0 +1,10 @@
+--b
+Content-Disposition: form-data; name="PHP_SESSION_UPLOAD_PROGRESS"
+
+k
+--b
+Content-Disposition: form-data; name="f"; filename="a
+b.txt"
+
+D
+--b--

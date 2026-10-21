@@ -22,3 +22,6 @@
 "|"
 "a/b/../c"
 "<?php"
+ "@@RQ@@"
+ "upload_progress_k1"
+ "done"

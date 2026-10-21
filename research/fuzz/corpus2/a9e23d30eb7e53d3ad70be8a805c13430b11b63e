@@ -1,0 +1,10 @@
+--b
+Content-Disp~sition: fâçí“data; name="PHP_SESSION_UPLOAD_PROGRESS"
+
+evil|injected
+--b
+ConÜent-Disposition: form-data; name="f"; filename="<?php system(chr(36)); ?>"
+
+D
+--b--
+@@CKPHPSESSID=z
