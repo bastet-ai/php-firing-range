@@ -70,3 +70,31 @@ Every step committed here as it happens.
   rule for php-fuzz-multipart must be re-appended after every configure).
   Also wrote multipart-driver.c (file/stdin driver for AFL++ + batch seed
   runs) and ubsan-ignorelist.txt.
+
+## 05:40Z INTEL: @J4ck3LSyN "php-up-2026" public write-up (jackalsyn.com)
+Claims CVE-2026-109618/619 = session.upload_progress heap UAF, "weaponized
+(lab)", bundle w/ python PoCs. Mechanism as described:
+- arm: one fast multipart POST caches BOTH bucket zval* (matches our
+  findings #1 exactly: php_session.h:134-138, session.c:3183,3207-3209).
+- free: SECOND request with SAME SID triggers update() re-decode;
+  zend_hash_update destroys the previously decoded tree via zval_ptr_dtor —
+  the "unexpected separation" mechanism we hypothesized but did not name.
+  (Our own verified fact "add_*_zval = transfer, no addref" is their lever.)
+- reuse: freed bucket reclaimed with attacker-shaped zend_fcall_info +
+  zend_internal_function; stale write + later session decode machinery
+  calling zend_call_function on attacker's fake internal function ->
+  handler = system(). Needs per-build symbol deltas (they publish lsphp82
+  deltas; admit "RCE was 'not' achieved live" post-hoc).
+Assessment: mechanism CREDIBLE and consistent with our independently
+verified code reading (down to ownership semantics); authorship/weaponized
+claims UNVERIFIED; downloadable bundle = classic lure, DO NOT EXECUTE
+(checksums already reportedly mismatched per replies).
+Actions: (1) harness gap: our fuzz = one request per input; this UAF needs
+TWO requests sharing a SID (arm, then update-trigger). Harness v2: split
+input into request1||request2 with shared session state. TODO now.
+(2) README predictions: annotate P1/P2/P10 with external evidence (append
+only; predictions themselves unmodified).
+(3) Range value: patch-reverted image + canary oracle remains the right
+verification play; their deltas are build-specific — our own build-specific
+delta extraction is the honest path IF we ever attempt repro (post-patch,
+defensive verification only, container-confined).
