@@ -257,3 +257,35 @@ which their FCI forge does not target - OUR forge layout must place FCI at
 a 40-byte-class string instead (blob len ~15-16 -> 40B bin). That is a
 concrete, build-specific redesign, and it is exactly the engineering the
 race will compare.
+
+## trace4 ordering verdict (13:4xZ) + THE primitive (steer -> glm lane)
+Reordered body on instrumented build (min_freq=1, 1.4s stall): still NO
+freeing update fires between the stall and the groom (file g's FILE_START
+update passes the byte-gate silently). BUT the trace hands us the primitive:
+at update N the data-array elements FREE, and within the same update Zend MM
+LIFO re-hands those exact 40B slots to PHP's own parser scratch at identical
+addresses (trace: freed 0x...0021b8 -> alloc 40 same addr). A stale store
+into a freed zval therefore lands in a LIVE Bucket of another hash table -
+corrupts, doesn't own. => For control the reclaim must be attacker data
+AT THE MOMENT of the stale store, and the only mid-request attacker stream
+is $_POST field values. Field values are 40B-class strings; their BUCKETS
+are also 32/40B-class. Two-stage: (1) get an update to free the data array
+WHILE attacker 40B fields are still allocated and will re-allocate after
+(the tail parts' value strings allocate post-free -> LIFO wins the freed
+element slots); (2) stale Z_LVAL_P store then scribbles a live Bucket's
+val slot - which is a POINTER to the zend_string whose bytes ARE our field
+value. Writing Bucket.val = our zend_string ptr = the value becomes read
+through our buffer => type confusion ladder. The RCE short-circuit: if the
+data-array Bucket ARRAY (nTableSize 8 = 272B) is freed at update N and a
+tail-field array (t[] packed => exactly Bucket[] growth!) reclaims 272B,
+we own ALL cached element slots at once with attacker-chosen zvals -
+including one crafted to make php_session_rfc1867_cleanup/update treat a
+fake function zval. THIS is the groom shape: not 149x320B strings, but a
+t[] array sized to realloc 8-bucket arrays in the freed-272B LIFO window.
+Trace confirms t[] arrays DO allocate Bucket arrays (seen 272B-class allocs
+in stream). Craft: N fields such that HT grows 8->16 (16*32=512B?) or
+repeats 272B allocs; verify via P2S_TRACE that a 272 free precedes a 272
+attacker alloc; then the two cached pointers (post_bytes_processed,
+current_file_bytes_processed) point INTO OUR array: set element1 = fake
+zval whose value points at a fake zend_internal_function we forge in a
+40B field... RCE = zend_call_function path on file h FILE_DATA.
