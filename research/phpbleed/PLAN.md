@@ -104,3 +104,12 @@ CONTROL RUNNING: vendor php8_remote.py verbatim vs same :8088.
  If vendor also fails R-5 => target build moved out of vendor tuning
  (retune offsets = our work). If vendor lands => bug in MY vendored
  slice (diff vs php8_remote_original.py which differs materially).
+
+## CONTROL WAS INVALID - vendor exploits hardcode /remote_app.php
+Vendor send_http(): "POST /remote_app.php" hardcoded; our range deployed
+the app as /var/www/html/index.php => both vendor control fires were 404
+rounds, NOT R-1 failures. "FAILED" printed because serialize(@unserialize(404
+body)) returns nothing to reflect. Fix: deployed app ALSO at
+/var/www/html/remote_app.php (kept index.php for our own tools). Lesson:
+control experiments must verify the transport path end-to-end FIRST
+(one curl, expected reflection) before believing any phase failure.
