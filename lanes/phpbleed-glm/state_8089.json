@@ -1,8 +1,8 @@
 {
  "heap_ref": 260857131266464,
- "req_count": 217,
- "crash_count": 0,
- "updated": "18:35:46Z",
+ "req_count": 33,
+ "crash_count": 8,
+ "updated": "18:48:03Z",
  "elf_candidates": [
   [
    260857128747008,
@@ -76,5 +76,11 @@
   "std_object_handlers": "0xed3f8b99e2d0",
   "zend_std_get_properties_for": "0xed3f8afa8a88"
  },
- "exfil_ev": {}
+ "exfil_ev": {
+  "S_verify_head": "00000000000000000000bbbb0000000004000000000000000000000000000000",
+  "id_raw": "",
+  "id_docker_logs": "uid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)",
+  "abort": "S-stale-after-id"
+ },
+ "spray_addr": null
 }

