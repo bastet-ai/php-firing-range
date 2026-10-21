@@ -70,3 +70,48 @@ NEXT: 8083 controlled groom => fake-ht bytes on the freed 64-bin chunk
 sizeof(php_serialize_data)=60 => 64-bin => header values of len 57-63
 land exactly there) => arData=attacker bytes => guaranteed SEGV at chosen
 pattern => worker death => bias rotation = controlled 619 on prod.
+18:0xZ-18:4xZ 8083 FINAL MATRIX + MECHANISM CLOSED (all one keep-alive conn, same child):
+ * poc619.py: P0 poison(420K name) fatal alloc=434176; P1(same SID) fatal
+   alloc=413696 = NOT its own encode size (its name was 150K) => P1's fatal
+   is the DECODE of the file P0's shutdown wrote through STALE BG(serialize)
+   = bogus s:LEN token length 413672 (+24 header = 413696 exact).
+   P2-P4 then hung on H/Z: reader wedged consuming corrupt session tokens.
+ * poc619c.py: TRUNCATED-body growth idea fails: MULTIPART_EVENT_END is
+   UNCONDITIONAL at fileupload_done: => cleanup always deletes the entry;
+   all 6 requests clean "lab ok" => sessions stayed empty => confirms
+   progress entries persist ONLY via aborted requests.
+ * disambig.py: poison Q (420K) then reader-on-Q from a SECOND connection:
+   reader HANGS (45s) => cross-request persistent effect confirmed (corrupt
+   session file + fd lifecycle), not a per-connection artifact.
+ * SOURCE-LEVEL CONFIRMATION (research/src/php-src-83):
+   - PHP_RSHUTDOWN_FUNCTION(session): if session_status==active (set by the
+     progress update's initialize!) -> zend_try { php_session_flush(1); }
+     => the ABORTED request's shutdown ENCODES through STALE BG(serialize)
+     (php_var_serialize_init reuse, rig-proven) and S_WRI tes THE CORRUPT
+     ENCODE INTO THE SESSION FILE.
+   - main.c:1791: PG(modules_activated) only zeroed at MSHUTDOWN => RSHUTDOWNs
+     run even when request STARTUP FAILED (the mod_php susceptibility from
+     the advisory, verified in code).
+   - php_session_flush sets status none; each update's initialize re-runs
+     s_open->ps_close_files(old)->s_read reopen: fd+flock window per update
+     explains which aborts block readers (fd open at bailout) vs corrupt
+     them (shutdown-flush wins).
+=> CONFIRMED CHAIN ON TARGET: 618 OOM bailout mid php_session_rfc1867_update
+   (encode) => worker global BG(serialize) freed-but-level>=1 =>
+   shutdown (runs anyway) => session flush encode through stale var_hash =>
+   CORRUPT SESSION FILE persisted (attacker-influenced token stream via
+   progress names) => subsequent requests' php_var_unserialize consumes
+   corrupt tokens => reader-side OOM at crafted-length alloc (413696 observed)
+   or decode-divergence hang (60s+ observed). This is 618+619 chained live.
+NOT achieved: full RCE (FLAG/uid=). Remaining ladder documented in notes.md:
+reader-side type confusion -> fake zval -> aarch64 fci forge
+(syms-php83prod.json + derive_offsets.py prep exists from prior lanes).
+18:36Z FINAL POC CONFIRMATION RUN (poc.py, fresh SID, one keep-alive conn):
+ [1] producer: Fatal alloc=434176 (encode smart_str of the 420KB name) => 618
+     in-band producer on target, in-response, zero app code involved.
+ [3] reader on poisoned SID: t=75.1s <TIMEOUT> => server holds the request
+     consuming the shutdown-written corrupt session => 618->619 chain
+     reproduced standalone by poc.py. Lane closed: poc.py + evidence.txt +
+ fires.log + notes.md complete in lanes/race-618/glm/.
+ Win (FLAG/uid=): not captured; stale-state consumption demonstrated
+ end-to-end; weaponization ladder documented in notes.md.

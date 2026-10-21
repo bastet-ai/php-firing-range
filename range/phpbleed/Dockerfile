@@ -1,4 +1,4 @@
-FROM php:8.5-apache
+FROM php:8.5.11
 
 RUN a2dismod mpm_event 2>/dev/null; a2enmod mpm_prefork 2>/dev/null; true
 

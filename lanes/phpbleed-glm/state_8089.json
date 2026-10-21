@@ -1,8 +1,8 @@
 {
  "heap_ref": 260857131266464,
- "req_count": 70,
- "crash_count": 38,
- "updated": "18:29:29Z",
+ "req_count": 217,
+ "crash_count": 0,
+ "updated": "18:35:46Z",
  "elf_candidates": [
   [
    260857128747008,

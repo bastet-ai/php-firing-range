@@ -59,3 +59,76 @@ handler@+72) -> system("id") / readfile of /CANARY via stdout = response.
   url-scanner)? -> causality matrix AT THE TARGET (bias oracle).
 - mod_php keeps worker alive after crash? (apache recycles child -> bias
   rotates; observable)
+
+## FINAL (18:4xZ) - end-of-lane summary
+
+### Confirmed on the target (8083, php 8.3.35 mod_php pre-patch)
+1. 618 producer at will: OOM inside php_session_encode during the progress
+   update (smart_str on the 420KB client filename) => in-band fatal, worker
+   survives. Also fired: header-bloat part (20k tiny headers), 1MB progress
+   value (FORMDATA copy), parser-path fatals. Stock limits: max_file_uploads
+   =20, max_input_vars=1000; chunked delivery works; lied-small CL is a dead
+   end under Apache (only declared bytes are handed to the handler).
+2. The mod_php susceptibility from the advisory VERIFIED IN CODE: RSHUTDOWNs
+   run even when request startup failed (PG(modules_activated) zeroed only at
+   MSHUTDOWN). The aborted request's session RSHUTDOWN sees
+   session_status==active and php_session_flush(1)es through the STALE
+   BG(serialize) (php_var_serialize_init reuse) => the corrupt encode is
+   written INTO THE SESSION FILE (persistent, attacker-influenced token
+   stream via progress names).
+3. Reader-side 619 consumption: later requests pre-RINIT decode the corrupt
+   file. Observed markers: bogus-length decode alloc 413696 (=24B hdr +
+   s:413672 corrupt token; reader's own names were 150KB so the size is
+   decode-side) and decode-divergence HANGS (45-150s+, persistent across
+   connections). Cross-check: truncated-body control requests all clean =>
+   only fatal (618) requests poison.
+4. Instrumented-build proof with addresses+bytes: next-request
+   php_var_serialize_init reuses the freed chunk (level 1->2), and with a
+   39-byte field groom the stale chunk IS the attacker string
+   ("G01PPP..." hexdump in evidence.txt); php_add_var_hash's early-return
+   means plain sessions touch it via data->n increments; refs/objects would
+   drive zend_hash_index_find/add_new through the fully attacker-chosen
+   fake HashTable.
+5. Independent DoS primitive: abort-time session fd/flock window blocks
+   readers of that SID (same or different connection) while the leaking
+   child lives.
+6. Bias oracle caveat discovered: libphp.so mapping is fork-inherited =>
+   ALL children share bias 0xe21fde850000 => bias is NOT a worker-identity
+   oracle on this target; same-worker must be enforced structurally
+   (single keep-alive connection).
+
+### Not achieved
+Full RCE (FLAG / uid=). The consumption primitives above are demonstrated;
+weaponization requires one more engineering stage:
+
+### Remaining ladder (for the next runner)
+Route A (serialize side, no session read needed): make the next request's
+session contain a REFERENCE or OBJECT so php_add_var_hash hits the fake
+HashTable. The fake ht fields are fully attacker-controlled via raw
+estrdup'd bytes (e.g., 57-63 byte header names land in the 64-bin; or the
+groomed 39B field strings give arData=len=0x27 -> controlled fault at 0x27).
+With arData pointed at libphp statics (bias 0xe21fde850000 + nm offsets,
+see /tmp/asan-lab/syms-php83prod.json), zend_hash_index_add_new writes
+{ZVAL_LONG(n), h=zval_ptr, key=NULL} buckets at chosen addresses, and
+zend_hash_index_find becomes an oracle: bucket.h stores RAW zval pointer
+values (zend ulong keys are not hashed) => position a bucket at any
+readable static and the emitted r:ID leaks low bits of heap pointers.
+Route B (unserialize side, stronger): produce BG(unserialize) staleness by
+OOM inside the decode (groom-field memory pressure + a large readable
+session; the flock window must be respected - grow sessions ONLY via
+aborted writes whose fd closes, or accept one readable-poisoned file),
+then consume with the 224-bin groom (193-200B field values): the reuse path
+does NOT reset used_slots/last/first_dtor/last_dtor => tmp_var/var_push
+walk attacker chains, var_access (r:/R: tokens) returns fake zvals into
+$_SESSION, var_destroy walks fake dtor chains (VAR_WAKEUP_FLAG ->
+delayed __wakeup via zend_call_function on a forged object). Final call
+forge: aarch64 zend_fcall_info (size 64, fn.val@8, type@16,
+param_count@48), zend_internal_function handler @+72 (NOT +88 as on x86),
+zend_call_function = bias+0x45bd4c (stable per child; rotate on recycle).
+system("id") / readfile("/CANARY") output goes to the response via mod_php
+stdout = the win channel.
+
+### Deliverables
+poc.py (chain: producer fatal -> poisoned session -> reader hang/corrupt
+alloc), evidence.txt (raw responses + rig hexdump + source anchors),
+fires.log (every fire), notes.md (this file).
