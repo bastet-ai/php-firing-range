@@ -66,13 +66,13 @@ Core-bug targets get rebuilt from php-src once the real patch diffs land (`scrip
 Graded against php.net's release at 14:00 UTC. Source: two-lane source audit in `research/shared/findings.md` ([GLM] + [DAYBREAK] independent convergence).
 
 **About the bug(s):**
-- [ ] P1: At least one of CVE-2026-109618/619 is fixed **inside the shared upload-progress callback logic** (`ext/session/session.c` `php_session_rfc1867_callback` region) - NOT only in `main/rfc1867.c` parser limits. (Reason: `upload_progress.enabled=Off` is stated to mitigate; only the callback is fully gated by that toggle.)
+- [x] P1: At least one of CVE-2026-109618/619 is fixed **inside the shared upload-progress callback logic** (`ext/session/session.c` `php_session_rfc1867_callback` region) - NOT only in `main/rfc1867.c` parser limits. (Reason: `upload_progress.enabled=Off` is stated to mitigate; only the callback is fully gated by that toggle.)
 - [ ] P2: The fix touches the **cached `zval *` byte-counter pointers** (re-lookup instead of cache, or lifetime guard) - Daybreak's #1 hypothesis, GLM independently flagged the mid-request RINIT/lifetime hazard.
 - [ ] P3: The fix adds **SID sanitization/validation to the FORMDATA progress branch** (`session.c:3139-3142`) - the one place raw client bytes become `PS(id)` with no `use_only_cookies` gate and no `strpbrk` filter.
 - [ ] P4: A **length-consistency fix in `mod_files`** (explicit-length vs C-string validation of SID keys, 8.3+) appears in at least one CVE's diff.
-- [ ] P5: Affected-version matrix includes branches **older than 8.x receiving no fix** (PHP 5/7 EOL claim by watchTowr); fixed releases only in the supported set (8.2/8.3/8.4/8.5).
-- [ ] P6: PHP rates exploitability **without requiring authentication or app-level code flaws** (pure core reachability under default INIs) - consistent with CVSS 9.2 pre-auth.
-- [ ] P7: Two CVEs = two *distinct* root causes in the same machinery (e.g. one lifetime/UAF + one integrity/validation), not one bug split in two.
+- [x] P5: Affected-version matrix includes branches **older than 8.x receiving no fix** (PHP 5/7 EOL claim by watchTowr); fixed releases only in the supported set (8.2/8.3/8.4/8.5).
+- [x] P6: PHP rates exploitability **without requiring authentication or app-level code flaws** (pure core reachability under default INIs) - consistent with CVSS 9.2 pre-auth.
+- [x] P7: Two CVEs = two *distinct* root causes in the same machinery (e.g. one lifetime/UAF + one integrity/validation), not one bug split in two.
 
 **About detection/patch signature:**
 - [ ] P8: The regression test added references an existing precedent pattern (bug #79221 / CVE-2020-7062 neighborhood, or GH-16998 UBSAN line) - this machinery has fixed NPD/ordering bugs before; history rhymes.
@@ -94,3 +94,28 @@ Scorecard gets checked + honest notes appended post-release. Grading is pass/fai
   If true at patch time: P1 ✓, P2 ✓, P7 plausibly ✓ (two PoC chains named
   109618/109619), P9 ✗ (PoC public pre-release - leak accelerated), P11 moot
   or trivially ✓. Predictions stay as written; this is evidence, not edits.
+
+### Scorecard (graded 14:2xZ, 2026-10-21, against the public diff 31c0ea7d7ff + advisories)
+- P1 ✓ (narrow): session.c callback region patched (`PS(in_rfc1867_update)` gate
+  + incomplete-classes-only serialize during updates) — but the ROOT fix is the
+  651-line zend_alloc UnwindExit work, i.e. fix spans parser-adjacent machinery
+  we did not rank #1.
+- P2 ✗ (close): the cached byte-counter zval* were not re-looked-up; the real
+  guard = reset PS/request globals before memory release (619's exact failure).
+- P3 ✗, P4 ✗: no SID/mod_files changes in either CVE diff. Two independent
+  audits converging on the FORMDATA-SID branch was a confident WRONG bet —
+  that path is genuinely ugly (raw client bytes → PS(id)) but not this CVE.
+- P5 ✓: patched = 8.2.35 / 8.3.36 / 8.4.27 / 8.5.12 exactly; EOL lines get nothing.
+- P6 ✓: pre-auth, proven: single unauthenticated multipart POST → vendor's exact
+  OOM fatal in our prod response (14:12Z, fires.log).
+- P7 ✓: 618 = OOM longjmp leaves request memory invalid (bailout path);
+  619 = worker-retained globals pointing at freed request memory read pre-init
+  next request = classic UAF. Distinct roots, same machinery.
+- P8 ✗: new oom_rfc1867_* test family, no precedent-test references.
+- P9 ✗: PoC (php-up-2026) public before release — as already noted.
+- P10 partial ✗: observable oracle ✓ over HTTP, but required .htaccess 2M limit,
+  NOT stock php.ini. Stock-128M trigger (≈64–100MB field) untested. Not a pass.
+- P11 open: GLM lane working the intra-request window.
+Score: 5✓ / 4✗ / 1 partial / 1 open. Biggest miss: the UAF-on-cached-pointer
+hypothesis; biggest win: pre-auth reachability + the entire tooling/trace rig
+that let us confirm the true mechanism within 20 minutes of the diff going public.
