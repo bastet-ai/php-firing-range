@@ -30,6 +30,12 @@ Plan:
    Build: sapi/fuzzer/php-fuzz-multipart via reconfigure.sh (ASan+UBSan
    instrumentation confirmed in Makefile CFLAGS/CXXFLAGS). Target name in
    Makefile is the PATH form sapi/fuzzer/php-fuzz-multipart.
+   BUILD WIRING GOTCHA: PHP_FUZZER_TARGET() in config.m4 registers vars only;
+   the link RULE lives in sapi/fuzzer/Makefile.frag, which is injected at
+   configure time — editing the frag post-configure does NOT reach Makefile
+   (config.status Makefile doesn't re-include it either). Fixed by appending
+   the link rule directly to Makefile (+ frag edit so future reconfigure
+   keeps it). Full ASan build of core objects: several minutes.
 6. Triage: any crash => minimize, reduce to .phpt, verify on stock CLI build
    (not just harness), file in findings.md + README predictions if it maps to
    a suspect.
