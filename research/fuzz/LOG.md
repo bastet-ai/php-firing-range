@@ -23,7 +23,13 @@ Plan:
 3. [WIP 05:10] Wire into config.m4 (PHP_FUZZER_TARGET([multipart]));
    ./configure --enable-fuzzer with clang, ASan+UBSan+UAC; make php-fuzz-multipart.
 4. Seed corpus from ext/session/tests/*.phpt multipart bodies + dict tokens.
-5. Parallel libFuzzer runs; AFL++ separately if buildable (check).
+5. [SETUP 05:35] libFuzzer: N parallel runs (ASan+UBSan build).
+   AFL++ 4.09c installed — needs a no-libFuzzer ASan CLI build of the same
+   SAPI glue (separate make config, afl-clang-fast) + a plain-file input
+   driver; queued after libFuzzer run is stable.
+   Build: sapi/fuzzer/php-fuzz-multipart via reconfigure.sh (ASan+UBSan
+   instrumentation confirmed in Makefile CFLAGS/CXXFLAGS). Target name in
+   Makefile is the PATH form sapi/fuzzer/php-fuzz-multipart.
 6. Triage: any crash => minimize, reduce to .phpt, verify on stock CLI build
    (not just harness), file in findings.md + README predictions if it maps to
    a suspect.
