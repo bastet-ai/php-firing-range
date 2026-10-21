@@ -1,6 +1,6 @@
-# Consolidated findings — PHP session upload progress
+# Consolidated findings - PHP session upload progress
 
-[DAYBREAK] 2026-10-20T20:40:31-07:00 — ranked by exploit plausibility × default coverage. No `[GLM]` entries were present in `shared/` at consolidation time; this is therefore a DAYBREAK-only interim consolidation and should be extended append-only when peer results arrive.
+[DAYBREAK] 2026-10-20T20:40:31-07:00 - ranked by exploit plausibility × default coverage. No `[GLM]` entries were present in `shared/` at consolidation time; this is therefore a DAYBREAK-only interim consolidation and should be extended append-only when peer results arrive.
 
 ## 1. Cached pointers into mutable nested HashTables (high interest, broad coverage; hypothesis)
 
@@ -40,12 +40,12 @@ Set `session.upload_progress.enabled=Off` wherever progress is unused; this exit
 
 # Two-lane consolidation (Bastet merge, 2026-10-21T04:25Z)
 
-GLM's results arrived post-consolidation via transcript salvage — see
+GLM's results arrived post-consolidation via transcript salvage - see
 `notes-glm-recovered.md` (citations independently re-verified against src).
 Merged ranking below; provenance tags [D]=Daybreak, [G]=GLM, [D∩G]=independent agreement.
 
 ## Convergence (strongest signal in the whole exercise)
-- **[D∩G] Unguarded FORMDATA SID branch** — `session.c:3139-3142`: multipart
+- **[D∩G] Unguarded FORMDATA SID branch** - `session.c:3139-3142`: multipart
   form field named `PHPSESSID` sets `progress->sid` from raw client bytes with
   no `use_only_cookies` gate and no `strpbrk("\r\n\t <>'\"\\")` filter (that
   filter exists only in `php_session_start()` at `1625-1629`, [G]); sid validity
@@ -54,9 +54,9 @@ Merged ranking below; provenance tags [D]=Daybreak, [G]=GLM, [D∩G]=independent
   core and #4's entry point.
 - **[D∩G] Pre-basename raw client filename persists into progress session
   state** (session.c:3195-3200 [D]; rfc1867.c:1132 basename happens AFTER both
-  FILE events [G]) — retained phar-family-shaped consumer input, though neither
+  FILE events [G]) - retained phar-family-shaped consumer input, though neither
   lane found an in-tree consumer chain (keep as question, [D] framing stands).
-- **[D∩G] Shared-code suspicion** — identical callback 7.4↔8.3 ⇒ if the
+- **[D∩G] Shared-code suspicion** - identical callback 7.4↔8.3 ⇒ if the
   embargoed bug "affects PHP 5-8" (watchTowr claim), it lives in this shared
   state/event/ownership logic. Both branch-diffs independently agree.
 
@@ -69,19 +69,19 @@ Merged ranking below; provenance tags [D]=Daybreak, [G]=GLM, [D∩G]=independent
    FILE_START) [G] is a concrete mechanism candidate for how #1's "unexpected
    separation" could occur, especially NTS.
 2. [D4 + G] Binary/NUL SID aliasing, 8.3-specific: explicit-length copy vs
-   C-string validation in mod_files (`mod_files.c:107-130,168-175`) — GLM's raw
+   C-string validation in mod_files (`mod_files.c:107-130,168-175`) - GLM's raw
    unsanitized sid bytes are what let NUL/odd bytes reach that handler at all.
    Integrity/aliasing rather than OOB, but this is exactly the shape of a
    "hidden invariant break" a CVSS 9.2 chain could use.
 3. [D2] Event-state trust with historical precedent (CVE-2020-7062, GH-16998,
-   7.4 next_line NULL `buf_begin` UB [G]) — ordering violations produce
+   7.4 next_line NULL `buf_begin` UB [G]) - ordering violations produce
    null/stale writes.
 4. [G] php serializer (compiled default) framing under client-influenced
-   keys + 7.4/8.3 decode-tail divergence — poisoning/aliasing surface, lower
+   keys + 7.4/8.3 decode-tail divergence - poisoning/aliasing surface, lower
    memory-safety plausibility.
 5. [D5] Oversized metadata into persistent serialization (7.4 lacks 8.3's
-   parts limiter) — DoS/pressure.
-6. [D6] cancel_upload race — DoS only.
+   parts limiter) - DoS/pressure.
+6. [D6] cancel_upload race - DoS only.
 
 ## Open questions for patch-diff confirmation at release (07:00 PDT)
 - Does the fix add a sid sanitization/validation call in the FORMDATA progress
@@ -96,7 +96,7 @@ Merged ranking below; provenance tags [D]=Daybreak, [G]=GLM, [D∩G]=independent
 ## Attribution corrections (repo history honesty)
 - Commit "first shared notes (GLM core read + ...)" was mis-attributed: all
   initial shared/ files were Daybreak-r3's; GLM produced zero shared notes in
-  either run (first: budget mismanagement — all thinking, no writing; second:
+  either run (first: budget mismanagement - all thinking, no writing; second:
   provider 900s stream cap on the resumed session). GLM's substantive
   contribution exists only because its transcript was salvaged. Note for
   future lane briefs: hard "write within N tool calls, append per discovery"
@@ -104,12 +104,12 @@ Merged ranking below; provenance tags [D]=Daybreak, [G]=GLM, [D∩G]=independent
 
 
 ## Live-fire verdict on jackalsyn PoCs vs firing range (11:05Z, pre-patch)
-**Answer to "do the PoCs get a shell in our range?" — NO, and precisely why:**
+**Answer to "do the PoCs get a shell in our range?" - NO, and precisely why:**
 - Static audit clean (no callbacks except local subprocess for symbol-dump;
   shell=True _sh unused in PoC flow; --dry body-build safe & tested).
 - Their forged-body builder runs verbatim on our box: 62,929-byte body,
   PHPSESSID-field sid (P3 ✓), FILLUNIT stall, 149x packed t[] groom, stale
-  FILE_DATA store stage — full chain serialized exactly per their docs.
+  FILE_DATA store stage - full chain serialized exactly per their docs.
 - Delivered through a local TLS relay to a staged lab sink (session_start +
   slow handler, mirroring their webrootF lab semantics) on php83-8.3.35
   mod_php: request COMPLETED. No shell, no segfault, no sanitizer hit.
@@ -117,13 +117,13 @@ Merged ranking below; provenance tags [D]=Daybreak, [G]=GLM, [D∩G]=independent
   1. `--dtor/--call` = leaked zval_ptr_dtor of THEIR lsphp builds
      (delta 0x43EF0 per-build). Our php83 php.ini has different symbol
      addresses; forging a garbage handler ptr only lands if the reclaim
-     takes — and no crash means the groom never reclaimed the freed bucket
+     takes - and no crash means the groom never reclaimed the freed bucket
      under mod_php's allocator stream (their deltas are LiteSpeed-class
      specific; their own RATING.md admits groom tuning).
   2. SAPI mismatch: published deltas for lsphp only; fpm path exists in
      framework but lab-only; mod_php (our stack) not covered.
   3. Their own VALIDATION.md: no UAF without manual groom, stale write
-     lands in still-owned memory — matches our 1.89M-exec fleet negative.
+     lands in still-owned memory - matches our 1.89M-exec fleet negative.
 - CONCLUSION: the PoC is real machinery pointed at a target it doesn't own.
   "Shell on OUR range" requires porting groom constants to our build's
   allocator profile = OUR OWN exploit work, which is exactly what the
@@ -161,7 +161,7 @@ all 200 OK, ZERO ASan reports, zero shell. Root insight:
 routes every allocation through ASan's malloc, whose quarantine+poison
 design GUARANTEES a freed 320-byte bin is never handed to a later
 allocation. The reclaim stage of this chain is therefore structurally
-impossible on an ASan target — silence on ASan proves nothing about the
+impossible on an ASan target - silence on ASan proves nothing about the
 groom's quality, only about ASan's quarantine. Split the rig:
   * CORRUPTION DETECTION: ASan build + targeted tripwire instrumentation
     (poison hooks on the two cached-pointer writes) - not blind exploit.

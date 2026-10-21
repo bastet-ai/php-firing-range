@@ -2,7 +2,7 @@
 
 Context: PHP emergency security release Wed 2026-10-21 14:00 UTC fixes two critical
 CVSS 9.2 vulns (CVE-2026-109618/619, RCE, details embargoed). A trusted hint says
-`session.upload_progress.enabled = Off` mitigates "this bug" — so the vulnerable code
+`session.upload_progress.enabled = Off` mitigates "this bug" - so the vulnerable code
 is very likely in the upload-progress machinery (ext/session/, rfc1867 progress).
 
 This is AUTHORIZED DEFENSIVE RESEARCH on open-source code we host locally, ahead of
@@ -25,13 +25,13 @@ Your job:
    sanitization? Track lifetime: what outlives what?
 2. Enumerate every way an unauthenticated remote request reaches this code without
    any ini other than the default (progress.enabled=1, freq_bytes=0, name prefix
-   default). Note defaults per branch (7.4 vs 8.3) — the hint implies the bug lives
+   default). Note defaults per branch (7.4 vs 8.3) - the hint implies the bug lives
    in code paths enabled by DEFAULT.
 3. For each finding: root cause hypothesis, memory-safety plausibility (what corrupts
    what), trigger preconditions, and detection/hardening value. "Could this chain to
    RCE via $_SESSION state read back in another extension?" is a fair question to
    log, but stay in notes: no exploit code, no PoC binaries here.
-4. DIFF the two branches in these files — behavior deltas narrow the suspect window.
+4. DIFF the two branches in these files - behavior deltas narrow the suspect window.
 
 Collaboration protocol (both agents share this directory):
 - Notes live in ~/firing-research/shared/. Append-only, one file per topic:

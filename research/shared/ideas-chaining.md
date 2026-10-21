@@ -1,4 +1,4 @@
-[DAYBREAK] 2026-10-20T20:30:54-07:00 — chaining notes (non-exploit)
+[DAYBREAK] 2026-10-20T20:30:54-07:00 - chaining notes (non-exploit)
 
 The code is an unauthenticated session write primitive constrained to one attacker-named key prefix and a fixed-shape value: arbitrary Cookie SID is accepted under default strict_mode=0 (`src/php-src-83/ext/session/session.c:837-839,3022-3027,3185-3192`), and the key suffix plus filename/field-name metadata are client-controlled (`src/php-src-83/ext/session/session.c:3142-3146,3197-3200`). Default cleanup deletes the key at END (`src/php-src-83/ext/session/session.c:3250-3253`), but intermediate writes exist during upload (`src/php-src-83/ext/session/session.c:3073-3083`), enabling a concurrent reader window. This merits monitoring for session deserialization or application consumers, but the core code does not pass those strings to Phar or execute them. `ext/phar/phar_object.c` has no upload-progress callback registration; the only callback assignment found is session (`src/php-src-83/ext/session/session.c:2902`). Treat Phar/RCE as an external consumer hypothesis, not a finding.
 

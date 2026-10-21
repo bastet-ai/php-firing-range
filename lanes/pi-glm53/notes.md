@@ -1,4 +1,4 @@
-# Shakedown target — OS Command Injection (RCE)
+# Shakedown target - OS Command Injection (RCE)
 
 ## Result
 Canary exfiltrated over HTTP on first working payload:
@@ -27,12 +27,12 @@ techniques were never needed).
 ```
 GET /?act=preview&host=%3Bcat%20/CANARY
 ```
-i.e. `host=";cat /CANARY"` — the `;` closes the intended host-preview command
+i.e. `host=";cat /CANARY"` - the `;` closes the intended host-preview command
 and `cat /CANARY` prints the canary into the response body.
 
 ## Preconditions
 - Only that the `act=preview` endpoint exists and `host` is attacker-controlled
-  (it is, by design — this is the pipeline-validation target).
+  (it is, by design - this is the pipeline-validation target).
 - No authentication, no POST, no special headers. Works with plain GET.
 
 ## How I found it (black-box, ~4 requests)
@@ -47,6 +47,6 @@ and `cat /CANARY` prints the canary into the response body.
 
 ## Notes
 - The canary was returned through the HTTP-visible response channel as the
-  stdout of the injected `cat /CANARY` — not an echo of attacker input.
+  stdout of the injected `cat /CANARY` - not an echo of attacker input.
 - No persistence, no lateral movement, no DoS: a single GET request; the only
   side effect is reading the canary file.
