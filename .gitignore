@@ -9,3 +9,4 @@ research/fuzz/corpus/
 research/fuzz/fuzz-results/
 research/phpbleed/publications/
 .env-range
+.env

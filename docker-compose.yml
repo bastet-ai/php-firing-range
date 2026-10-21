@@ -87,7 +87,7 @@ services:
     environment:
       MYSQL_DATABASE: wp
       MYSQL_USER: wp
-      MYSQL_PASSWORD: ${MYSQ...WORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     restart: unless-stopped
 
