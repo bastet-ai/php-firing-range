@@ -50,3 +50,9 @@ B) On the fatal request + immediately-following requests on same worker:
    happening in exactly the pre-init consumer window!).
 C) Watch for: wrong-content responses, cross-session bleed, segfaults,
    double-fatal, /CANARY leak. uid= = sub-canary win.
+
+## 16:5xZ UPDATE: daubois.dev insider post distilled -> research/shared/DAUBOIS-KEYPOINTS.md
+Key: 618 = pure allocator OOM (sessions irrelevant); vendor validated mod_php
+RCE at DEFAULT 128M; exact zend_mm_safe_error jump site; patched residual =
+real mmap() failure still old path; final fix sha 01a40e89fbfc; FPM/
+FrankenPHP in-scope-without-public-exploit = differentiation lane.
