@@ -37,6 +37,5 @@ git fetch origin tags 2>/dev/null
 #   (score.sh enforces execution-derived only). Log fires:
 #   lanes/glm-reclaim/fires.log. Commit immediately.
 #
-# 5) GLM RESUME (Pi buffers stdout; session persists across the 900s wall):
-tmux new-session -d -s glm-reclaim2 \
-  "pi --provider venice --model venice/z-ai-glm-5-3 -p 'Continue: read research/shared/findings.md trace4 section + this RUNBOOK.md, resume the 272B Bucket-array groom design. Verify on instrumented php -S first, then fire prod 8083. Checkpoint files every step.' 2>&1 | tee /tmp/glm-reclaim2.log"
+# 5) GLM RESUME: (bastet handles this from outside; do NOT run tmux/pi from
+#    inside your lane - just checkpoint your state to files every step.)

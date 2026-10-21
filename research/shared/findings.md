@@ -289,3 +289,30 @@ attacker alloc; then the two cached pointers (post_bytes_processed,
 current_file_bytes_processed) point INTO OUR array: set element1 = fake
 zval whose value points at a fake zend_internal_function we forge in a
 40B field... RCE = zend_call_function path on file h FILE_DATA.
+
+## 14:0xZ PATCH DROP - REAL MECHANISM CONFIRMED (CVE-2026-109618/619)
+Commit 31c0ea7d7ff (Le Blanc, in tag php-8.5.12; "Avoid state corruption via
+bailout", 423 files): the bug is NOT the progress-tree UAF. It is:
+  OOM inside php_session_rfc1867_update()'s session ENCODE/DECODE
+  -> zend_bailout() mid-update -> request shutdown sees half-mutated session
+  globals/cached zval* (the very pointers session.c:3186/3212) -> LATER
+  accesses corrupt ("state corruption via bailout").
+Patch = zend_alloc UnwindExit for allocation failure (no bailout), global
+resets incl. PS(in_rfc1867_update), and incomplete-classes-only
+serialize/unserialize during progress updates.
+EXPLOIT TRIGGER (vendor-shipped repro = tests/basic/oom_rfc1867_upload_progress.phpt):
+  low memory_limit + freq=1 + min_freq=0 + use_strict_mode=0, upload
+  session_starting body -> encode OOM mid-update. On stock PRE-patch PHP this
+  is a ONE-REQUEST repro of the corrupt state; our 8.3.35 range targets are
+  PRE-patch => trivially reachable. The exploit = ride the corrupted state to
+  a controlled write (their stale-store = one instance of it; lsphp differs
+  only in WHEN the OOM/bailout lands). OUR trace observations (stale frees,
+  LIFO re-hands) are downstream artifacts of the same bailout window.
+=> PLAN: fire vendor phpt shape at 8083 (worker memory_limit is Apache-set;
+   per-dir .user.ini or .htaccess php_value memory_limit if allowed; else our
+   instrumented php -S with -d memory_limit=1M is a perfectly legitimate
+   pre-patch vulnerable demo). Then characterize post-bailout state via
+   P2S_TRACE, then chain to code exec.
+CHECKLIST GRADES (pre-registered predictions): P1-P4 aligned with the
+progress/session region but MECHANISM = OOM bailout, not plain UAF: partial
+confirmations noted honestly post-analysis.
