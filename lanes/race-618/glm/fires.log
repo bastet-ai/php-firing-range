@@ -33,3 +33,21 @@ NEXT: instrument stale BG(serialize)/BG(unserialize) reuse on own php -S, then 6
    producer fatal abandons reset; N+1 pre-RINIT consumer (hash_environment
    serialize) reads stale worker global => UAF.
 NEXT: causality matrix + non-ASan repro + 8083 same-worker fire.
+16:4xZ 8083 matrix (all fires same-worker via keep-alive, bias stable e21fde850000):
+ ENC  producer: 1MB filename part => fatal "tried to allocate 1052672" =
+      smart_str zend_string(len 1052648) => OOM lands INSIDE php_session_encode
+      (BG(serialize) stale; vendor 618 mechanism confirmed on prod target).
+ DEC  prefill 600KB filename OOMs during PREFILL itself (600*3>2M) -> need
+      smaller name to ever write a big session file (see grow-chain below).
+ HDR  20k-header part: fatal (alloc 4096) - parser-path OOM (control; BG clean).
+ PROGV 1MB progress value: fatal (alloc 1052672 = the 1MB key zend_string) -
+      FORMDATA-path OOM (control; BG clean).
+ Consumers (progress multipart, first FILE_START update ALWAYS fires the
+ gate: next_update=0, next_update_time=0.0 at init): all returned clean
+ "lab ok 0" => stale consumption happened but freed chunk got benign
+ re-handling (non-ASan Zend MM LIFO); no visible signal yet.
+KEY: 8083 stock max_file_uploads=20/max_input_vars=1000 gate my 600-part
+ shapes; huge-filename & header-bloat shapes work at stock.
+NEXT: plain local build for deterministic groom; grow session file across
+requests for DECODE-side OOM (BG(unserialize) stale = the strong primitive:
+fake php_unserialize_data => controlled last/first_dtor/entries chains).

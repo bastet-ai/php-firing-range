@@ -1,0 +1,217 @@
+# GLM-5.3 phpbleed lane fires (target 127.0.0.1:8088/index.php, php 8.5.11 apache prefork aarch64)
+# chain = vendor php8_remote.py adapted (WRITEUP.md Part II), exfil = multipart /tmp/php* staging (see notes.md)
+16:51:26Z === phpbleed run start (fresh=False) target 127.0.0.1:8088/index.php ===
+16:51:26Z [#1] [R-1 heap-leak] ok rawlen=9804 bodylen=9580
+16:51:26Z [R-1] heap_ref = 0xfaf9a3c57220 (reqs=1)
+16:51:26Z [#2] [R-2 elf-scan@0xfaf9a3c00010] ok rawlen=9681 bodylen=9457
+16:51:26Z [#3] [R-2 elf-scan@0xfaf9a3c00010] ok rawlen=9681 bodylen=9457
+16:51:26Z [#4] [R-2 elf-scan@0xfaf9a3e00010] ok rawlen=9746 bodylen=9522
+16:51:26Z [#5] [R-2 elf-scan@0xfaf9a3a00010] CRASH/no-response
+16:51:26Z [#6] [R-2 elf-scan@0xfaf9a4000010] ok rawlen=9681 bodylen=9457
+16:51:26Z [#7] [R-2 elf-scan@0xfaf9a3800010] ok rawlen=192 bodylen=0
+16:51:26Z [#8] [R-2 elf-scan@0xfaf9a4200010] ok rawlen=192 bodylen=0
+16:51:26Z [#9] [R-2 elf-scan@0xfaf9a3600010] ok rawlen=9710 bodylen=9486
+16:51:26Z [#10] [R-2 elf-scan@0xfaf9a4400010] ok rawlen=192 bodylen=0
+16:51:26Z [#11] [R-2 elf-scan@0xfaf9a3400010] ok rawlen=192 bodylen=0
+16:51:26Z [#12] [R-2 elf-scan@0xfaf9a4600010] ok rawlen=192 bodylen=0
+16:51:26Z [#13] [R-2 elf-scan@0xfaf9a3200010] ok rawlen=192 bodylen=0
+16:51:26Z [#14] [R-2 elf-scan@0xfaf9a4800010] ok rawlen=192 bodylen=0
+16:51:26Z [#15] [R-2 elf-scan@0xfaf9a3000010] CRASH/no-response
+16:51:26Z [#16] [R-2 elf-scan@0xfaf9a4a00010] ok rawlen=192 bodylen=0
+16:51:26Z [#17] [R-2 elf-scan@0xfaf9a2e00010] CRASH/no-response
+16:51:26Z [#18] [R-2 elf-scan@0xfaf9a4c00010] ok rawlen=192 bodylen=0
+16:51:27Z [#19] [R-2 elf-scan@0xfaf9a2c00010] CRASH/no-response
+16:51:27Z [#20] [R-2 elf-scan@0xfaf9a4e00010] ok rawlen=192 bodylen=0
+16:51:27Z [#21] [R-2 elf-scan@0xfaf9a2a00010] CRASH/no-response
+16:51:28Z [#22] [R-2 elf-scan@0xfaf9a5000010] ok rawlen=192 bodylen=0
+16:51:28Z [#23] [R-2 elf-scan@0xfaf9a2800010] CRASH/no-response
+16:51:28Z [#24] [R-2 elf-scan@0xfaf9a5200010] CRASH/no-response
+16:51:28Z [#25] [R-2 elf-scan@0xfaf9a2600010] CRASH/no-response
+16:51:28Z [#26] [R-2 elf-scan@0xfaf9a5400010] ok rawlen=9746 bodylen=9522
+16:51:29Z [#27] [R-2 elf-scan@0xfaf9a2400010] CRASH/no-response
+16:51:29Z [#28] [R-2 elf-scan@0xfaf9a5600010] CRASH/no-response
+16:51:30Z [#29] [R-2 elf-scan@0xfaf9a2200010] CRASH/no-response
+16:51:30Z [#30] [R-2 elf-scan@0xfaf9a5800010] ok rawlen=192 bodylen=0
+16:51:30Z [#31] [R-2 elf-scan@0xfaf9a2000010] ok rawlen=192 bodylen=0
+16:51:30Z [#32] [R-2 elf-scan@0xfaf9a5a00010] ok rawlen=192 bodylen=0
+16:51:30Z [#33] [R-2 elf-scan@0xfaf9a1e00010] CRASH/no-response
+16:51:30Z [#34] [R-2 elf-scan@0xfaf9a5c00010] CRASH/no-response
+16:51:30Z [#35] [R-2 elf-scan@0xfaf9a1c00010] ok rawlen=9746 bodylen=9522
+16:51:31Z [#36] [R-2 elf-scan@0xfaf9a5e00010] CRASH/no-response
+16:51:31Z [#37] [R-2 elf-scan@0xfaf9a1a00010] ok rawlen=9681 bodylen=9457
+16:51:31Z [#38] [R-2 elf-scan@0xfaf9a6000010] CRASH/no-response
+16:51:31Z [#39] [R-2 elf-scan@0xfaf9a1800010] ok rawlen=9681 bodylen=9457
+16:51:32Z [#40] [R-2 elf-scan@0xfaf9a6200010] CRASH/no-response
+16:51:32Z [#41] [R-2 elf-scan@0xfaf9a1600010] ok rawlen=9681 bodylen=9457
+16:51:32Z [#42] [R-2 elf-scan@0xfaf9a6400010] CRASH/no-response
+16:51:32Z [#43] [R-2 elf-scan@0xfaf9a1400010] ok rawlen=9681 bodylen=9457
+16:51:32Z [#44] [R-2 elf-scan@0xfaf9a6600010] CRASH/no-response
+16:51:32Z [#45] [R-2 elf-scan@0xfaf9a1200010] ok rawlen=9729 bodylen=9505
+16:51:33Z [#46] [R-2 elf-scan@0xfaf9a6800010] CRASH/no-response
+16:51:33Z [#47] [R-2 elf-scan@0xfaf9a1000010] ok rawlen=9681 bodylen=9457
+16:51:33Z [#48] [R-2 elf-scan@0xfaf9a6a00010] CRASH/no-response
+16:51:33Z [#49] [R-2 elf-scan@0xfaf9a0e00010] ok rawlen=192 bodylen=0
+16:51:34Z [#50] [R-2 elf-scan@0xfaf9a6c00010] CRASH/no-response
+16:51:34Z [#51] [R-2 elf-scan@0xfaf9a0c00010] ok rawlen=192 bodylen=0
+16:51:34Z [#52] [R-2 elf-scan@0xfaf9a6e00010] CRASH/no-response
+16:51:34Z [#53] [R-2 elf-scan@0xfaf9a0a00010] ok rawlen=192 bodylen=0
+16:51:34Z [#54] [R-2 elf-scan@0xfaf9a7000010] CRASH/no-response
+16:51:34Z [#55] [R-2 elf-scan@0xfaf9a0800010] ok rawlen=192 bodylen=0
+16:51:35Z [#56] [R-2 elf-scan@0xfaf9a7200010] CRASH/no-response
+16:51:35Z [#57] [R-2 elf-scan@0xfaf9a0600010] ok rawlen=9746 bodylen=9522
+16:51:35Z [#58] [R-2 elf-scan@0xfaf9a7400010] CRASH/no-response
+16:51:36Z [#59] [R-2 elf-scan@0xfaf9a0400010] ok rawlen=9681 bodylen=9457
+16:51:36Z [#60] [R-2 elf-scan@0xfaf9a7600010] CRASH/no-response
+16:51:36Z [#61] [R-2 elf-scan@0xfaf9a0200010] ok rawlen=9681 bodylen=9457
+16:51:36Z [#62] [R-2 elf-scan@0xfaf9a7800010] CRASH/no-response
+16:51:36Z [#63] [R-2 elf-scan@0xfaf9a0000010] ok rawlen=9681 bodylen=9457
+16:51:37Z [#64] [R-2 elf-scan@0xfaf9a7a00010] CRASH/no-response
+16:51:37Z [#65] [R-2 elf-scan@0xfaf99fe00010] ok rawlen=9681 bodylen=9457
+16:51:37Z [#66] [R-2 elf-scan@0xfaf9a7c00010] CRASH/no-response
+16:51:37Z [#67] [R-2 elf-scan@0xfaf99fc00010] ok rawlen=9681 bodylen=9457
+16:51:37Z [#68] [R-2 elf-scan@0xfaf9a7e00010] CRASH/no-response
+16:51:38Z [#69] [R-2 elf-scan@0xfaf99fa00010] ok rawlen=9681 bodylen=9457
+16:51:38Z [#70] [R-2 elf-scan@0xfaf9a8000010] CRASH/no-response
+16:51:38Z [#71] [R-2 elf-scan@0xfaf99f800010] ok rawlen=9681 bodylen=9457
+16:51:38Z [#72] [R-2 elf-scan@0xfaf9a8200010] CRASH/no-response
+16:51:38Z [#73] [R-2 elf-scan@0xfaf99f600010] ok rawlen=9681 bodylen=9457
+16:51:39Z [#74] [R-2 elf-scan@0xfaf9a8400010] CRASH/no-response
+16:51:39Z [#75] [R-2 elf-scan@0xfaf99f400010] ok rawlen=9681 bodylen=9457
+16:51:39Z [#76] [R-2 elf-scan@0xfaf9a8600010] CRASH/no-response
+16:51:39Z [#77] [R-2 elf-scan@0xfaf99f200010] ok rawlen=9681 bodylen=9457
+16:51:39Z [#78] [R-2 elf-scan@0xfaf9a8800010] CRASH/no-response
+16:51:40Z [#79] [R-2 elf-scan@0xfaf99f000010] ok rawlen=9681 bodylen=9457
+16:51:40Z [#80] [R-2 elf-scan@0xfaf9a8a00010] CRASH/no-response
+16:51:40Z [#81] [R-2 elf-scan@0xfaf99ee00010] ok rawlen=9681 bodylen=9457
+16:51:40Z [#82] [R-2 elf-scan@0xfaf9a8c00010] CRASH/no-response
+16:51:40Z [#83] [R-2 elf-scan@0xfaf99ec00010] ok rawlen=9681 bodylen=9457
+16:51:41Z [#84] [R-2 elf-scan@0xfaf9a8e00010] CRASH/no-response
+16:51:41Z [#85] [R-2 elf-scan@0xfaf99ea00010] ok rawlen=9681 bodylen=9457
+16:51:41Z [#86] [R-2 elf-scan@0xfaf9a9000010] CRASH/no-response
+16:51:41Z [#87] [R-2 elf-scan@0xfaf99e800010] ok rawlen=9681 bodylen=9457
+16:51:41Z [#88] [R-2 elf-scan@0xfaf9a9200010] CRASH/no-response
+16:51:42Z [#89] [R-2 elf-scan@0xfaf99e600010] ok rawlen=9681 bodylen=9457
+16:51:42Z [#90] [R-2 elf-scan@0xfaf9a9400010] CRASH/no-response
+16:51:42Z [#91] [R-2 elf-scan@0xfaf99e400010] ok rawlen=9681 bodylen=9457
+16:51:42Z [#92] [R-2 elf-scan@0xfaf9a9600010] CRASH/no-response
+16:51:42Z [#93] [R-2 elf-scan@0xfaf99e200010] ok rawlen=9681 bodylen=9457
+16:51:43Z [#94] [R-2 elf-scan@0xfaf9a9800010] CRASH/no-response
+16:51:43Z [#95] [R-2 elf-scan@0xfaf99e000010] ok rawlen=9681 bodylen=9457
+16:51:43Z [#96] [R-2 elf-scan@0xfaf9a9a00010] CRASH/no-response
+16:51:43Z [#97] [R-2 elf-scan@0xfaf99de00010] ok rawlen=9681 bodylen=9457
+16:51:43Z [#98] [R-2 elf-scan@0xfaf9a9c00010] CRASH/no-response
+16:51:44Z [#99] [R-2 elf-scan@0xfaf99dc00010] ok rawlen=9681 bodylen=9457
+16:51:44Z [#100] [R-2 elf-scan@0xfaf9a9e00010] CRASH/no-response
+16:51:44Z [#101] [R-2 elf-scan@0xfaf99da00010] ok rawlen=9681 bodylen=9457
+16:51:44Z [#102] [R-2 elf-scan@0xfaf9aa000010] CRASH/no-response
+16:51:44Z [#103] [R-2 elf-scan@0xfaf99d800010] ok rawlen=9681 bodylen=9457
+16:51:45Z [#104] [R-2 elf-scan@0xfaf9aa200010] CRASH/no-response
+16:51:45Z [#105] [R-2 elf-scan@0xfaf99d600010] ok rawlen=9681 bodylen=9457
+16:51:45Z [#106] [R-2 elf-scan@0xfaf9aa400010] CRASH/no-response
+16:51:45Z [#107] [R-2 elf-scan@0xfaf99d400010] ok rawlen=9681 bodylen=9457
+16:51:45Z [#108] [R-2 elf-scan@0xfaf9aa600010] CRASH/no-response
+16:51:46Z [#109] [R-2 elf-scan@0xfaf99d200010] ok rawlen=9681 bodylen=9457
+16:51:46Z [#110] [R-2 elf-scan@0xfaf9aa800010] CRASH/no-response
+16:51:46Z [#111] [R-2 elf-scan@0xfaf99d000010] ok rawlen=9681 bodylen=9457
+16:51:46Z [#112] [R-2 elf-scan@0xfaf9aaa00010] CRASH/no-response
+16:51:46Z [#113] [R-2 elf-scan@0xfaf99ce00010] ok rawlen=9681 bodylen=9457
+16:51:47Z [#114] [R-2 elf-scan@0xfaf9aac00010] CRASH/no-response
+16:51:47Z [#115] [R-2 elf-scan@0xfaf99cc00010] ok rawlen=9681 bodylen=9457
+16:51:47Z [#116] [R-2 elf-scan@0xfaf9aae00010] CRASH/no-response
+16:51:47Z [#117] [R-2 elf-scan@0xfaf99ca00010] ok rawlen=9681 bodylen=9457
+16:51:47Z [#118] [R-2 elf-scan@0xfaf9ab000010] CRASH/no-response
+16:51:48Z [#119] [R-2 elf-scan@0xfaf99c800010] ok rawlen=9681 bodylen=9457
+16:51:48Z [#120] [R-2 elf-scan@0xfaf9ab200010] CRASH/no-response
+16:51:48Z [#121] [R-2 elf-scan@0xfaf99c600010] ok rawlen=9681 bodylen=9457
+16:51:48Z [#122] [R-2 elf-scan@0xfaf9ab400010] CRASH/no-response
+16:51:48Z [#123] [R-2 elf-scan@0xfaf99c400010] ok rawlen=9681 bodylen=9457
+16:51:49Z [#124] [R-2 elf-scan@0xfaf9ab600010] CRASH/no-response
+16:51:49Z [#125] [R-2 elf-scan@0xfaf99c200010] ok rawlen=9681 bodylen=9457
+16:51:49Z [#126] [R-2 elf-scan@0xfaf9ab800010] CRASH/no-response
+16:51:49Z [#127] [R-2 elf-scan@0xfaf99c000010] ok rawlen=9681 bodylen=9457
+16:51:49Z [#128] [R-2 elf-scan@0xfaf9aba00010] CRASH/no-response
+16:51:50Z [#129] [R-2 elf-scan@0xfaf99be00010] ok rawlen=9681 bodylen=9457
+16:51:50Z [#130] [R-2 elf-scan@0xfaf9abc00010] CRASH/no-response
+16:51:50Z [#131] [R-2 elf-scan@0xfaf99bc00010] ok rawlen=9681 bodylen=9457
+16:51:50Z [#132] [R-2 elf-scan@0xfaf9abe00010] CRASH/no-response
+16:51:50Z [#133] [R-2 elf-scan@0xfaf99ba00010] ok rawlen=9681 bodylen=9457
+16:51:50Z [#134] [R-2 elf-scan@0xfaf9ac000010] CRASH/no-response
+16:51:50Z [#135] [R-2 elf-scan@0xfaf99b800010] ok rawlen=9681 bodylen=9457
+16:51:51Z [#136] [R-2 elf-scan@0xfaf9ac200010] CRASH/no-response
+16:51:51Z [#137] [R-2 elf-scan@0xfaf99b600010] ok rawlen=9681 bodylen=9457
+16:51:51Z [#138] [R-2 elf-scan@0xfaf9ac400010] CRASH/no-response
+16:51:52Z [#139] [R-2 elf-scan@0xfaf99b400010] ok rawlen=9681 bodylen=9457
+16:51:52Z [#140] [R-2 elf-scan@0xfaf9ac600010] CRASH/no-response
+16:51:52Z [#141] [R-2 elf-scan@0xfaf99b200010] ok rawlen=9681 bodylen=9457
+16:51:52Z [#142] [R-2 elf-scan@0xfaf9ac800010] CRASH/no-response
+16:51:52Z [#143] [R-2 elf-scan@0xfaf99b000010] ok rawlen=9681 bodylen=9457
+16:51:52Z [#144] [R-2 elf-scan@0xfaf9aca00010] CRASH/no-response
+16:51:52Z [#145] [R-2 elf-scan@0xfaf99ae00010] ok rawlen=9681 bodylen=9457
+16:51:52Z [#146] [R-2 elf-scan@0xfaf9acc00010] CRASH/no-response
+16:51:52Z [#147] [R-2 elf-scan@0xfaf99ac00010] ok rawlen=9681 bodylen=9457
+16:51:53Z [#148] [R-2 elf-scan@0xfaf9ace00010] CRASH/no-response
+16:51:53Z [#149] [R-2 elf-scan@0xfaf99aa00010] ok rawlen=9681 bodylen=9457
+16:51:53Z [#150] [R-2 elf-scan@0xfaf9ad000010] CRASH/no-response
+16:51:53Z [#151] [R-2 elf-scan@0xfaf99a800010] ok rawlen=9681 bodylen=9457
+16:51:54Z [#152] [R-2 elf-scan@0xfaf9ad200010] CRASH/no-response
+16:51:54Z [#153] [R-2 elf-scan@0xfaf99a600010] ok rawlen=9681 bodylen=9457
+16:51:54Z [#154] [R-2 elf-scan@0xfaf9ad400010] CRASH/no-response
+16:51:54Z [#155] [R-2 elf-scan@0xfaf99a400010] ok rawlen=9681 bodylen=9457
+16:51:54Z [#156] [R-2 elf-scan@0xfaf9ad600010] CRASH/no-response
+16:51:54Z [#157] [R-2 elf-scan@0xfaf99a200010] ok rawlen=9681 bodylen=9457
+16:51:54Z [#158] [R-2 elf-scan@0xfaf9ad800010] CRASH/no-response
+16:51:55Z [#159] [R-2 elf-scan@0xfaf99a000010] ok rawlen=9681 bodylen=9457
+16:51:55Z [#160] [R-2 elf-scan@0xfaf9ada00010] CRASH/no-response
+16:51:55Z [#161] [R-2 elf-scan@0xfaf999e00010] ok rawlen=9681 bodylen=9457
+16:51:56Z [#162] [R-2 elf-scan@0xfaf9adc00010] CRASH/no-response
+16:51:56Z [#163] [R-2 elf-scan@0xfaf999c00010] ok rawlen=9681 bodylen=9457
+16:51:56Z [#164] [R-2 elf-scan@0xfaf9ade00010] CRASH/no-response
+16:51:56Z [#165] [R-2 elf-scan@0xfaf999a00010] ok rawlen=9681 bodylen=9457
+16:51:56Z [#166] [R-2 elf-scan@0xfaf9ae000010] CRASH/no-response
+16:51:56Z [#167] [R-2 elf-scan@0xfaf999800010] ok rawlen=9681 bodylen=9457
+16:51:57Z [#168] [R-2 elf-scan@0xfaf9ae200010] CRASH/no-response
+16:51:57Z [#169] [R-2 elf-scan@0xfaf999600010] ok rawlen=9681 bodylen=9457
+16:51:57Z [#170] [R-2 elf-scan@0xfaf9ae400010] CRASH/no-response
+16:51:57Z [#171] [R-2 elf-scan@0xfaf999400010] ok rawlen=9681 bodylen=9457
+16:51:58Z [#172] [R-2 elf-scan@0xfaf9ae600010] CRASH/no-response
+16:51:58Z [#173] [R-2 elf-scan@0xfaf999200010] ok rawlen=9681 bodylen=9457
+16:51:58Z [#174] [R-2 elf-scan@0xfaf9ae800010] CRASH/no-response
+16:51:58Z [#175] [R-2 elf-scan@0xfaf999000010] ok rawlen=9681 bodylen=9457
+16:51:58Z [#176] [R-2 elf-scan@0xfaf9aea00010] CRASH/no-response
+16:51:58Z [#177] [R-2 elf-scan@0xfaf998e00010] ok rawlen=9681 bodylen=9457
+16:51:59Z [#178] [R-2 elf-scan@0xfaf9aec00010] CRASH/no-response
+16:51:59Z [#179] [R-2 elf-scan@0xfaf998c00010] ok rawlen=9681 bodylen=9457
+16:51:59Z [#180] [R-2 elf-scan@0xfaf9aee00010] CRASH/no-response
+16:51:59Z [#181] [R-2 elf-scan@0xfaf998a00010] ok rawlen=9681 bodylen=9457
+16:52:00Z [#182] [R-2 elf-scan@0xfaf9af000010] CRASH/no-response
+16:52:00Z [#183] [R-2 elf-scan@0xfaf998800010] ok rawlen=9681 bodylen=9457
+16:52:00Z [#184] [R-2 elf-scan@0xfaf9af200010] CRASH/no-response
+16:52:00Z [#185] [R-2 elf-scan@0xfaf998600010] ok rawlen=192 bodylen=0
+16:52:00Z [#186] [R-2 elf-scan@0xfaf9af400010] CRASH/no-response
+16:52:01Z [#187] [R-2 elf-scan@0xfaf998400010] CRASH/no-response
+16:52:01Z [#188] [R-2 elf-scan@0xfaf9af600010] CRASH/no-response
+16:52:02Z [#189] [R-2 elf-scan@0xfaf998200010] CRASH/no-response
+16:52:02Z [#190] [R-2 elf-scan@0xfaf9af800010] CRASH/no-response
+16:52:02Z [#191] [R-2 elf-scan@0xfaf998000010] CRASH/no-response
+16:52:03Z [#192] [R-2 elf-scan@0xfaf9afa00010] CRASH/no-response
+16:52:03Z [#193] [R-2 elf-scan@0xfaf997e00010] CRASH/no-response
+16:52:04Z [#194] [R-2 elf-scan@0xfaf9afc00010] CRASH/no-response
+16:52:04Z [#195] [R-2 elf-scan@0xfaf997c00010] CRASH/no-response
+16:52:04Z [#196] [R-2 elf-scan@0xfaf9afe00010] CRASH/no-response
+16:52:04Z [#197] [R-2 elf-scan@0xfaf997a00010] CRASH/no-response
+16:52:05Z [#198] [R-2 elf-scan@0xfaf9b0000010] CRASH/no-response
+16:52:06Z [#199] [R-2 elf-scan@0xfaf997800010] CRASH/no-response
+16:52:06Z [#200] [R-2 elf-scan@0xfaf9b0200010] CRASH/no-response
+16:52:06Z [#201] [R-2 elf-scan@0xfaf997600010] CRASH/no-response
+16:52:07Z [#202] [R-2 elf-scan@0xfaf9b0400010] CRASH/no-response
+16:52:07Z [#203] [R-2 elf-scan@0xfaf997400010] CRASH/no-response
+16:52:08Z [#204] [R-2 elf-scan@0xfaf9b0600010] CRASH/no-response
+16:52:08Z [#205] [R-2 elf-scan@0xfaf997200010] CRASH/no-response
+16:52:08Z [#206] [R-2 elf-scan@0xfaf9b0800010] CRASH/no-response
+16:52:09Z [#207] [R-2 elf-scan@0xfaf997000010] CRASH/no-response
+16:52:09Z [#208] [R-2 elf-scan@0xfaf9b0a00010] CRASH/no-response
+16:52:10Z [#209] [R-2 elf-scan@0xfaf996e00010] CRASH/no-response
+16:52:10Z [#210] [R-2 elf-scan@0xfaf9b0c00010] CRASH/no-response
+16:52:10Z [#211] [R-2 elf-scan@0xfaf996c00010] CRASH/no-response
+16:52:10Z [#212] [R-2 elf-scan@0xfaf9b0e00010] CRASH/no-response
+16:52:11Z [#213] [R-2 elf-scan@0xfaf996a00010] CRASH/no-response
