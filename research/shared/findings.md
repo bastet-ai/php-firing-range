@@ -227,3 +227,33 @@ NEXT (post-drop, patch shows exact free site): reproduce the destroy path by
 running with min_freq=1 + 1.4s stall in the trace and check whether the 4th
 update frees the data array; if yes, groom targeting = distance calc from
 leaked heap base to the freed Bucket array.
+
+## Trace correction (13:2xZ): stale frees DO occur - timing differs from lsphp
+CORRECTION to "tree destroy does not materialize" above (that read used the
+wrong window between markers). Raw trace of OUR build shows the 4th UPDATE
+(file2 FILE_START) frees exactly:
+  the data-array elements cached at update 3: 0x...4042d0/404320/404348/
+  404370/404398/4043c0 (40B) + 458280/4582a0 (32B)
+  PLUS two 320-byte groom blobs 0x...4896c0/489800 (t[] strings!)
+So the stale-pointer precondition IS real on our build - but the FREE fires
+AT file2 FILE_START, i.e. AFTER the groom already ran (groom = EVT1 fields,
+which never trigger update). Between the free and the stale FILE_DATA write
+there are ZERO attacker allocations - so their reclaim order cannot work
+here: on lsphp the free fires at a mid-upload FILE_DATA update (time-gated
+min_freq path) with the groom following it; on our build all pre-file2
+updates pass the byte-gate with no free, and the first freeing update is
+file2 START itself.
+EXPLOIT FOLD: make an update fire BETWEEN stall and groom. Options:
+ (a) extra small file part after the stall (its START/DATA/END events force
+     the update while tree still small-freeable), groom after it;
+ (b) make update 2 actually free: session_status reset so
+     php_session_initialize destroys the old session-vars HT earlier
+     (their lsphp seems to hit this; ours keeps status active);
+ (c) post-drop: the php.net diff will show the exact free site + the
+     settings matrix - derive reclaim offsets from the patch itself.
+Hardcoded set for php83 prod still: call = bias(live) + 0x45bd4c; freed
+targets now identified as 32/40-byte data-array elements (Bucket 32B),
+which their FCI forge does not target - OUR forge layout must place FCI at
+a 40-byte-class string instead (blob len ~15-16 -> 40B bin). That is a
+concrete, build-specific redesign, and it is exactly the engineering the
+race will compare.
