@@ -1,0 +1,38 @@
+# Consolidated findings — PHP session upload progress
+
+[DAYBREAK] 2026-10-20T20:40:31-07:00 — ranked by exploit plausibility × default coverage. No `[GLM]` entries were present in `shared/` at consolidation time; this is therefore a DAYBREAK-only interim consolidation and should be extended append-only when peer results arrive.
+
+## 1. Cached pointers into mutable nested HashTables (high interest, broad coverage; hypothesis)
+
+The progress object caches raw `zval *` bucket pointers for overall and current-file byte counts (`src/php-src-83/ext/session/php_session.h:134-138`), obtains them once (`src/php-src-83/ext/session/session.c:3183,3207-3209`), then writes through them on later FILE_DATA/FILE_END events (`src/php-src-83/ext/session/session.c:3222-3223,3242`). Normal session flush retains a progress-owned reference, so no UAF was demonstrated (`src/php-src-83/ext/session/session.c:3073-3083`), but mutation/reentrancy or unexpected separation could stale a cached bucket. The logic is identical in 7.4 (`src/php-src-74/ext/session/php_session.h:137-141`; `src/php-src-74/ext/session/session.c:3253-3315`). Preconditions are default-enabled progress plus marker, attacker-supplied SID, and a file; extra serializer/save-handler behavior may be required. Memory-safety consequence if stale: attacker-timed writes of integer zvals into freed/reused request-heap buckets. Detection: crashes/ASan reports at the two writes during multipart requests; hardening: `session.upload_progress.enabled=Off`, or vendor-side re-lookup before each write.
+
+## 2. Event handlers trust state initialized by FILE_START (medium-high interest, broad parser exposure; hypothesis)
+
+FILE_DATA and FILE_END test only SID+key before dereferencing `current_file_bytes_processed`, `post_bytes_processed`, and `current_file` (`src/php-src-83/ext/session/session.c:3215-3244`). The stock parser nominally emits successful FILE_START first (`src/php-src-83/main/rfc1867.c:957-969,1005-1018,1076-1085`), so no current violating path was proven. Historical malformed-header regression coverage and the guarded END path show this subsystem has previously mishandled partial event state (`src/php-src-83/ext/session/tests/bug79221.phpt:23-47`; `src/php-src-83/ext/session/session.c:3253-3259`). If a parser/error/callback path violates ordering, the plausible result is null/stale-pointer write and crash, potentially stronger heap corruption depending on pointer state. Detection: malformed multipart followed by worker crashes; hardening: disable progress and reject malformed Content-Disposition early.
+
+## 3. Default unauthenticated session-write surface (high confidence, very broad coverage; primitive, not memory corruption)
+
+Progress is enabled by default in both branches (`src/php-src-83/ext/session/session.c:849-859`; `src/php-src-74/ext/session/session.c:818-828`). Every accepted multipart POST invokes START (`src/php-src-83/main/rfc1867.c:759-766`), and an attacker can provide a Cookie SID under default strict_mode=0 or directly supply multipart `PHPSESSID`, whose direct branch ignores `use_only_cookies` (`src/php-src-83/ext/session/session.c:837-839,3022-3033,3139-3149`). A later file causes repeated session read/write cycles (`src/php-src-83/ext/session/session.c:3163-3212`). Default cleanup deletes the final key, but intermediate state is observable to concurrent same-SID requests (`src/php-src-83/ext/session/session.c:3052-3095,3250-3253`). This is the coverage amplifier for findings 1–2 and a race/session-poisoning surface. Detect requests containing the default marker plus any PHP session identifier, especially to endpoints not expected to process uploads; harden by disabling progress globally and enabling strict mode.
+
+## 4. Binary SID validation/length mismatch in 8.3 files handler (medium confidence, 8.3-specific; integrity/aliasing)
+
+Upload initialization copies multipart SID with explicit length and bypasses the normal session-start character gate (`src/php-src-83/ext/session/session.c:3139-3141,3185-3186` versus `src/php-src-83/ext/session/session.c:1625-1627`). The files handler validates through a C string but sizes/copies the path with full Zend-string length (`src/php-src-83/ext/session/mod_files.c:107-130,168-175`). Embedded NUL therefore creates disagreeing identities: validation/OS path see a prefix while Zend bookkeeping sees the full string. PHP 7.4 uses C-string length consistently (`src/php-src-74/ext/session/mod_files.c:109-136,156-178`). No out-of-bounds access was found; likely impact is session aliasing/collision or unusual handler state. Detect/reject NUL/control bytes in all SID sources; vendor fix should validate explicit length.
+
+## 5. Unbounded client metadata enters persistent session serialization (medium confidence, broad coverage; chaining/DoS)
+
+The marker value becomes the session key suffix byte-for-byte (`src/php-src-83/ext/session/session.c:3142-3146`), and file field name/full client filename are copied into the progress value (`src/php-src-83/ext/session/session.c:3195-3200`). The multipart body reader passes explicit field lengths (`src/php-src-83/main/rfc1867.c:839-870`), while field/filename copies use NUL-terminated APIs. Serialization is length-aware, so direct corruption was not found, but very large values increase allocation/session-write pressure and binary strings can expose downstream C-string assumptions. 8.3 limits total body parts (`src/php-src-83/main/rfc1867.c:666-692,785-788`); 7.4 lacks that limiter around `src/php-src-74/main/rfc1867.c:685-790`. Cap multipart field/header lengths and log lengths/hashes rather than raw values.
+
+## 6. Same-key `cancel_upload` race (high confidence, narrower impact; DoS)
+
+Before overwriting the progress entry, PHP reads an existing same-key session value and treats literal boolean `cancel_upload` as authoritative (`src/php-src-83/ext/session/session.c:3036-3049,3073-3082`). A concurrent request able to write the same SID/key can force callback failure, which RFC1867 converts to upload error X (`src/php-src-83/main/rfc1867.c:1015-1017,1082-1084`). This is cancellation/availability impact, not RCE.
+
+## Branch narrowing and chain assessment
+
+The core callback is behaviorally identical across 7.4 and 8.3 (`src/php-src-74/ext/session/session.c:3072-3350`; `src/php-src-83/ext/session/session.c:3001-3279`), so a vulnerability affecting both likely resides in shared ownership/event-state assumptions. 8.3 adds multipart-parts and boundary limits (`src/php-src-83/main/rfc1867.c:684-737,785-788`) and stronger SAPI teardown nulling (`src/php-src-83/main/SAPI.c:528-552`; `src/php-src-83/main/rfc1867.c:168-177`), reducing some malformed-input/heap-shaping possibilities without changing the minimal trigger.
+
+No direct Phar invocation or object deserialization chain was found in this path. The session callback is the only in-tree assignment to `php_rfc1867_callback` (`src/php-src-83/ext/session/session.c:2902`; invocation sites `src/php-src-83/main/rfc1867.c:759-1263`). Any RCE through Phar or another extension would require an external consumer of the briefly persisted fixed-shape session record; retain as a question, not a finding.
+
+## Immediate defensive guidance
+
+Set `session.upload_progress.enabled=Off` wherever progress is unused; this exits before progress-state allocation/use (`src/php-src-83/ext/session/session.c:3103-3108`). Also enable `session.use_strict_mode=1`, reject unexpected multipart requests/marker fields at the edge, allowlist SID bytes and length, cap body/header/field sizes, and alert on worker crashes during multipart parsing. These controls cover the default pre-auth surface while awaiting the vendor patch.
+
