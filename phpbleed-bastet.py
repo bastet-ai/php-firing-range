@@ -538,7 +538,11 @@ def fire_cmd(t: Target, ce_stdclass, system_addr, spray_addr, cmd14):
 
 
 def mode_id(t: Target, args):
-    """Run one <=14B command via forged get_properties_for -> system()."""
+    """Run one <=14B command. With --ce/--system/--spray: single-shot legacy
+    mode. WITHOUT them: full self-deriving chain (same as rce mode) - no
+    hardcoded symbols required."""
+    if not (args.ce and args.system and args.spray):
+        return mode_rce(t, args)
     cmd = args.cmd.encode("latin-1")
     if len(cmd) > 14:
         log("x", f"command {cmd!r} exceeds 14 bytes (vendor single-shot)")
