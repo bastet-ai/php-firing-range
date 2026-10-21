@@ -113,3 +113,13 @@ body)) returns nothing to reflect. Fix: deployed app ALSO at
 /var/www/html/remote_app.php (kept index.php for our own tools). Lesson:
 control experiments must verify the transport path end-to-end FIRST
 (one curl, expected reflection) before believing any phase failure.
+
+## 11:53Z CANARY CAPTURED (shell mode, RC=0, exit verified)
+Target: :8088 php:8.5.11-apache (version-gated pre-fire).
+FLAG{phpbleed:44188d9a1bb48c29ab767d0eefedfdd5}
+Chain: R-1 leak -> R-2 ELF -> R-3 gnu_hash -> R-4 libc/system ->
+R-5 stdclass ce -> R-6 fresh-leak spray slot (5 @ page117) ->
+R-7 15x system() echo-staging webshell r.php -> readfile('/CANARY').
+3976 requests total. phpbleed-bastet.py = reliable end-to-end PoC
+(own R-1 + vendored R2-R6 + orchestration fixes: fresh R-6 leak,
+deep SRUN scan, widened R-5 sweep, per-container lane lock, image pin).

