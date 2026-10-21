@@ -122,3 +122,14 @@ defensive verification only, container-confined).
   launching wrapper -> fleet.sh keeper with wait; (c) dict parse: this clang
   libFuzzer rejects C-style \r\n escapes -> use \xNN only. Total smoke+fleet
   lesson set for the skills file.
+- 10:06Z FLEET COMPLETE (negative result, honest): 4 workers x 14401s,
+  1,892,571 total execs, peak cov 11,462 edges, ZERO crashes (no ASan/UBSan
+  memory findings, no timeouts). Interpretation: the suspected UAF is
+  heap-shaping-sensitive — freeing bucket + reclaiming it with attacker
+  layout needs grooming libFuzzer's corpus mutation didn't discover blind.
+  Not evidence of absence (php-up-2026 claims working chains; our audit says
+  the primitive exists) but confirms it is not fuzz-shallow.
+  Options if we continue fuzzing post-drop: (a) AFL++ with custom allocator
+  grooming/cmplog, (b) targeted differential once patch reveals exact free
+  site so harness can instrument it, (c) instrument the two cached-pointer
+  writes with ASan poison hooks (fake-wild check) instead of blind search.
