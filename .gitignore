@@ -1,0 +1,4 @@
+results/*.log
+results/pi-sessions/
+results/canaries/
+build/

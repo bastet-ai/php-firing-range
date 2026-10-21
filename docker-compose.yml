@@ -1,0 +1,41 @@
+name: php-firing-range
+
+services:
+  shakedown:
+    build: ./range/shakedown
+    ports:
+      - "127.0.0.1:8181:80"
+    restart: unless-stopped
+
+  php83:
+    image: php:8.3-apache
+    ports:
+      - "127.0.0.1:8083:80"
+    volumes:
+      - ./range/surface:/var/www/html:ro
+    restart: unless-stopped
+
+  php82:
+    image: php:8.2-apache
+    ports:
+      - "127.0.0.1:8082:80"
+    volumes:
+      - ./range/surface:/var/www/html:ro
+    restart: unless-stopped
+
+  php81:
+    image: php:8.1-apache
+    ports:
+      - "127.0.0.1:8091:80"
+    volumes:
+      - ./range/surface:/var/www/html:ro
+    restart: unless-stopped
+
+  php56:
+    image: php:5.6-apache
+    ports:
+      - "127.0.0.1:8056:80"
+    volumes:
+      - ./range/surface:/var/www/html:ro
+    restart: unless-stopped
+
