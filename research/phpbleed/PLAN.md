@@ -123,3 +123,9 @@ R-7 15x system() echo-staging webshell r.php -> readfile('/CANARY').
 3976 requests total. phpbleed-bastet.py = reliable end-to-end PoC
 (own R-1 + vendored R2-R6 + orchestration fixes: fresh R-6 leak,
 deep SRUN scan, widened R-5 sweep, per-container lane lock, image pin).
+
+## 13:5xZ BLEED CONFIRMED: dump v2 self-anchored
+1,032,192 bytes in 14 requests from :8088 (16KB->512KB escalating reads;
+adaptive doubling when read hits requested L). Content = live worker heap:
+adjacent zvals/Buckets with embedded heap pointers (0xe113e8...), i.e.
+session data, internal tables - pre-auth, GET-body echo channel.
