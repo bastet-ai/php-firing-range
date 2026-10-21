@@ -107,3 +107,8 @@ defensive verification only, container-confined).
   is yours unless proven otherwise.)
 - v2 harness now the canonical target; v1 kept for reference. Rebuild
   php-fuzz-multipart from fuzzer-multipart2.c next, then fleet.
+- 05:48Z FLEET LIVE: 8 independent libFuzzer workers (ASan+UBSan recover,
+  leaks off) on v2 harness, 4h budget each (-max_total_time=14400), islands
+  fz1..fz8 seeded from corpus2 (82 seeds incl. arm/trigger pairs), shared
+  dict, crash artifacts -> fuzz-results/. Fleet launched 05:47Z, expires
+  ~09:47Z; drop at 14:00Z. Monitor cadence: coverage delta + crash count.

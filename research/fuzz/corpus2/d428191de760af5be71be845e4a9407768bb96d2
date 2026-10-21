@@ -1,0 +1,9 @@
+--b
+Contknt-DiJpogsition: form-data; name="PHP_SESSION_UPLOAD_PROGRESS"
+
+k
+--b
+Content-Disposition: form-data; filename="x"
+
+DATA
+--PHP_
