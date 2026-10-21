@@ -112,3 +112,4 @@ defensive verification only, container-confined).
   fz1..fz8 seeded from corpus2 (82 seeds incl. arm/trigger pairs), shared
   dict, crash artifacts -> fuzz-results/. Fleet launched 05:47Z, expires
   ~09:47Z; drop at 14:00Z. Monitor cadence: coverage delta + crash count.
+- 05:52Z note: fuzz-results/crash-7a5f... predates fleet (smoke4 harness strlen bug artifact); moved to triaged-harness-bugs/. Fleet crash baseline reset to 0.
