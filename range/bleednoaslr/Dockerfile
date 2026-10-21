@@ -12,4 +12,6 @@ RUN echo '\nMaxRequestWorkers 256\nServerLimit 256\nStartServers 16\n' >> /etc/a
 # replace entrypoint's apache2ctl exec with setarch-wrapped apache2
 RUN sed -i 's|exec apache2|exec setarch $(uname -m) --addr-no-randomize apache2|' /etc/apache2/entrypoint.sh 2>/dev/null; \
     grep -q addr-no-randomize /etc/apache2/entrypoint.sh || sed -i '1a exec setarch $(uname -m) --addr-no-randomize "$@"' /etc/apache2/docker-entrypoint.sh 2>/dev/null; true
-CMD ["setarch", "aarch64", "--addr-no-randomize", "apache2", "-DFOREGROUND"]
+# apache2-foreground (php image helper) sources envvars then execs
+# apache2 -- wrapping IT preserves the personality through the exec.
+CMD ["setarch", "aarch64", "--addr-no-randomize", "apache2-foreground"]
