@@ -100,3 +100,9 @@ services:
     restart: unless-stopped
     command: ["sh","-c","php-fpm & nginx -g 'daemon off;'"]
 
+  t4b:
+    build: ./range/t4b
+    ports:
+      - "127.0.0.1:8096:80"
+    restart: unless-stopped
+

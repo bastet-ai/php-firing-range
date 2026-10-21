@@ -36,6 +36,24 @@ for 8.5.5 x86_64 (DELTA_MAX=0x600 too small for our aarch64/8.3 EG layout).
    missing skill: per-build/EG offset derivation - candidate for a shared
    derive-offsets tool (extend scripts/derive_offsets.py + phase-3 scan fix).
 
+## T4a/T4b results (17:2xZ, live probes on range)
+T4a GADGET CENSUS (wordpress:6-php8.2 arm64, php 8.2.31): ZERO Serializable
+implementations in WP core recursive or bundled lib dirs. The vendor's
+admitted weak spot CONFIRMED at scale: phpbleed-remote finds no gadget in
+stock WordPress core. Plugin-ecosystem scan = next step for a real claim.
+T4b SPL QUESTION (the interesting one):
+  - stock INTERNAL SPL (ArrayObject, SplObjectStorage) C: payloads REJECTED
+    (internal classes don't route through zend_user_unserialize).
+  - BUT a trivial USER-defined class extending ArrayObject defining
+    unserialize() => C:5:"Probe":3:{abc} FIRES user unserialize with NO
+    Serializable declaration on the child.
+  => gadget bar LOWER than the writeup suggests: any autoloadable userland
+     class with an unserialize() method (even via SPL inheritance) is a
+     gateway; composer autoload / phar:// expand it further.
+  - range/t4b added (:8096, session_start + Probe only, NO Serializable app)
+    -> can SESSION DECODE (pre-auth, zero-gadget) carry the C: UAF? The
+    impact mile.
+
 ## Status 16:3xZ
 - Target LIVE :8088 (php:8.5-apache prefork, vendor gadget app verbatim,
   /CANARY FLAG{phpbleed:...}, loopback-only). Round-trip verified.
