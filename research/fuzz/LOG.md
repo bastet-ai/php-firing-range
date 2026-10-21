@@ -55,3 +55,10 @@ Every step committed here as it happens.
   Removed stubs, relaunching make so the generator rules recreate them.
   Reminder: late proc notifications are from SUPERSEDED build launches —
   always re-check live state (pgrep + ls binary) instead of trusting them.
+- 05:25Z build fail #3 (same .lo message): root cause identified — I deleted
+  main/internal_functions*.lo while a make was mid-run; libtool in the next
+  make raced the regen rule (link before recompile). Manual `make
+  main/internal_functions_cli.lo` regenerated it fine. Relaunch link.
+  NOTE: many "build completed rc=2" notifications arriving are GHOSTS of
+  superseded attempts (Daybreak-style late death). Trust only: live pgrep +
+  binary existence + log mtime vs now.
