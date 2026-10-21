@@ -36,3 +36,69 @@ No direct Phar invocation or object deserialization chain was found in this path
 
 Set `session.upload_progress.enabled=Off` wherever progress is unused; this exits before progress-state allocation/use (`src/php-src-83/ext/session/session.c:3103-3108`). Also enable `session.use_strict_mode=1`, reject unexpected multipart requests/marker fields at the edge, allowlist SID bytes and length, cap body/header/field sizes, and alert on worker crashes during multipart parsing. These controls cover the default pre-auth surface while awaiting the vendor patch.
 
+---
+
+# Two-lane consolidation (Bastet merge, 2026-10-21T04:25Z)
+
+GLM's results arrived post-consolidation via transcript salvage — see
+`notes-glm-recovered.md` (citations independently re-verified against src).
+Merged ranking below; provenance tags [D]=Daybreak, [G]=GLM, [D∩G]=independent agreement.
+
+## Convergence (strongest signal in the whole exercise)
+- **[D∩G] Unguarded FORMDATA SID branch** — `session.c:3139-3142`: multipart
+  form field named `PHPSESSID` sets `progress->sid` from raw client bytes with
+  no `use_only_cookies` gate and no `strpbrk("\r\n\t <>'\"\\")` filter (that
+  filter exists only in `php_session_start()` at `1625-1629`, [G]); sid validity
+  is only enforced under `use_strict_mode` (default off, [G]). Found
+  independently via different reading paths. This is finding #3's amplifier
+  core and #4's entry point.
+- **[D∩G] Pre-basename raw client filename persists into progress session
+  state** (session.c:3195-3200 [D]; rfc1867.c:1132 basename happens AFTER both
+  FILE events [G]) — retained phar-family-shaped consumer input, though neither
+  lane found an in-tree consumer chain (keep as question, [D] framing stands).
+- **[D∩G] Shared-code suspicion** — identical callback 7.4↔8.3 ⇒ if the
+  embargoed bug "affects PHP 5-8" (watchTowr claim), it lives in this shared
+  state/event/ownership logic. Both branch-diffs independently agree.
+
+## Merged ranking (plausibility × default coverage)
+1. [D1 + D3 + G-primary] Cached zval* bucket writes (#1) sitting inside the
+   default-enabled, attacker-SID-choosable, mid-request lifecycle surface
+   (#3/[G]lead1). The SID findings make #1's preconditions trivially reachable;
+   GLM's stale-globals ordering (`php_hash_environment()` before module RINIT;
+   `ZVAL_UNDEF` without dtor in `php_rinit_session_globals`, mid-request via
+   FILE_START) [G] is a concrete mechanism candidate for how #1's "unexpected
+   separation" could occur, especially NTS.
+2. [D4 + G] Binary/NUL SID aliasing, 8.3-specific: explicit-length copy vs
+   C-string validation in mod_files (`mod_files.c:107-130,168-175`) — GLM's raw
+   unsanitized sid bytes are what let NUL/odd bytes reach that handler at all.
+   Integrity/aliasing rather than OOB, but this is exactly the shape of a
+   "hidden invariant break" a CVSS 9.2 chain could use.
+3. [D2] Event-state trust with historical precedent (CVE-2020-7062, GH-16998,
+   7.4 next_line NULL `buf_begin` UB [G]) — ordering violations produce
+   null/stale writes.
+4. [G] php serializer (compiled default) framing under client-influenced
+   keys + 7.4/8.3 decode-tail divergence — poisoning/aliasing surface, lower
+   memory-safety plausibility.
+5. [D5] Oversized metadata into persistent serialization (7.4 lacks 8.3's
+   parts limiter) — DoS/pressure.
+6. [D6] cancel_upload race — DoS only.
+
+## Open questions for patch-diff confirmation at release (07:00 PDT)
+- Does the fix add a sid sanitization/validation call in the FORMDATA progress
+  branch, or re-lookup instead of caching `zval*` in FILE_DATA/END? Either one
+  names the bug.
+- Does it move/tighten `php_session_reset_id`/`initialize` mid-upload behavior
+  (GLM's stale-globals ordering)?
+- mod_files length-consistency fix ⇒ confirms #2.
+- If the fix touches ONLY rfc1867.c parser limits, the shared-callback theory
+  weakens and D2/G-parser leads rise.
+
+## Attribution corrections (repo history honesty)
+- Commit "first shared notes (GLM core read + ...)" was mis-attributed: all
+  initial shared/ files were Daybreak-r3's; GLM produced zero shared notes in
+  either run (first: budget mismanagement — all thinking, no writing; second:
+  provider 900s stream cap on the resumed session). GLM's substantive
+  contribution exists only because its transcript was salvaged. Note for
+  future lane briefs: hard "write within N tool calls, append per discovery"
+  framing is mandatory for pi/GLM.
+
