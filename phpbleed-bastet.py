@@ -62,6 +62,21 @@ def log(tag, msg):
 # --------------------------------------------------------------------------
 # Target guard: loopback / range only (rules of engagement)
 # --------------------------------------------------------------------------
+import fcntl
+_LOCK = None
+def acquire_target_lock(url):
+    """One exploit stream per target at a time (heap-thrash rule)."""
+    global _LOCK
+    import hashlib, os
+    key = hashlib.sha1(url.encode()).hexdigest()[:12]
+    path = os.path.join(os.environ.get("TMPDIR", "/tmp"), f"p2s-{key}.lock")
+    _LOCK = open(path, "w")
+    try:
+        fcntl.flock(_LOCK, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        raise SystemExit(f"[!] another exploit stream holds {path}; one stream per target")
+
+
 def guard_target(url):
     from urllib.parse import urlparse
     u = urlparse(url if "://" in url else "http://" + url)
@@ -672,6 +687,7 @@ def main():
     global _CLASS
     _CLASS = a.klass
     t = Target(a.url, field=a.field)
+    acquire_target_lock(a.url)
     log(">", f"target acquired :: http://{t.host}:{t.port}{t.path}")
     fn = {"dump": mode_dump, "probe": mode_probe,
           "canary": mode_canary, "id": mode_id, "rce": mode_rce,

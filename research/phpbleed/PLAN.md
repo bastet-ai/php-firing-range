@@ -49,3 +49,10 @@ Full chain end-to-end OUR OWN implementation (leak + vendored R2-R6 via
 read_at hook): 2683 requests, R-7 "id>/tmp/x" -> container /tmp/x =
 uid=33(www-data). Target survived (200 after). shell mode (staged webshell
 readfile channel + /CANARY fetch) added; docroot made 777 in range images.
+
+## Pitfall logged: shared-target thrash
+783 segfaults/10min on :8088 while my shell-mode AND GLM lane fired R-7
+sprays concurrently. Failed sprays corrupt worker heaps; R-5 class_table
+read then lands on stale garbage => false negative ("R-5 ce").
+RULE: one exploit stream per container at a time; restart container
+(fresh heap + fresh ASLR) between R-7 attempts. Dedicated port per lane.
