@@ -141,6 +141,10 @@ static void set_cookie_from_segment(const char *seg, size_t seg_len)
 	cookie_dup = cookie_buf;
 }
 
+/* read_post_bytes copies content_type via strlen on a NUL-terminated string;
+ * fuzzer buffers are NOT NUL-terminated -> keep our own terminated copy. */
+static char ct_copy[256];
+
 static void run_one_request(const char *seg, size_t seg_len, unsigned sel)
 {
 	post_data = seg;
@@ -152,11 +156,18 @@ static void run_one_request(const char *seg, size_t seg_len, unsigned sel)
 		case 1: snprintf(ct_buf, sizeof(ct_buf), "multipart/form-data; boundary=\"b\""); break;
 		case 2: {
 			size_t blen = seg_len < 70 ? seg_len : 70;
-			snprintf(ct_buf, sizeof(ct_buf), "multipart/form-data; boundary=%.*s", (int) blen, seg);
+			/* sanitize boundary copy: strip NULs, keep length sane */
+			char btmp[71];
+			memcpy(btmp, seg, blen);
+			for (size_t i = 0; i < blen; i++) if (!btmp[i]) btmp[i] = '_';
+			btmp[blen] = '\0';
+			snprintf(ct_buf, sizeof(ct_buf), "multipart/form-data; boundary=%s", btmp);
 			break;
 		}
 		default: snprintf(ct_buf, sizeof(ct_buf), "text/plain"); break;
 	}
+	strncpy(ct_copy, ct_buf, sizeof(ct_copy) - 1);
+	ct_copy[sizeof(ct_copy) - 1] = '\0';
 
 	SG(server_context) = (void *) &inited;
 	SG(request_info).request_method = "POST";

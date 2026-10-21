@@ -98,3 +98,12 @@ only; predictions themselves unmodified).
 verification play; their deltas are build-specific — our own build-specific
 delta extraction is the honest path IF we ever attempt repro (post-patch,
 defensive verification only, container-confined).
+- 05:45Z smoke test v1 (leaks off): REAL crash at exec #209 — heap-buffer-
+  overflow READ in strlen called from strx_printv via our own
+  LLVMFuzzerTestOneInput frame. VERDICT: HARNESS BUG, not php-src:
+  content-type selector 2 spliced up to 70 raw body bytes (NULs allowed)
+  into ct_buf; strlen-based consumers then read past. Fixed in v2: NUL-
+  sanitize boundary copy. (Lesson: fuzz YOUR harness first — the crash found
+  is yours unless proven otherwise.)
+- v2 harness now the canonical target; v1 kept for reference. Rebuild
+  php-fuzz-multipart from fuzzer-multipart2.c next, then fleet.
