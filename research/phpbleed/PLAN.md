@@ -177,3 +177,12 @@ ADDR_NO_RANDOMIZE). Fix for THIS lab service only: security_opt
 :8088 (default):                    libphp @ f37d81800000  <- randomized
 Range now has both worlds labeled. :8097 caveat: seccomp:unconfined scoped
 to that service only (personality() need), loopback-only.
+
+## 22:05Z both-worlds exploit proof complete
+Same phpbleed-bastet.py, same zero-knowledge path, on :8097 (no-ASLR):
+leak 0xfffff6058220 -> libphp 0xfffff2c00000 (FIXED, matches maps) ->
+libc 0xfffff7c90000 -> ce 0xaaaaaac936d0 (deterministic brk region!) ->
+R-7 -> /tmp/noaslr = uid=33(www-data). Same chain, no code change, works
+with ASLR fully ON (all other targets, bases 4TB apart) AND fully OFF.
+Note: leak-derived bases = identical result either way; no-ASLR just means
+hardcoders could skip R-2/R-3. That is the answer to "does it work on ASLR".
