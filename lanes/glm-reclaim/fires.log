@@ -1,0 +1,7 @@
+14:12Z [BASTET] TRIGGER CONFIRMED PROD: POST /lab/index.php boundary=OOM8P,
+ parts: PHPSESSID(32hex) + PHP_SESSION_UPLOAD_PROGRESS(1MB "K") + tiny file
+ part; target dir .htaccess php_value memory_limit 2M ->
+ "Fatal error: Allowed memory size of 2097152 bytes exhausted" IN RESPONSE.
+ = vendor EXPECTF from php_session_rfc1867_handler (their shipped repro for
+ CVE-2026-109618). DoS-grade primitive on pre-patch 8.3.35, zero crashes in
+ apache. Next: mid-request corrupted-state window -> controlled write -> RCE.

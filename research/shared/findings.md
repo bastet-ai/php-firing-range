@@ -316,3 +316,12 @@ EXPLOIT TRIGGER (vendor-shipped repro = tests/basic/oom_rfc1867_upload_progress.
 CHECKLIST GRADES (pre-registered predictions): P1-P4 aligned with the
 progress/session region but MECHANISM = OOM bailout, not plain UAF: partial
 confirmations noted honestly post-analysis.
+
+## 14:12Z OOM trigger live on prod (pre-patch 8.3.35)
+1MB progress-value POST at 2M limit => vendor's expected fatal, in-band, from
+the progress handler. Apache worker survives (mod_php per-request reset);
+php -S persistence probe running (oom6). The RCE gap now = what the bailout
+shutdown path DOES with the half-built progress/session state within the
+failed request (patch: PS(in_rfc1867_update flag + incomplete-class gating +
+UnwindExit => the corrupted state included the serialize/unserialize path
+handling live objects mid-update). Harness the window via instrumented -S.
