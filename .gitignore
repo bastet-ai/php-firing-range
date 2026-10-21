@@ -2,3 +2,5 @@ results/*.log
 results/pi-sessions/
 results/canaries/
 build/
+research/glm-sessions/
+research/*.log
