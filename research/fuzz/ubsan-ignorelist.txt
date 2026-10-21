@@ -1,0 +1,6 @@
+// Known-benign UBSan sites in php-src core (function-pointer cast in module
+// globals ctor dispatch; upstream PHP core carries this pattern deliberately).
+fun:zend_register_module_ex
+fun:php_register_internal_extensions_func
+fun:zm_startup_date
+src:*Zend/zend_API.c

@@ -62,3 +62,11 @@ Every step committed here as it happens.
   NOTE: many "build completed rc=2" notifications arriving are GHOSTS of
   superseded attempts (Daybreak-style late death). Trust only: live pgrep +
   binary existence + log mtime vs now.
+- 05:30Z binary LINKED (166MB ASan+UBSan libFuzzer target). Smoke test hit a
+  known php-core UBSan FP (zend_API.c:2318 globals-ctor func-ptr cast) —
+  build had -fno-sanitize-recover baked, so init ABORTED. Lesson: recover mode
+  must be compile-time in this build config. Reconfigured with
+  -fsanitize-recover=undefined (reconfigure.sh updated; remember Makefile link
+  rule for php-fuzz-multipart must be re-appended after every configure).
+  Also wrote multipart-driver.c (file/stdin driver for AFL++ + batch seed
+  runs) and ubsan-ignorelist.txt.
