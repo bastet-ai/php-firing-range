@@ -113,3 +113,12 @@ defensive verification only, container-confined).
   dict, crash artifacts -> fuzz-results/. Fleet launched 05:47Z, expires
   ~09:47Z; drop at 14:00Z. Monitor cadence: coverage delta + crash count.
 - 05:52Z note: fuzz-results/crash-7a5f... predates fleet (smoke4 harness strlen bug artifact); moved to triaged-harness-bugs/. Fleet crash baseline reset to 0.
+- 06:07Z FLEET CONFIRMED LIVE (attempt #3): 4/4 workers, ~1250 exec/s total,
+  cov ~11.2k edges growing, corpora 484-709 inputs, 0 crashes, rss ~330MB/ea,
+  memory comfortable. Session-dir sweeper active (5-min cycle). Fleet window
+  06:07Z -> ~10:07Z (4h), drop 14:00Z. Root causes of the three failed
+  launches, all logged: (a) libFuzzer refuses pre-created-but-missing island
+  dirs -> seed dirs created explicitly; (b) background jobs killed with the
+  launching wrapper -> fleet.sh keeper with wait; (c) dict parse: this clang
+  libFuzzer rejects C-style \r\n escapes -> use \xNN only. Total smoke+fleet
+  lesson set for the skills file.
