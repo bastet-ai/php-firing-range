@@ -39,3 +39,9 @@ services:
       - ./range/surface:/var/www/html:ro
     restart: unless-stopped
 
+  phpbleed:
+    build: ./range/phpbleed
+    ports:
+      - "127.0.0.1:8088:80"
+    restart: unless-stopped
+
