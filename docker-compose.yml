@@ -92,7 +92,7 @@ services:
     restart: unless-stopped
 
   magento:
-    image: magento/magento2-base:2.4.7-php8.3
+    image: shinsenter/magento:latest
     ports:
       - "127.0.0.1:8095:80"
     restart: unless-stopped
