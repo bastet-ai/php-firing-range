@@ -152,3 +152,23 @@ live-fire lacked:
 6. Their SAPI is Apache mod_php with WordPress sink + uploads dir writable
    for blind verify; our lab sink mirrors session semantics; canary oracle
    remains the only scoring channel.
+
+## Two-platform doctrine (from the 8-attempt aarch64 run, 05:13Z)
+Our tool ran clean leak-first (bias stable per worker, call VA correct,
+handler offset aarch64 +72, groom 145..151 jitter): 8/8 attempts delivered,
+all 200 OK, ZERO ASan reports, zero shell. Root insight:
+**ASan is a detector, not an exploitation platform.** USE_ZEND_ALLOC=0
+routes every allocation through ASan's malloc, whose quarantine+poison
+design GUARANTEES a freed 320-byte bin is never handed to a later
+allocation. The reclaim stage of this chain is therefore structurally
+impossible on an ASan target — silence on ASan proves nothing about the
+groom's quality, only about ASan's quarantine. Split the rig:
+  * CORRUPTION DETECTION: ASan build + targeted tripwire instrumentation
+    (poison hooks on the two cached-pointer writes) - not blind exploit.
+  * EXPLOIT EXECUTION: plain (non-ASan) build in Docker; scoring is the
+    canary oracle, so no sanitizer needed to PROVE a shell.
+php2shell-bastet.py belongs to the second platform; the fuzz fleet + a
+future instrumented tripwire build to the first. This resolves the whole
+"ASan confirms corruption?" thread: not with a reclaim chain, by design;
+and our earlier "no UAF" negatives must be read with that caveat (their
+lsphp target was likewise stock-Zend-MM, doubly blind).
