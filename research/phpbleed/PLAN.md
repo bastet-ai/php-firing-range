@@ -170,3 +170,10 @@ so hardcode-address variants can be demonstrated vs the leak-first one.
 Docker's default seccomp denies personality() flag changes (incl.
 ADDR_NO_RANDOMIZE). Fix for THIS lab service only: security_opt
 [seccomp:unconfined] (loopback-only container, deliberate + scoped).
+
+## ASLR contrast VERIFIED (maps side-by-side, 22:0xZ)
+:8097 (setarch --addr-no-randomize): libphp @ fffff2c00000  <- deterministic
+   aarch64 no-ASLR mmap base (top of address space, same every boot)
+:8088 (default):                    libphp @ f37d81800000  <- randomized
+Range now has both worlds labeled. :8097 caveat: seccomp:unconfined scoped
+to that service only (personality() need), loopback-only.
