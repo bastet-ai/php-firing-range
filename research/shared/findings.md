@@ -172,3 +172,20 @@ future instrumented tripwire build to the first. This resolves the whole
 "ASan confirms corruption?" thread: not with a reclaim chain, by design;
 and our earlier "no UAF" negatives must be read with that caveat (their
 lsphp target was likewise stock-Zend-MM, doubly blind).
+
+## php2shell-bastet vs production php83 (05:1xZ): the real frontier
+16 attempts, leak-first (libphp.so bias stable per worker: 0xe21fde850000,
+call = bias+0x45bd4c), aarch64 offsets, groom 142..157 sweep: 16/16 delivered
+200 OK, no shell, no crash. So silence is NOT solely ASan quarantine - the
+reclaim genuinely misses on this build too. Diagnosis:
+ * Their LEAK stage leaks FOUR values: main_heap, stale_reference,
+   zval_ptr_dtor, zend_call_function. We only leak bias->symbol. The missing
+   pair (heap base + stale_reference VA) is how they AIM the groom: they know
+   where the freed bucket lives and shape the t[] spray relative to it.
+   Groping with a blind 149-spray on a different allocator profile (glibc
+   aarch64 vs x86 Zend MM bins) is expected to miss - it's aiming vs groping.
+ * NEXT: derive stale_reference leak on our rig (debug build: log
+   progress->post_bytes_processed into the lab oracle response during the
+   stall window). Once we know the freed address, groom becomes a distance
+   calculation instead of a sweep. This is exactly the engineering the
+   14:00Z patch-diff will illuminate (fix shows the exact free site).
