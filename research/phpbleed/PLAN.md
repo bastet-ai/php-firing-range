@@ -129,3 +129,18 @@ deep SRUN scan, widened R-5 sweep, per-container lane lock, image pin).
 adaptive doubling when read hits requested L). Content = live worker heap:
 adjacent zvals/Buckets with embedded heap pointers (0xe113e8...), i.e.
 session data, internal tables - pre-auth, GET-body echo channel.
+
+## Cross-request bleed: NEGATIVE on mod_php (honest)
+8 shots planting per-request secrets: no cross-request hit. Mechanism:
+PHP frees the prior request's arena bins at shutdown and OUR spray reclaims
+exactly those freed slots (the UAF's own reclaim mechanic) - plaintext is
+overwritten before the next read. "Heartbleed of PHP" hype is WRONG for
+per-request POST/session secrets on mod_php.
+REAL bleed value: (1) ASLR oracle - leaked heap ptrs defeat PIE/guess
+libc (this is literally what powered our R-1..R-4); (2) persistent-state
+reads (interned strings, ini, module globals) survive resets; (3) concurrent
+state on ZTS/threaded SAPIs; (4) any app that copies secrets to persistent
+storage (apc, pconnect pools, opcache shm).
+NEXT dump v3: pointer-chasing (php2leak bootstrap): from leaked qwords,
+forge val into adjacent structs whose own +0x10 field is a big qword
+(phdr p_align, d_tag...) = vendor anchor trick generalized -> full-heap walk.
