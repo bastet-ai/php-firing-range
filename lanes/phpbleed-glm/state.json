@@ -1,8 +1,8 @@
 {
  "heap_ref": 275950101426720,
- "req_count": 636,
- "crash_count": 952,
- "updated": "16:54:26Z",
+ "req_count": 2686,
+ "crash_count": 1582,
+ "updated": "16:56:34Z",
  "elf_candidates": [
   [
    275950103166976,
@@ -31,5 +31,15 @@
  ],
  "elf_base": 275950044446720,
  "eg": 275950068992648,
- "pltgot": 275950068039656
+ "pltgot": 275950068039656,
+ "libc_base": 275950129709056,
+ "system_addr": 275950130008768,
+ "ce_stdclass": 207879995311824,
+ "spray_addr": 275950101550680,
+ "exfil_ev": {
+  "id_raw": "",
+  "cat_canary_raw": "",
+  "upload_exfil_raw": "",
+  "upload_exfil_sh_raw": ""
+ }
 }

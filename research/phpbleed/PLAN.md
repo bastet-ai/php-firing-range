@@ -43,3 +43,9 @@ for 8.5.5 x86_64 (DELTA_MAX=0x600 too small for our aarch64/8.3 EG layout).
   php-S experiments (stale-BG serialize state = T4c convergence work) plus
   lane dir lanes/phpbleed-glm/.
 - race-glm 107 msgs still on 618/619 mile.
+
+## 17:0xZ RCE PROVEN: phpbleed-bastet.py rce => uid=33 on :8088
+Full chain end-to-end OUR OWN implementation (leak + vendored R2-R6 via
+read_at hook): 2683 requests, R-7 "id>/tmp/x" -> container /tmp/x =
+uid=33(www-data). Target survived (200 after). shell mode (staged webshell
+readfile channel + /CANARY fetch) added; docroot made 777 in range images.

