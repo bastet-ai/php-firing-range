@@ -1,6 +1,12 @@
 {
  "heap_ref": 256223656374688,
- "req_count": 1,
- "crash_count": 0,
- "updated": "17:51:17Z"
+ "req_count": 577,
+ "crash_count": 971,
+ "updated": "18:02:02Z",
+ "elf_candidates": [
+  [
+   256223672795136,
+   9
+  ]
+ ]
 }

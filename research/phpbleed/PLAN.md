@@ -91,3 +91,16 @@ same :8088 => my requests queue behind theirs; shell-mode shot killed by
 timeout mid-R-2 while exit code said 0 (tail in pipe swallowed 124).
 RULE: one CONTAINER per exploit stream. GLM moved to :8089 (bleed82,
 php8.2), mine stays :8088. Watch pipe exit codes; use PIPESTATUS.
+
+## R-5 forensics (11:0xZ): EG symbol offset MOVED between runs
+Working run  : libphp base B, EG = B+0x1768a88, ce lookup OK, uid=33.
+Failing runs  : EG = B+0x1768b98 (delta +0x110), class_table sweep misses.
+Same Dockerfile, same php:8.5-apache tag => the base image was re-pulled
+(digest 676ba097a368) with a patched 8.5.12 build: .bss symbols shifted.
+=> R-5's anchor sweep (scan -0x800..0x1C0) or layout constants need a
+   re-tune for the new build; R-1..R-4 all pass on it (they are
+   self-describing), only the fixed-offset R-5 assumption broke.
+CONTROL RUNNING: vendor php8_remote.py verbatim vs same :8088.
+ If vendor also fails R-5 => target build moved out of vendor tuning
+ (retune offsets = our work). If vendor lands => bug in MY vendored
+ slice (diff vs php8_remote_original.py which differs materially).

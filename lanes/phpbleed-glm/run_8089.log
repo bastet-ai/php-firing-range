@@ -11,3 +11,11 @@
 
 [Phase R-2] Finding libphp.so
   ELF @ 0xe908b9000000 phnum=9 (18 reqs)
+  Fine-grained scan near 0xe908b9000000
+18:02:02Z [R-2] elf candidates: [('0xe908b9000000', 9)] (reqs=577)
+
+[Phase R-3] Resolving symbols via .gnu_hash
+  Trying ELF @ 0xe908b9000000 (phnum=9)
+    ELF at 0xe908b9000000 no longer parseable
+18:02:03Z [R-3] FAILED (no candidate exports executor_globals)
+  No candidate exports executor_globals; not libphp
