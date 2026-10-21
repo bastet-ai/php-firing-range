@@ -11,15 +11,18 @@ Plan:
    upstream (targets: execute, unserialize, parser, json, mb*, exif, jit).
    => we must WRITE a multipart+session fuzz SAPI ourselves. This is itself a
    gap in OSS-Fuzz coverage worth noting in findings.
-2. Write fuzzer-multipart.c: fuzz SAPI that feeds corpus bytes through
-   php_register_variable_ex multipart flow with upload-progress INIs on
-   (enabled=1, cleanup default), files handler in temp dir, mirroring the
-   audited default-config trigger path: marker field + PHPSESSID field + file
-   part, including binary/NUL SIDs (our P3/P4 suspects).
-3. ./configure --enable-fuzzer with clang, ASan (+UBSan), UAF-detecting
-   options; build.
-4. Seed corpus from ext/session/tests/*.phpt multipart bodies +
-   sapi/fuzzer/corpus conventions; dict with boundary/marker/session tokens.
+2. [DONE 05:05] Wrote research/fuzz/fuzzer-multipart.c: feeds fuzz bytes
+   through the REAL flow (SG(request_info) set pre-startup; sapi_activate()
+   inside php_request_startup() runs the registered multipart post-entry ->
+   php_parse_file_upload -> progress callback -> files handler). Cookie/SID
+   channel via @@CK marker; boundary fuzzed via content-type selector; stock
+   default progress INIs; USE_ZEND_ALLOC=0 for ASan-visible heap. Copied into
+   sapi/fuzzer/ (source-tree copy kept out of git; this dir is canonical).
+   KNOWN RISK: fuzzer_request_shutdown vs php_request_shutdown pairing —
+   first build/run loop will tell.
+3. [WIP 05:10] Wire into config.m4 (PHP_FUZZER_TARGET([multipart]));
+   ./configure --enable-fuzzer with clang, ASan+UBSan+UAC; make php-fuzz-multipart.
+4. Seed corpus from ext/session/tests/*.phpt multipart bodies + dict tokens.
 5. Parallel libFuzzer runs; AFL++ separately if buildable (check).
 6. Triage: any crash => minimize, reduce to .phpt, verify on stock CLI build
    (not just harness), file in findings.md + README predictions if it maps to

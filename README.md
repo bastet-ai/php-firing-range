@@ -39,3 +39,26 @@ scripts/range-reset.sh       # wipe + restage between attempts (no cross-lane co
 | php56 | php:5.6-apache (EOL) | legacy surface; never patched — differential hunting ground |
 
 Core-bug targets get rebuilt from php-src once the real patch diffs land (`scripts/stage-php-src.sh`).
+
+## Pre-registered predictions (written 2026-10-21 04:40 UTC, before the advisory text exists)
+
+Graded against php.net's release at 14:00 UTC. Source: two-lane source audit in `research/shared/findings.md` ([GLM] + [DAYBREAK] independent convergence).
+
+**About the bug(s):**
+- [ ] P1: At least one of CVE-2026-109618/619 is fixed **inside the shared upload-progress callback logic** (`ext/session/session.c` `php_session_rfc1867_callback` region) — NOT only in `main/rfc1867.c` parser limits. (Reason: `upload_progress.enabled=Off` is stated to mitigate; only the callback is fully gated by that toggle.)
+- [ ] P2: The fix touches the **cached `zval *` byte-counter pointers** (re-lookup instead of cache, or lifetime guard) — Daybreak's #1 hypothesis, GLM independently flagged the mid-request RINIT/lifetime hazard.
+- [ ] P3: The fix adds **SID sanitization/validation to the FORMDATA progress branch** (`session.c:3139-3142`) — the one place raw client bytes become `PS(id)` with no `use_only_cookies` gate and no `strpbrk` filter.
+- [ ] P4: A **length-consistency fix in `mod_files`** (explicit-length vs C-string validation of SID keys, 8.3+) appears in at least one CVE's diff.
+- [ ] P5: Affected-version matrix includes branches **older than 8.x receiving no fix** (PHP 5/7 EOL claim by watchTowr); fixed releases only in the supported set (8.2/8.3/8.4/8.5).
+- [ ] P6: PHP rates exploitability **without requiring authentication or app-level code flaws** (pure core reachability under default INIs) — consistent with CVSS 9.2 pre-auth.
+- [ ] P7: Two CVEs = two *distinct* root causes in the same machinery (e.g. one lifetime/UAF + one integrity/validation), not one bug split in two.
+
+**About detection/patch signature:**
+- [ ] P8: The regression test added references an existing precedent pattern (bug #79221 / CVE-2020-7062 neighborhood, or GH-16998 UBSAN line) — this machinery has fixed NPD/ordering bugs before; history rhymes.
+- [ ] P9: No public PoC within 6h of release (details were already leaked; the *technical* cause was not).
+
+**About our range:**
+- [ ] P10: Patch-reverted `firing-php` image built from the fix's parent commit reproduces at least one crash or observable oracle with a single unauthenticated multipart POST (stock php.ini), i.e. pre-auth reachability claim survives verification.
+- [ ] P11: First full canary capture on the real staged target lands **<24h after the diff is public** (patch-to-exploit window under today's tooling).
+
+Scorecard gets checked + honest notes appended post-release. Grading is pass/fail per line, no rewriting predictions after the fact.
