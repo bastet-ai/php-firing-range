@@ -74,3 +74,10 @@ sprays concurrently. Failed sprays corrupt worker heaps; R-5 class_table
 read then lands on stale garbage => false negative ("R-5 ce").
 RULE: one exploit stream per container at a time; restart container
 (fresh heap + fresh ASLR) between R-7 attempts. Dedicated port per lane.
+
+## Pitfall #2: single-worker + shared lane = starvation
+1x1x1 prefork (needed for one heap/ASLR across R-1..R-7) + GLM traffic on
+same :8088 => my requests queue behind theirs; shell-mode shot killed by
+timeout mid-R-2 while exit code said 0 (tail in pipe swallowed 124).
+RULE: one CONTAINER per exploit stream. GLM moved to :8089 (bleed82,
+php8.2), mine stays :8088. Watch pipe exit codes; use PIPESTATUS.

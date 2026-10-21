@@ -2699,3 +2699,16 @@
 16:56:34Z [#2686] [R-7 upload-exfil-sh cmd=b'sh /tmp/php*'] CRASH/no-response
 16:56:34Z [R-7 upload-exfil-sh] cmd=b'sh /tmp/php*' multipart -> NO RESPONSE
 16:56:34Z === exfil sequence finished without HTTP capture; check docker logs for cat output ===
+17:30:07Z [#1] [init] ok-multipart rawlen=207 bodylen=14
+17:30:09Z [#2] [init] ok-multipart rawlen=9804 bodylen=9580
+17:2xZ [EVENT] container php-firing-range-phpbleed-1 REBUILT by concurrent bastet lane
+ (range/phpbleed/Dockerfile patched with `chmod 777 /var/www/html`, compose up --build):
+ NEW ASLR + /CANARY regenerated at image build. My run1 state (heap/lib addrs,
+ leaked 16:51-16:56Z vs old container) now VOID -> will re-run --fresh.
+ Old-container docker logs (incl. any uid= from my 16:56 R-7 shots) are GONE
+ with the old container; R-7 failure (4 shots: no response, no exec evidence)
+ undiagnosable post-hoc. New run adds per-shot docker-logs uid=/FLAG checks
+ + S-slot verification + multipart staging smoke-tested OK (leaked heap ptr
+ 0xedad000560a0 over multipart = UAF live on new container too).
+ Note: bastet lane granted THEMSELVES docroot write (webshell mode); my lane
+ contract unchanged: no docroot writes, exfil via /tmp/php* staging only.
