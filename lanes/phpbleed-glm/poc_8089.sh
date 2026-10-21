@@ -13,7 +13,8 @@
 
 cd "$(dirname "$0")"
 
-echo "[*] verifying target liveness + single-worker design..."
+echo "[*] verifying target liveness (multi-worker lane: the chain pins its own
+    worker via keep-alive from R-6 onward)..."
 docker exec php-firing-range-bleed82-1 sh -c \
   'n=$(ps -eo user,cmd | grep -c "[w]ww-data.*apache2"); echo "workers=$n"' \
   || { echo "container check failed"; exit 1; }

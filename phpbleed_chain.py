@@ -621,7 +621,7 @@ def lookup_class_table(eg, name):
 
     # Sweep for a fake-string anchor in BSS that covers ct_addr + 8.
     class_table = None
-    for scan_off in range(-0x800, 0x1C0, 8):
+    for scan_off in range(-0x4000, 0x1C0, 8):  # widened: post-8.5.12-refresh .bss shift
         fs = eg + scan_off
         data_start = fs + 0x18
         if data_start > ct_addr:
