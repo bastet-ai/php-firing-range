@@ -164,3 +164,9 @@ php2leak's "bootstrapping zend:main" purpose). libphp.so is DYN/PIE.
 ADDED for contrast: :8097 bleednoaslr (apache exec'd under
 setarch --addr-no-randomize = per-process ASLR disabled despite host=2)
 so hardcode-address variants can be demonstrated vs the leak-first one.
+
+## Pitfall: setarch personality blocked by Docker default seccomp
+:8097 crash-looped "failed to set personality ... Operation not permitted".
+Docker's default seccomp denies personality() flag changes (incl.
+ADDR_NO_RANDOMIZE). Fix for THIS lab service only: security_opt
+[seccomp:unconfined] (loopback-only container, deliberate + scoped).

@@ -112,3 +112,8 @@ services:
     ports:
       - "127.0.0.1:8097:80"
     restart: unless-stopped
+    # setarch --addr-no-randomize needs personality(ADDR_NO_RANDOMIZE),
+    # which Docker's default seccomp profile blocks. Lab container,
+    # loopback-only: relax seccomp for THIS service only.
+    security_opt:
+      - seccomp:unconfined
