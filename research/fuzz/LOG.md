@@ -133,3 +133,40 @@ defensive verification only, container-confined).
   grooming/cmplog, (b) targeted differential once patch reveals exact free
   site so harness can instrument it, (c) instrument the two cached-pointer
   writes with ASan poison hooks (fake-wild check) instead of blind search.
+
+## 10:3xZ php-up-2026 bundle RECOVERED + TRIAGED (read-only, quarantined)
+- Page embeds only file DESCRIPTIONS (contents lazy-load via asset fetch).
+- Downloaded tar.gz: sha256 0c254d54...7ed60a0d63 vs CLAIMED a29d640e...683017
+  => MISMATCH (either they re-uploaded and forgot the checksum - matches the
+  "sha doesn't match" reply on X - or the release was swapped. Unverifiable.)
+- Contents (text extracted for study; 3x14MB .zval.debug blobs skipped):
+  README, docs/{VALIDATION,REPORT_VALIDATION,RATING,DELTAS_LSphp,README_FRAMEWORK}.md,
+  bin/{php_up_framework,poc0_109618,poc1_109619,poc_trigger}.py
+- Their validation report is more honest than the hype thread:
+  * 20+ line refs claimed verified against php-8.4.4; key ones I spot-check
+    against OUR 8.3 tree (3139-3142 FORMDATA sid; add_next_index_zval =
+    ZVAL_COPY_VALUE no-addref [GLM proved]; FILLUNIT 5120 rfc1867.c:184).
+  * EXPLICITLY: no ASan UAF observed without the heap-groom stage; stale ptrs
+    read/write "memory still owned by the engine" -> consistent with OUR fleet
+    negative (1.89M execs, no crash). Two independent blind attempts, same
+    result: bug needs manual grooming. Convergence strengthens credibility.
+  * Bug split matches P7: bug1 = stale READ (outer post_bytes_processed),
+    bug2 = stale STORE (inner current_file_bytes_processed). poc0=109618 one-
+    file inner; poc1=109619 two-file outer.
+- Trigger: 258-byte body, PHPSESSID form field (our P3!), marker "x", file
+  byte "Z"; second update() via min_freq stall or fast-path; track_init +
+  zend_hash_update free; groom into 149-element packed array; then
+  zend_call_function -> system(). Per-build deltas for lsphp82 only (LiteSpeed
+  8.2.34) - NOT generic.
+- IMPORTANT DEFENSIVE FINDING they surfaced that our earlier notes undersold:
+  the multipart PARSER path runs regardless of upload_progress.enabled -
+  their mitigation #3 (clamp multipart POSTs at the edge) covers residual
+  surface our "one ini line" guidance missed. Update briefing guidance.
+- OUR PREDICTIONS vs their claims: P1/P2/P3/P4/P6/P7 all ALIGN; P5 aligns
+  (8.x-only fixes); P9 already graded ✗ (PoC public pre-release). If patch
+  at 14:00Z touches session.c cached-pointer region + parser, P1-P4 ✓ via
+  their read (we'll verify against the actual diff independently).
+- Files held in /tmp/phpup-quarantine (chmod-restricted, nothing executed,
+  NOT committed to repo - reference by hash only). Framework PoCs = live
+  weaponized code; our rule stands: no execution outside patch-reverted
+  container canary range, and even then our own repro beats theirs.
