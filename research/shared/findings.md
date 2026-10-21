@@ -129,3 +129,26 @@ Merged ranking below; provenance tags [D]=Daybreak, [G]=GLM, [D∩G]=independent
   allocator profile = OUR OWN exploit work, which is exactly what the
   14:00Z patch-revert race will test the honest way.
 - Lab sink + autostart ini REMOVED post-test; range restored to stock.
+
+## php2shell-bastet.py + hardening from the leaked-tool run trace
+Trace of the working exploit (Dean, 12:0xZ) revealed the missing stages our
+live-fire lacked:
+1. LEAK-FIRST: it leaks {main_heap, stale_reference, zval_ptr_dtor,
+   zend_call_function} at runtime, derives call = dtor - 0x43EF0 (profile
+   delta). Our no-crash ambiguity was partly a garbage hardcoded --call;
+   we now leak PIE bias from OUR lab oracle + nm offset from OUR binary.
+2. PROFILE REGISTRY keyed per distro build ("ubuntu2604-php85",
+   package-build range pinned). Our PROFILES dict + hard gate now mirrors it.
+3. ADAPTIVE RETRY ENVELOPE (attempts=8, 25s timeout). We do 8 attempts with
+   groom-count jitter +/-6 and fresh random sid per attempt.
+4. BLIND CHANNEL: their payload wrote a file (uploads/pwned.txt) rather
+   than trusting stdout; we added --verify-url fetch-back for the same.
+5. ARCH PORTING TRAP (biggest one): their ABI is x86-64; THIS host is
+   aarch64. offsetof probe against our headers: zend_fcall_info identical
+   (size 64, fn.val@8, type@16, param_count@48) BUT zend_internal_function
+   handler sits at +72 on aarch64 vs +88 x86 - a silently wrong handler
+   pointer is exactly the kind of bug that makes a chain "deliver 200 OK
+   forever". aarch64-php8x profile added with real offsets.
+6. Their SAPI is Apache mod_php with WordPress sink + uploads dir writable
+   for blind verify; our lab sink mirrors session semantics; canary oracle
+   remains the only scoring channel.
