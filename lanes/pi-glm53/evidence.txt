@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Date: Wed, 21 Oct 2026 02:38:07 GMT
+Server: Apache/2.4.68 (Debian)
+X-Powered-By: PHP/8.3.35
+Content-Length: 49
+Content-Type: text/plain;charset=UTF-8
+
+FLAG{shakedown:0b19c44eeaa0bad2ebfa7dc3533a742a}
