@@ -41,3 +41,11 @@ Plan:
    a suspect.
 
 Every step committed here as it happens.
+
+## Build iteration log
+- 06:05Z build fail #1 (rc=2): fuzzer-multipart.c errors — (a) wrong
+  read_post signature: real contract is int read_post(char *buf, uint32_t n)
+  fill-buffer style (rfc1867.c:231 caller), NOT php_write-sink; fixed with
+  memcpy+count. (b) stale SG(request_info) members (remote_addr et al. don't
+  exist in 8.3) — removed. Core objects were already built; rebuild now
+  harness-compile + link only.

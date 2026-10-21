@@ -45,15 +45,18 @@ static void fuzz_log(const char *m, int l) { (void)m; (void)l; }
 static void fuzz_send_header(sapi_header_struct *h, void *srv) { (void)h; (void)srv; }
 static void fuzz_register_vars(zval *arr) { php_import_environment_variables(arr); }
 
-static void fuzzer_read_post(unsigned int content_length)
+/* read_post contract (see main/rfc1867.c:231): fill buf with up to
+ * bytes_to_read body bytes, return count actually delivered; 0/negative = EOF. */
+static int fuzzer_read_post(char *buf, uint32_t bytes_to_read)
 {
 	size_t remain = post_len - post_pos;
-	size_t n = (size_t) content_length < remain ? (size_t) content_length : remain;
+	size_t n = (size_t) bytes_to_read < remain ? (size_t) bytes_to_read : remain;
 	if (n == 0) {
-		return; /* EOF -> truncated-body parser paths */
+		return 0; /* EOF -> truncated-body parser paths */
 	}
-	php_write(post_data + post_pos, n);
+	memcpy(buf, post_data + post_pos, n);
 	post_pos += n;
+	return (int) n;
 }
 
 static char *fuzzer_read_cookies(void)
@@ -164,11 +167,6 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 	SG(request_info).auth_user = NULL;
 	SG(request_info).auth_password = NULL;
 	SG(request_info).auth_digest = NULL;
-	SG(request_info).remote_addr = NULL;
-	SG(request_info).remote_ident = NULL;
-	SG(request_info).remote_host = NULL;
-	SG(request_info).server_name = NULL;
-	SG(request_info).server_software = NULL;
 
 	zend_try {
 		if (php_request_startup() == SUCCESS) {
