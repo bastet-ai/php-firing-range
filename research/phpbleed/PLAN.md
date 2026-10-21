@@ -26,3 +26,12 @@ T4 [research, HIGHER IMPACT]: NO-gadget variants:
    c) today's 618/619 OOM fatal leaves BG(serialize) at level=1 dangling
       (php2shell leak stage) - same UAF family as 109619; document
       convergence: php2shell authors literally reused var_hash machinery.
+
+## T3 result (15:1xZ): vendor local_exploit.php on php:8.3-cli aarch64
+Phase1 heap leak WORKS ([+] zend_reference @ 0xebdb836a4a00), Phase3 object
+ptrs found (257-bucket group). Phase4 fails: function_table scan bounds tuned
+for 8.5.5 x86_64 (DELTA_MAX=0x600 too small for our aarch64/8.3 EG layout).
+=> primitive confirmed live on OUR stack; exploit = per-build param tuning,
+   exactly the same landing gap as 109618. Both exploits now need the SAME
+   missing skill: per-build/EG offset derivation - candidate for a shared
+   derive-offsets tool (extend scripts/derive_offsets.py + phase-3 scan fix).
