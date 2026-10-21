@@ -1,15 +1,14 @@
 #!/bin/sh
 # End-to-end PoC runner: phpbleed_8089 chain against the bleed82 lane target
-# (http://127.0.0.1:8089/index.php, php 8.2.34 NTS aarch64, single prefork
-# worker). Resumable: phpbleed_8089.py checkpoints every phase to
-# state_8089.json; rerun without --fresh to continue from the checkpoint.
+# (http://127.0.0.1:8089/index.php, php 8.2.34 NTS aarch64).
+# Resumable: phpbleed_8089.py checkpoints every phase to state_8089.json;
+# rerun without --fresh to continue from the checkpoint.
 #
-# Prereq (done once): the bleed82 image build dropped the 1x1x1 prefork
-# block (5 workers ran); it was restored at runtime:
-#   docker exec php-firing-range-bleed82-1 sh -c \
-#     "printf '\nStartServers 1\nMinSpareServers 1\nMaxSpareServers 1\nServerLimit 1\nMaxRequestWorkers 1\nMaxConnectionsPerChild 0\n' >> /etc/apache2/apache2.conf && kill 1"
-# Verify single worker: docker exec php-firing-range-bleed82-1 \
-#   ps -eo pid,user,cmd | grep [a]pache2  # -> root parent + ONE www-data child
+# Target history: the operator recreated bleed82 at 18:00Z as a MULTI-worker
+# service (StartServers 16 / MaxRequestWorkers 256). The chain does NOT rely
+# on a single worker anymore: it pins one prefork worker via a persistent
+# keep-alive connection for R-6/R-7 (the spray-slot geometry is
+# worker-specific), while R-1..R-5 only touch address-stable mappings.
 
 cd "$(dirname "$0")"
 

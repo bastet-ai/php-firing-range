@@ -1,0 +1,19 @@
+phpbleed_8089 capture evidence
+target: http://127.0.0.1:8089/index.php (bleed82, php 8.2.34 NTS aarch64,
+        prefork multi-worker (operator 18:00Z recreate: StartServers 16 / MRM 256) -
+        the chain pins ONE worker via a keep-alive connection from R-6 onward)
+flag: FLAG{bleed82:fbe9e5931464515be8dd9c20fca1b34d}
+capture channel: staged-script docroot write -> GET /f (plain HTTP 200)
+their channel: docker logs (worker stdout) shows the same flag (cat /CANARY)
+chain: heap leak -> libphp(.gnu_hash) -> EG+0x1B8 -> GOT/libc/system ->
+       stdClass ce -> free_slot[16] spray slot -> IS_OBJECT confusion ->
+       system('bash /tmp/php*') on the staged exfil script
+
+{
+ "cleanup_raw": "",
+ "cleanup_docker": "",
+ "S_verify_head": "00000000000000000000bbbb0000000004000000000000000000000000000000",
+ "upload_exfil_raw": "",
+ "upload_exfil_pin_last_raw": "",
+ "docroot_f_raw": "FLAG{bleed82:fbe9e5931464515be8dd9c20fca1b34d}\n"
+}

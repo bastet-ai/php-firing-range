@@ -1,8 +1,8 @@
 {
  "heap_ref": 260857131266464,
- "req_count": 49,
- "crash_count": 8,
- "updated": "18:53:09Z",
+ "req_count": 11,
+ "crash_count": 2,
+ "updated": "19:02:10Z",
  "elf_candidates": [
   [
    260857128747008,
@@ -77,11 +77,12 @@
   "zend_std_get_properties_for": "0xed3f8afa8a88"
  },
  "exfil_ev": {
+  "cleanup_raw": "",
+  "cleanup_docker": "",
   "S_verify_head": "00000000000000000000bbbb0000000004000000000000000000000000000000",
   "upload_exfil_raw": "",
   "upload_exfil_pin_last_raw": "",
-  "upload_exfil_docker_logs": "",
-  "abort": "worker-died-after-capture-shot"
+  "docroot_f_raw": "FLAG{bleed82:fbe9e5931464515be8dd9c20fca1b34d}\n"
  },
- "spray_addr": null
+ "spray_addr": 260857131360472
 }
