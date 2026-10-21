@@ -45,18 +45,18 @@ static void fuzz_log(const char *m, int l) { (void)m; (void)l; }
 static void fuzz_send_header(sapi_header_struct *h, void *srv) { (void)h; (void)srv; }
 static void fuzz_register_vars(zval *arr) { php_import_environment_variables(arr); }
 
-/* read_post contract (see main/rfc1867.c:231): fill buf with up to
- * bytes_to_read body bytes, return count actually delivered; 0/negative = EOF. */
-static int fuzzer_read_post(char *buf, uint32_t bytes_to_read)
+/* read_post contract (8.3 SAPI.h): fill buf with up to bytes_to_read body
+ * bytes, return count delivered; 0 = EOF (truncated-body parser paths). */
+static size_t fuzzer_read_post(char *buf, size_t bytes_to_read)
 {
 	size_t remain = post_len - post_pos;
-	size_t n = (size_t) bytes_to_read < remain ? (size_t) bytes_to_read : remain;
+	size_t n = bytes_to_read < remain ? bytes_to_read : remain;
 	if (n == 0) {
-		return 0; /* EOF -> truncated-body parser paths */
+		return 0; /* EOF */
 	}
 	memcpy(buf, post_data + post_pos, n);
 	post_pos += n;
-	return (int) n;
+	return n;
 }
 
 static char *fuzzer_read_cookies(void)
