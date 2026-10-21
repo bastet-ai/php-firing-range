@@ -62,3 +62,14 @@ Graded against php.net's release at 14:00 UTC. Source: two-lane source audit in 
 - [ ] P11: First full canary capture on the real staged target lands **<24h after the diff is public** (patch-to-exploit window under today's tooling).
 
 Scorecard gets checked + honest notes appended post-release. Grading is pass/fail per line, no rewriting predictions after the fact.
+
+### Evidence appendix (append-only, does not alter predictions)
+- 2026-10-21 05:40Z: external write-up (@J4ck3LSyN "php-up-2026") claims the
+  CVEs are a session.upload_progress heap UAF via the two cached bucket
+  pointers + second-request re-decode free + shaped reuse into
+  zend_call_function. See research/fuzz/LOG.md for the credibility assessment
+  (mechanism consistent with our independent audit findings #1/#3; claims
+  themselves unverified; their downloadable bundle is NOT to be executed).
+  If true at patch time: P1 ✓, P2 ✓, P7 plausibly ✓ (two PoC chains named
+  109618/109619), P9 ✗ (PoC public pre-release — leak accelerated), P11 moot
+  or trivially ✓. Predictions stay as written; this is evidence, not edits.
