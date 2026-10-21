@@ -96,7 +96,7 @@ int LLVMFuzzerInitialize(int *argc, char ***argv)
 	mpf2_module.ini_entries = strdup(
 		"html_errors=0\n"
 		"implicit_flush=1\noutput_buffering=0\nerror_reporting=0\n"
-		"max_execution_time=0\nallow_url_fopen=0\nmemory_limit=128M\n"
+		"max_execution_time=0\nallow_url_fopen=0\nmemory_limit=64M\n"
 		"session.upload_progress.enabled=1\n"
 		"session.upload_progress.cleanup=1\n"
 		"session.upload_progress.prefix=upload_progress_\n"
