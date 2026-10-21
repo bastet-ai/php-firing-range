@@ -151,3 +151,16 @@ forge val into adjacent structs whose own +0x10 field is a big qword
 (libphp/EG/GOT/libc/system/ce/spray all leaked, R-3 EG=+0x1768a88 = the
 8.5.11 offsets), R-7 fired, /tmp/noargs = uid=33(www-data). RC=0.
 Every mode zero-knowledge about the target. 573 requests to shell.
+
+## ASLR posture (verified 21:2xZ) - exploit IS ASLR-proof by design
+Host kernel: randomize_va_space=2 (FULL ASLR), aarch64. Every capture
+today ran under it. Evidence across container restarts: heap_ref/libphp
+bases ~4TB apart (0xeab7.. / 0xe113.. / 0xf37d..) - all three captures
+(id uid=33, shell canary, shellshot5/6 runs) succeeded because the chain
+DERIVES bases from the leak every run (R-2/R-3 = the ASLR defeat; exactly
+php2leak's "bootstrapping zend:main" purpose). libphp.so is DYN/PIE.
+=> every existing bleed target (8088/8089/8090/8092/8096) IS an ASLR
+   target; range diversity was ASLR-on all along, just not labeled.
+ADDED for contrast: :8097 bleednoaslr (apache exec'd under
+setarch --addr-no-randomize = per-process ASLR disabled despite host=2)
+so hardcode-address variants can be demonstrated vs the leak-first one.

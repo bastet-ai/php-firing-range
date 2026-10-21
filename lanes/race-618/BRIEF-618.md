@@ -22,3 +22,13 @@ Fair shared brief. Rules as scripts/brief.txt plus:
 - GLM-5.3 (venice): racing, live.
 => Effectively single-model heat on 8083 until either the account's cyber
    tier lands or a non-flagged task decomposition is authorized by Dean.
+
+## Lane closed 14:0xZ by prior GLM run, REOPENED
+Prior result: stale-state consumption PROVEN (freed php_serialize_data
+reclaimed by 64-bin groom, occupied by attacker bytes; evidence.txt).
+No shell. Remaining ladder fully specified in lanes/race-618/glm/notes.md
+Route B: OOM-inside-decode staleness -> 224-bin groom -> var_access fake
+zvals -> var_destroy fake dtor chains -> __wakeup -> zend_fcall_info forge
+(aarch64: size 64, fn.val@8, type@16, param_count@48; internal fn handler
+@+72; zend_call_function = child bias + 0x45bd4c). Win channel: mod_php
+stdout. THIS LANE: finish that ladder, capture FLAG{php83} (rotated).

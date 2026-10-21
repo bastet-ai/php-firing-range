@@ -106,3 +106,9 @@ services:
       - "127.0.0.1:8096:80"
     restart: unless-stopped
 
+
+  bleednoaslr:
+    build: ./range/bleednoaslr
+    ports:
+      - "127.0.0.1:8097:80"
+    restart: unless-stopped
