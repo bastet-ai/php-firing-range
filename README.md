@@ -2,7 +2,7 @@
 
 ```
                       \ /
-                     ( * )      <- Ra's eye watches this range
+                     ( * )
                       \|/
               /\___/\  |
              (  o o  ) |

