@@ -54,6 +54,16 @@ T4b SPL QUESTION (the interesting one):
     -> can SESSION DECODE (pre-auth, zero-gadget) carry the C: UAF? The
     impact mile.
 
+## Correction: multi-worker IS deterministic (evidence over theory)
+Empirical: uid=33 capture completed full 2683-req chain <590s on vendor
+16-worker prefork; single-worker pin => timeout mid-R-4 both times.
+Why theory was wrong: prefork children fork the parent AFTER libphp is
+mapped; ASLR applies to the parent exec, so all children share identical
+DSO bases; per-request heap is fresh but ZendMM arena layout reproducible.
+Single worker also serializes throughput (accept+bootstrap per request).
+Earlier R-5 misses were crash-thrash from shared streams, NOT worker count.
+FINAL config: vendor pool (256/16) + ONE STREAM PER CONTAINER (isolation).
+
 ## Status 16:3xZ
 - Target LIVE :8088 (php:8.5-apache prefork, vendor gadget app verbatim,
   /CANARY FLAG{phpbleed:...}, loopback-only). Round-trip verified.

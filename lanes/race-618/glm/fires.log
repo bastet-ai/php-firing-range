@@ -51,3 +51,22 @@ KEY: 8083 stock max_file_uploads=20/max_input_vars=1000 gate my 600-part
 NEXT: plain local build for deterministic groom; grow session file across
 requests for DECODE-side OOM (BG(unserialize) stale = the strong primitive:
 fake php_unserialize_data => controlled last/first_dtor/entries chains).
+17:5xZ PLAIN-RIG (non-ASan php-src-83-plain, P2S instrumented, 2M) GROUND TRUTH:
+ * Producer (20x60KB filenames, freq=50000): 5 updates, OOM #5 INSIDE
+   php_session_encode (smart_str 303104) => BG(serialize).level=1,
+   data=0xfa1ecf2640c0 at bailout (freed at shutdown, NEVER reset).
+ * Consumer (DIFFERENT SID, same worker) FILE_START update:
+   [P2S] SER_INIT lock=0 level=1 data=0xfa1ecf2640c0   <== STALE REUSE
+   => php_var_serialize_intern ran zend_hash ops on the FREED chunk.
+   Worker SURVIVED (freed chunk unre-handed, residual ht bytes intact =>
+   silent corrupt writes into freed arData). Consumption window = exactly
+   the first request's php_hash_environment after the producer (pre-RINIT).
+ * Same-SID consumer WEDGES forever: session-file flock leaked by bailout
+   (files save handler lock held across bailout) => per-SID DoS primitive.
+ * gdb/ASLR-off: no crash (layout-sensitive => needs deterministic GROOM,
+   not luck).
+NEXT: 8083 controlled groom => fake-ht bytes on the freed 64-bin chunk
+(smart_str header-value buffers are RAW attacker bytes from offset 0;
+sizeof(php_serialize_data)=60 => 64-bin => header values of len 57-63
+land exactly there) => arData=attacker bytes => guaranteed SEGV at chosen
+pattern => worker death => bias rotation = controlled 619 on prod.

