@@ -45,3 +45,56 @@ services:
       - "127.0.0.1:8088:80"
     restart: unless-stopped
 
+  bleed82:
+    build: ./range/bleed82
+    ports:
+      - "127.0.0.1:8089:80"
+    restart: unless-stopped
+
+  bleed81arm:
+    build: ./range/bleed81arm
+    ports:
+      - "127.0.0.1:8090:80"
+    restart: unless-stopped
+
+  bleedsrv:
+    build: ./range/bleedsrv
+    ports:
+      - "127.0.0.1:8092:8080"
+    restart: unless-stopped
+
+  phpinfo:
+    build: ./range/phpinfo
+    ports:
+      - "127.0.0.1:8093:80"
+    restart: unless-stopped
+
+  wordpress:
+    image: wordpress:6-php8.2-apache
+    ports:
+      - "127.0.0.1:8094:80"
+    environment:
+      WORDPRESS_DB_HOST: wpdb
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_NAME: wp
+    restart: unless-stopped
+    depends_on:
+      - wpdb
+
+  wpdb:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: wp
+      MYSQL_USER: wp
+      MYSQL_PASSWORD: ${MYSQ...WORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    restart: unless-stopped
+
+  magento:
+    image: magento/magento2-base:2.4.7-php8.3
+    ports:
+      - "127.0.0.1:8095:80"
+    restart: unless-stopped
+    command: ["tail","-f","/dev/null"]
+
