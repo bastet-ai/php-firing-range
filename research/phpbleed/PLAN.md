@@ -35,3 +35,11 @@ for 8.5.5 x86_64 (DELTA_MAX=0x600 too small for our aarch64/8.3 EG layout).
    exactly the same landing gap as 109618. Both exploits now need the SAME
    missing skill: per-build/EG offset derivation - candidate for a shared
    derive-offsets tool (extend scripts/derive_offsets.py + phase-3 scan fix).
+
+## Status 16:3xZ
+- Target LIVE :8088 (php:8.5-apache prefork, vendor gadget app verbatim,
+  /CANARY FLAG{phpbleed:...}, loopback-only). Round-trip verified.
+- GLM lane phpbleed-glm LIVE (41 msgs) - currently building instrumented
+  php-S experiments (stale-BG serialize state = T4c convergence work) plus
+  lane dir lanes/phpbleed-glm/.
+- race-glm 107 msgs still on 618/619 mile.
