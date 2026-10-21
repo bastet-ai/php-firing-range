@@ -10,6 +10,6 @@ RUN chmod 777 /var/www/html
 RUN echo "FLAG{phpbleed:$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')}" > /CANARY && chmod 444 /CANARY
 
 # Survive probing
-RUN echo '\nMaxRequestWorkers 256\nServerLimit 256\nStartServers 16\n' >> /etc/apache2/apache2.conf
+RUN echo '\nStartServers 1\nMinSpareServers 1\nMaxSpareServers 1\nServerLimit 1\nMaxRequestWorkers 1\nMaxConnectionsPerChild 0\n' >> /etc/apache2/apache2.conf
 
 EXPOSE 80
