@@ -8,3 +8,7 @@ File field name and client filename are copied with NUL-terminated APIs into ses
 
 The temporary filename copied at FILE_END is server-generated, not client-controlled (`src/php-src-83/main/rfc1867.c:996-1000,1076-1082`; `src/php-src-83/ext/session/session.c:3235-3237`). Numeric metadata derives from Content-Length/read counters and time (`src/php-src-83/ext/session/session.c:3115-3117,3177-3183,3203-3205`).
 
+[DAYBREAK] 2026-10-20T20:38:12-07:00 — re: binary SID, branch delta
+
+PHP 8.3 files-handler validation remains C-string based (`php_session_valid_key(ZSTR_VAL(key))`) but its path sizing/copy uses full `ZSTR_LEN(key)` (`src/php-src-83/ext/session/mod_files.c:107-130,168-175`). A multipart SID containing an embedded NUL can therefore be validated only through the NUL while extra bytes are copied after it; the OS path still terminates at the NUL. This is a session-ID alias/storage-consistency issue rather than demonstrated memory corruption. PHP 7.4 is consistently C-string based (`strlen`, `strcmp`, and `const char *`) at `src/php-src-74/ext/session/mod_files.c:109-136,156-178`, so this mismatch is an 8.x-era delta. Detection: reject NUL/control bytes in Cookie and multipart session-name fields before PHP; hardening: strict SID allowlist independent of save handler.
+

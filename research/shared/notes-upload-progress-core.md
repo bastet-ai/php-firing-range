@@ -8,3 +8,11 @@ The first file initializes the exported array and opens/reads the client-selecte
 
 Default exposure is identical in both branches: enabled=1, cleanup=1, prefix `upload_progress_`, name `PHP_SESSION_UPLOAD_PROGRESS`, freq `1%`, min_freq 1 second (`src/php-src-83/ext/session/session.c:849-859`; `src/php-src-74/ext/session/session.c:818-828`). Session defaults use cookies=1, only-cookies=1, strict-mode=0 (`src/php-src-83/ext/session/session.c:837-839`), so no pre-authenticated application session is required: a syntactically acceptable attacker-selected Cookie SID reaches the save-handler path.
 
+[DAYBREAK] 2026-10-20T20:38:12-07:00 — branch-delta summary
+
+The upload-progress callback is behaviorally identical between 7.4 and 8.3; the only direct diff in this block is `zend_bool`→`bool`, callback/result type modernization, and generated function-table naming (`src/php-src-74/ext/session/session.c:3072-3350`; `src/php-src-83/ext/session/session.c:3001-3279`). This strongly points any shared critical issue toward the common state/ownership logic, not a version-specific algorithm.
+
+RFC1867 hardening in 8.3 adds a total multipart body-parts limit (`src/php-src-83/main/rfc1867.c:666-692,785-788`) and rejects oversized boundaries before parser allocation (`src/php-src-83/main/rfc1867.c:732-737`); 7.4 lacks both around `src/php-src-74/main/rfc1867.c:685-783`. This reduces malformed-input/heap-shaping coverage in 8.3 but does not remove the minimal marker+file path. 8.3 also records `full_path` while basename-normalizing ordinary `$_FILES[name]` (`src/php-src-83/main/rfc1867.c:1124-1160`); progress metadata still captures the pre-basename client filename at `src/php-src-83/ext/session/session.c:3198-3199` in both branches.
+
+SAPI teardown in 8.3 splits module deactivation from resource destruction and the RFC1867 uploaded-files destructor explicitly nulls the global (`src/php-src-83/main/SAPI.c:528-552`; `src/php-src-83/main/rfc1867.c:168-177`), unlike 7.4 (`src/php-src-74/main/SAPI.c:509-539`; `src/php-src-74/main/rfc1867.c:199-208`). This is adjacent lifetime hardening but occurs after multipart callbacks and is not presently tied to progress corruption.
+
