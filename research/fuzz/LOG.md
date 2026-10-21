@@ -49,3 +49,9 @@ Every step committed here as it happens.
   memcpy+count. (b) stale SG(request_info) members (remote_addr et al. don't
   exist in 8.3) — removed. Core objects were already built; rebuild now
   harness-compile + link only.
+- 06:20Z build fail #2: harness compiles now; LINK fails —
+  "main/internal_functions_cli.lo is not a valid libtool object": the
+  auto-generated .lo stubs never materialized (interrupted earlier builds).
+  Removed stubs, relaunching make so the generator rules recreate them.
+  Reminder: late proc notifications are from SUPERSEDED build launches —
+  always re-check live state (pgrep + ls binary) instead of trusting them.
