@@ -144,3 +144,10 @@ storage (apc, pconnect pools, opcache shm).
 NEXT dump v3: pointer-chasing (php2leak bootstrap): from leaked qwords,
 forge val into adjacent structs whose own +0x10 field is a big qword
 (phdr p_align, d_tag...) = vendor anchor trick generalized -> full-heap walk.
+
+## 13:58Z zero-knowledge verification PROVEN
+`phpbleed-bastet.py id <url> --cmd 'id>/tmp/noargs'` with NO --ce/--system/
+/--spray on wiped+restarted container: full chain self-derived
+(libphp/EG/GOT/libc/system/ce/spray all leaked, R-3 EG=+0x1768a88 = the
+8.5.11 offsets), R-7 fired, /tmp/noargs = uid=33(www-data). RC=0.
+Every mode zero-knowledge about the target. 573 requests to shell.
