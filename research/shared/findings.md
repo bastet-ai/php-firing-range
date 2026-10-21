@@ -102,3 +102,30 @@ Merged ranking below; provenance tags [D]=Daybreak, [G]=GLM, [D∩G]=independent
   future lane briefs: hard "write within N tool calls, append per discovery"
   framing is mandatory for pi/GLM.
 
+
+## Live-fire verdict on jackalsyn PoCs vs firing range (11:05Z, pre-patch)
+**Answer to "do the PoCs get a shell in our range?" — NO, and precisely why:**
+- Static audit clean (no callbacks except local subprocess for symbol-dump;
+  shell=True _sh unused in PoC flow; --dry body-build safe & tested).
+- Their forged-body builder runs verbatim on our box: 62,929-byte body,
+  PHPSESSID-field sid (P3 ✓), FILLUNIT stall, 149x packed t[] groom, stale
+  FILE_DATA store stage — full chain serialized exactly per their docs.
+- Delivered through a local TLS relay to a staged lab sink (session_start +
+  slow handler, mirroring their webrootF lab semantics) on php83-8.3.35
+  mod_php: request COMPLETED. No shell, no segfault, no sanitizer hit.
+- Why it can't work against our targets as-shipped:
+  1. `--dtor/--call` = leaked zval_ptr_dtor of THEIR lsphp builds
+     (delta 0x43EF0 per-build). Our php83 php.ini has different symbol
+     addresses; forging a garbage handler ptr only lands if the reclaim
+     takes — and no crash means the groom never reclaimed the freed bucket
+     under mod_php's allocator stream (their deltas are LiteSpeed-class
+     specific; their own RATING.md admits groom tuning).
+  2. SAPI mismatch: published deltas for lsphp only; fpm path exists in
+     framework but lab-only; mod_php (our stack) not covered.
+  3. Their own VALIDATION.md: no UAF without manual groom, stale write
+     lands in still-owned memory — matches our 1.89M-exec fleet negative.
+- CONCLUSION: the PoC is real machinery pointed at a target it doesn't own.
+  "Shell on OUR range" requires porting groom constants to our build's
+  allocator profile = OUR OWN exploit work, which is exactly what the
+  14:00Z patch-revert race will test the honest way.
+- Lab sink + autostart ini REMOVED post-test; range restored to stock.
