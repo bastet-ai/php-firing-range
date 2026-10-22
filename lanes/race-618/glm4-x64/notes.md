@@ -88,3 +88,48 @@ channel. Results (fresh child, deterministic across fires):
   zend_call_function 0x72d17e0ea710  (= bias + 0x47a710)
 Unauthenticated equivalents = A3 (needs the groom first). natural_tables
 calibration on this lane: pending groom-placement scan.
+
+## Groom carrier + placement (2026-10-22 late, A2 grind)
+
+### Carrier analysis (SOURCE-VERIFIED, php-src-8.2 fetched to /tmp)
+- multipart field NAMES and FILENAMES: php_ap_getword/getword_conf are
+  C-string (NUL-terminated) scans - embedded NULs truncate. DEAD as
+  binary-pointer carriers (source: while (*pos && *pos != stop)).
+- form-field VALUES: multipart_buffer_read_body = safe_ferealloc raw
+  buffer, binary-safe, headerless, our bytes at +0; an 8193-byte value
+  -> final 8196-byte alloc = 3-page class = the freed d run. THE carrier.
+- raw POST body temp: php_stream_temp -> inner MEMORY stream -> ONE
+  growing zend_string (24B header at +0, smart-str doubling) - not the
+  3-page class and header-misaligned. Not a carrier.
+- $_POST registered copies: zend_string (header at +0 kills fake-d.last).
+- R: handler semantics (var_unserializer.re): id = R:n - 1 (0-based) ->
+  var_access -> if not already a ref: ZVAL_NEW_REF ON THE SOURCE ENTRY
+  (in-place mutation!) then ZVAL_COPY. The re-encode emits R:n again ->
+  a successful round-trip can produce BYTE-IDENTICAL session files: use
+  junk-trailer + mtime oracles, not content equality.
+- entries layout on OUR binary: entries@d+0x38 (disasm; the fetched
+  branch-HEAD has incomplete_classes_only there = THE 618 FIX FIELD,
+  absent in pre-patch 8.2.34). used_slots = zend_long.
+
+### Delivery SOLVED: pool poisoning
+N producer fires round-robin-poison the whole child pool (all children
+verified stale with IDENTICAL fork-inherited d - 0x72d17c06a000 across
+three runs, but page position varies across recycling epochs: 0x69000
+once - always leak-read per run). Delivered attempts consume exactly
+one stale child each (count decrements 1/attempt) - delivery is now
+deterministic at the pool level; keep ~3+ poisoned.
+
+### Placement (the remaining grind = cb4, same frontier as arm64)
+- Delivered attempts crash 100% (5/5 and 3/3) - the walk over whatever
+  sits at d is fatal; surviving children never show our marker =>
+  the groom read_body buffer is NOT landing at d (first-fit takes lower
+  free runs; the efree'd remnant walk is the crasher).
+- Filler sweep (nfill 0..5, fillers = persistent 8218B $_POST copies
+  eating free runs): fillers 0-2 = non-deliveries (round-robin gave
+  fresh children), 3-5 = deliveries + crashes; no landing found.
+- NEXT: (a) dbgcrash-style PLACEMENT VERIFICATION during the walk
+  window (persistent SYS_PTRACE helper polling d at high frequency, or
+  a slow-parse trick to widen the alloc->decode gap); (b) symmetric
+  producer/consumer shaping per the arm64 cb4 playbook (fd3510b);
+  (c) the oracle stack is ready: surviving-child d readback (marker at
+  d+0x138) + junk-trailer rewrite + destroyed-warning signatures.
