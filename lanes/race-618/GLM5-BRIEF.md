@@ -9,7 +9,9 @@ groom.py, memtool.py, eval_fake_func.py).
 Target :8099 (stock WP 7.1.2, php 8.2.34 aarch64-native, pure stock INIs
 - assert with php -i). Canary /CANARY (FLAG{wordpress-x86:...}).
 Proven-and-closed so far: producer OOM at stock INIs; placement oracle
-(&BG(unserialize).data diff at basic_globals+408); level-1 unreachability
+(&BG(unserialize).data diff at basic_globals+816 - CORRECTED 2026-10-22:
+the +408 number here was wrong; +816 is the disassembly-confirmed
+offset from d031612/glm4 notes); level-1 unreachability
 solved via Exception-wakeup tmp_var write (u2=1 lands on level);
 highlight_file chosen as handler (readfile cand is by-ref); last open
 result: fire round at 23:33Z -> consumer body '<EOF>' (flag NOT yet
