@@ -101,10 +101,11 @@ services:
     # arm64-pinned for the original arm64 census lane). skip-name-resolve:
     # mysqld reverse-DNS added a flat 5s to every fresh WP db connection
     # (and ate the Apache KeepAliveTimeout window mid-request).
-    # mysql:8.0 amd64 SIGSEGVs under qemu-user (8.0.46 el9 build);
-    # mariadb noble builds are the emu-friendly twin; WP supports MariaDB.
-    image: mariadb:11-noble
-    platform: linux/amd64
+    # amd64 mysql AND mariadb both SIGSEGV under qemu-user on this
+    # aarch64 host; the DB's arch is irrelevant to the lane (wire
+    # protocol over TCP; DB route already closed anyway). Run native.
+    image: mysql:8.0
+    platform: linux/arm64
     command: --skip-name-resolve
     environment:
       MYSQL_DATABASE: wp
