@@ -107,4 +107,8 @@ tonistiigi/binfmt registration does not reach container execs (mysql
 crash-looped 'exec format error'). Register:
   sudo apt-get install -y qemu-user-static
   sudo python3 scripts/register-amd64-binfmt.py   # prints x86_64 on success
-Note: QEMU slows mysqld init noticeably; wait for first HTTP answer.
+Note: heavy amd64 daemons (mysql:8.0 AND mariadb:11 both SIGSEGV under
+qemu-user here - QEMU internal SIGSEGV at entrypoint). The -x86 lanes run
+qemu only for their PHP/HTTP part; wpdb-x86 is native arm64 mysql (DB arch
+is irrelevant - TCP wire protocol). Keep DB/engine images native; emu only
+the app being studied.
