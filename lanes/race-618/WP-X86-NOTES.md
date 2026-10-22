@@ -118,3 +118,59 @@ This lane's libphp.so IS extracted: lanes/race-618/glm3/bin/
 libphp-wp-x86.so (md5 181eea162c2271dae75c3d4f13acf3e7, matches
 container copy; aarch64 php 8.2.34, different build from glm3's php83
 libphp.so) - use lanes/race-618/glm3/find_fake_func.py as-is (aarch64).
+
+## A1 disclosure milestone - controlled matrix results (2026-10-22 09:xxZ)
+
+Daybreak-review-aligned harness (scripts/wpfire.py - honest transport,
+separate outcome/framing records, per-fire evidence JSON+metadata) and
+control lanes (wordpress-patched :8100 = PINNED FIXED 8.2.35; wordpress-
+x86-83 :8101 = PINNED PRE-PATCH 8.3.35). All fires: multipart 420KB-
+filename producer at 2M-assist, N rounds, fresh SID per round, session
+file polled 0.3-280s post-fatal.
+
+### Four-lane matrix (deterministic, 4/4 each cell)
+
+| lane | php | producer alloc | session file | reader |
+|---|---|---|---|---|
+| wp-vuln | 8.2.34 vuln | 434176 (618 encode-buffer signature) | created, stays EMPTY | per-SID flock wedge 30s+ |
+| wp-vuln-83 | 8.3.35 vuln | 434176 | created, stays EMPTY | flock wedge |
+| wp-patched | 8.2.35 FIXED | 2097152 | NOT created | clean |
+| lab83 (this box) | 8.3.36 FIXED | 2097152 | NOT created | clean |
+
+- The trigger discriminates PERFECTLY against a matched patched build:
+  vulnerable = the exact vendor/lab signature (434176 = 24B hdr + smart_str
+  buffer for the 420KB name encode), patched = a different generic
+  pre-script allocation (2097152 = exactly the 2M limit) and the session
+  machinery never even creates the file.
+- Gotcha confirmed in the wild: our php83 lab lane had silently rolled to
+  8.3.36 (patched) when the range was rebuilt - the original corrupt-token
+  lab evidence is 8.3.35 on aarch64. Re-pin pre-patch versions for lanes
+  (wordpress-x86-83 built for exactly this isolation).
+- Reader-side per-SID flock blocking (the lane's independent DoS primitive)
+  reproduces CROSS-CONNECTION on WP: reader on the poisoned SID hangs 30s+
+  (client-capped; the lab observed 45-150s+).
+
+### The empty-write finding (honest negative result)
+
+Corrupt-token persistence via the plain shutdown flush does NOT reproduce
+on x86/WP for EITHER 8.2.34 or 8.3.35: the session file is created at
+ps_read but never receives the corrupt encode - polled through 280s.
+Mechanism read: the flush's php_session_encode walks the dangling
+BG(serialize) chunk; on our heap layout the walk wedges (the wedged child
+holds the flock - hence the reader hang) and dies before s_write. The
+aarch64 lab heap happened to be walkable (their s:413672 evidence). =>
+Plain-flush disclosure is heap-layout luck; the DETERMINISTIC disclosure
+path is the groomed consumer: N+1's decode/encode walking a SHAPED
+reclaim of the freed chunk (the live glm4 lane's cb4/cb5 - same frontier).
+
+### Milestone ladder (Daybreak point 1 - assisted vs unauth separated)
+
+- A1 DONE: trigger + patched-controls + per-SID DoS, unauthenticated,
+  unmodified WP, stock INIs (assist: 2M memory_limit staging only).
+- A2 NEXT: assisted memory disclosure = groom the freed BG chunk so the
+  N+1 encode/decode walk completes and writes heap-derived bytes to the
+  session file (readback = lab access). This is cb4/5 on this lane.
+- A3: in-band memory-derived value disclosure (reader bogus-length fatal
+  oracle over HTTP, no lab access) - depends on A2's file content.
+- B: controlled native dispatch (fake func -> highlight_file/zif_system)
+- C: full HTTP-only reproduction, scored.

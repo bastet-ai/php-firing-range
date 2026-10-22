@@ -1,6 +1,6 @@
 {
  "wp-vuln": {
-  "sid": "fa80a1489d1c44f6b14709c7aed40e0a",
+  "sid": "03ffaa74b1b243c2a5fe4ac56a7d961d",
   "resp": "http_bytes=366 outcome=COMPLETE framing=content-length status=200 t=0.01s",
   "fatal_alloc": 434176,
   "polls": {
@@ -26,8 +26,50 @@
    "fatal_alloc": null
   }
  },
+ "wp-vuln-83": {
+  "sid": "dfd9b37afd3a421cb53ea94e2ceb4fab",
+  "resp": "http_bytes=366 outcome=COMPLETE framing=content-length status=200 t=0.02s",
+  "fatal_alloc": 434176,
+  "polls": {
+   "0.3": [
+    0,
+    ""
+   ],
+   "1": [
+    0,
+    ""
+   ],
+   "3": [
+    0,
+    ""
+   ],
+   "10": [
+    0,
+    ""
+   ]
+  },
+  "reader": {
+   "resp": "http_bytes=0 outcome=TIMEOUT framing=close status=None t=30.01s",
+   "fatal_alloc": null
+  }
+ },
  "wp-patched": {
-  "sid": "ffbcd2a3bae243919263180656c690dc",
+  "sid": "3b982c1e434b46e4a880016645a4ad89",
+  "resp": "http_bytes=367 outcome=COMPLETE framing=content-length status=200 t=0.01s",
+  "fatal_alloc": 2097152,
+  "polls": {
+   "0.3": null,
+   "1": null,
+   "3": null,
+   "10": null
+  },
+  "reader": {
+   "resp": "http_bytes=2808 outcome=COMPLETE framing=content-length status=500 t=0.07s",
+   "fatal_alloc": null
+  }
+ },
+ "lab83": {
+  "sid": "45a4ca00ae804988a2c30b143054cfcc",
   "resp": "http_bytes=367 outcome=COMPLETE framing=content-length status=200 t=0.00s",
   "fatal_alloc": 2097152,
   "polls": {
@@ -37,22 +79,7 @@
    "10": null
   },
   "reader": {
-   "resp": "http_bytes=2808 outcome=COMPLETE framing=content-length status=500 t=0.06s",
-   "fatal_alloc": null
-  }
- },
- "lab83": {
-  "sid": "0a251b5bd33d431d8e7fac0aef8ba823",
-  "resp": "http_bytes=367 outcome=COMPLETE framing=content-length status=200 t=0.05s",
-  "fatal_alloc": 2097152,
-  "polls": {
-   "0.3": null,
-   "1": null,
-   "3": null,
-   "10": null
-  },
-  "reader": {
-   "resp": "http_bytes=375 outcome=COMPLETE framing=content-length status=200 t=2.01s",
+   "resp": "http_bytes=375 outcome=COMPLETE framing=content-length status=200 t=2.00s",
    "fatal_alloc": null
   }
  }

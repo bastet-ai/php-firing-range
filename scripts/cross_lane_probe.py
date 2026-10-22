@@ -63,6 +63,7 @@ def sess_read(service, sid):
 
 TARGETS = [
     ("wp-vuln", "wordpress-x86", "127.0.0.1", 8099, "/"),
+    ("wp-vuln-83", "wordpress-x86-83", "127.0.0.1", 8101, "/"),
     ("wp-patched", "wordpress-patched", "127.0.0.1", 8100, "/"),
     ("lab83", "php83", "127.0.0.1", 8083, "/lab/index.php"),
 ]
@@ -77,7 +78,7 @@ def raw_post(host, port, path, body):
 
 def main():
     # stage 2M on the WP lanes (lab83 has its own .htaccess 2M)
-    for svc in ("wordpress-x86", "wordpress-patched"):
+    for svc in ("wordpress-x86", "wordpress-patched", "wordpress-x86-83"):
         sh(["docker", "compose", "exec", "-T", "-u", "root", svc, "sh", "-c",
             "printf 'memory_limit=2M\\n' > /usr/local/etc/php/conf.d/zz-2m.ini"])
         sh(["docker", "compose", "restart", svc], timeout=60)
@@ -131,7 +132,7 @@ def main():
                   f"{rec['polls']} reader_alloc={rec['reader']['fatal_alloc']}"
                   f" ({rec['reader']['resp']})", flush=True)
     finally:
-        for svc in ("wordpress-x86", "wordpress-patched"):
+        for svc in ("wordpress-x86", "wordpress-patched", "wordpress-x86-83"):
             sh(["docker", "compose", "exec", "-T", "-u", "root", svc, "sh", "-c",
                 "rm -f /usr/local/etc/php/conf.d/zz-2m.ini"])
             sh(["docker", "compose", "restart", svc], timeout=60)
