@@ -253,3 +253,59 @@
 [2026-10-22 01:12:51] oracle: &BG(unserialize).data=0xe3fc138cea78 d=0xe3fc109a8000 bias=0xe3fc129b0000
 [2026-10-22 01:12:51] consumer: t=0.2s len=6 FLAG=None
 [2026-10-22 01:12:51] cleanup: SIGCONT sent
+[2026-10-22 01:17:20] kids(host,ns): [(3025662, 19), (3025663, 20), (3025664, 21), (3025665, 22), (3025666, 23)]
+[2026-10-22 01:17:20] pinned child ns=19 host=3025662; stopped [3025663, 3025664, 3025665, 3025666]
+[2026-10-22 01:17:22] producer: t=0.1s oom=True len=553
+[2026-10-22 01:17:22] dbg oracle cand off=816 data=0xe4c423da8000 level=1
+[2026-10-22 01:17:22] oracle: &BG(unserialize).data=0xe4c426cdea78 d=0xe4c423da8000 bias=0xe4c425dc0000
+[2026-10-22 01:17:23] consumer: t=0.4s len=6 FLAG=None
+[2026-10-22 01:18:34] kids(host,ns): [(3026609, 19), (3026610, 20), (3026611, 21), (3026612, 22), (3026613, 23)]
+[2026-10-22 01:18:34] pinned child ns=19 host=3026609; stopped [3026610, 3026611, 3026612, 3026613]
+[2026-10-22 01:18:36] producer: t=0.1s oom=True len=553
+[2026-10-22 01:18:36] dbg oracle cand off=816 data=0xeabe3d1a8000 level=1
+[2026-10-22 01:18:36] oracle: &BG(unserialize).data=0xeabe3ffcea78 d=0xeabe3d1a8000 bias=0xeabe3f0b0000
+[2026-10-22 01:18:37] consumer: t=0.4s len=6 FLAG=None
+[2026-10-22 01:19:00] kids(host,ns): [(3027135, 19), (3027136, 20), (3027137, 21), (3027138, 22), (3027139, 23)]
+[2026-10-22 01:19:00] pinned child ns=19 host=3027135; stopped [3027136, 3027137, 3027138, 3027139]
+[2026-10-22 01:19:02] producer: t=0.1s oom=True len=553
+[2026-10-22 01:19:02] dbg oracle cand off=816 data=0xf62bd97a8000 level=1
+[2026-10-22 01:19:02] oracle: &BG(unserialize).data=0xf62bdc62ea78 d=0xf62bd97a8000 bias=0xf62bdb710000
+[2026-10-22 01:20:03] consumer: t=60.1s len=10 FLAG=None
+[2026-10-22 01:20:05] SIG-HIT: 0xae22a4a53ee0 ([heap]) chunkrel=0xae22a4a53ee0
+[2026-10-22 01:20:05] SIG-HIT: 0xf62bd96cd000 ([anon:zend_alloc]) chunkrel=0xf62bd96cd000
+[2026-10-22 01:20:05] SIG-HIT: 0xf62bd9739018 ([anon:zend_alloc]) chunkrel=0xf62bd9739018
+[2026-10-22 01:20:05] SIG-HIT: 0xf62bd97aa018 ([anon:zend_alloc]) chunkrel=0xf62bd97aa018
+[2026-10-22 01:20:05] SIG-HIT: 0xf62bdcae78e5 (anon) chunkrel=0xf62bdcae78e5
+[2026-10-22 01:23:07] kids(host,ns): [(3028917, 19), (3028918, 20), (3028919, 21), (3028920, 22), (3028921, 23)]
+[2026-10-22 01:23:07] pinned child ns=19 host=3028917; stopped [3028918, 3028919, 3028920, 3028921]
+[2026-10-22 01:23:08] producer: t=0.0s oom=True len=553
+[2026-10-22 01:23:08] dbg oracle cand off=816 data=0xf686b57a8000 level=1
+[2026-10-22 01:23:08] oracle: &BG(unserialize).data=0xf686b874ea78 d=0xf686b57a8000 bias=0xf686b7830000
+[2026-10-22 01:24:09] consumer: t=60.1s len=10 FLAG=None
+[2026-10-22 01:24:11] SIG-HIT: 0xc114e6ad6ee0 ([heap]) chunkrel=0xc114e6ad6ee0
+[2026-10-22 01:24:11] SIG-HIT: 0xf686b56cd000 ([anon:zend_alloc]) chunkrel=0xf686b56cd000
+[2026-10-22 01:24:11] SIG-HIT: 0xf686b5739018 ([anon:zend_alloc]) chunkrel=0xf686b5739018
+[2026-10-22 01:24:11] SIG-HIT: 0xf686b57aa018 ([anon:zend_alloc]) chunkrel=0xf686b57aa018
+[2026-10-22 01:24:11] SIG-HIT: 0xf686b8c378e5 (anon) chunkrel=0xf686b8c378e5
+[2026-10-22 01:26:14] kids(host,ns): [(3030289, 19), (3030290, 20), (3030291, 21), (3030292, 22), (3030293, 23)]
+[2026-10-22 01:26:14] pinned child ns=19 host=3030289; stopped [3030290, 3030291, 3030292, 3030293]
+[2026-10-22 01:26:15] producer: t=0.0s oom=True len=553
+[2026-10-22 01:26:15] dbg oracle cand off=816 data=0xf29f4b3a8000 level=1
+[2026-10-22 01:26:15] oracle: &BG(unserialize).data=0xf29f4e24ea78 d=0xf29f4b3a8000 bias=0xf29f4d330000
+[2026-10-22 01:26:21] consumer: t=5.2s len=68692 FLAG=None
+[2026-10-22 01:26:23] SIG-HIT: 0xaae6805cd890 ([heap]) chunkrel=0xaae6805cd890
+[2026-10-22 01:26:23] SIG-HIT: 0xaae6805cdee0 ([heap]) chunkrel=0xaae6805cdee0
+[2026-10-22 01:26:23] SIG-HIT: 0xaae6805ce520 ([heap]) chunkrel=0xaae6805ce520
+[2026-10-22 01:26:23] SIG-HIT: 0xf29f4b267018 ([anon:zend_alloc]) chunkrel=0xf29f4b267018
+[2026-10-22 01:26:23] SIG-HIT: 0xf29f4b26f018 ([anon:zend_alloc]) chunkrel=0xf29f4b26f018
+[2026-10-22 01:26:23] benign scan done
+[2026-10-22 01:27:19] kids(host,ns): [(3030987, 19), (3030988, 20), (3030989, 21), (3030990, 22), (3030991, 23)]
+[2026-10-22 01:27:19] pinned child ns=19 host=3030987; stopped [3030988, 3030989, 3030990, 3030991]
+[2026-10-22 01:27:20] producer: t=0.0s oom=True len=553
+[2026-10-22 01:27:20] dbg oracle cand off=816 data=0xf0ef863a8000 level=1
+[2026-10-22 01:27:20] oracle: &BG(unserialize).data=0xf0ef8932ea78 d=0xf0ef863a8000 bias=0xf0ef88410000
+[2026-10-22 01:28:21] consumer: t=60.0s len=10 FLAG=None
+[2026-10-22 01:28:23] SIG-HIT: 0xb3c56870aee0 ([heap]) chunkrel=0xb3c56870aee0
+[2026-10-22 01:28:23] SIG-HIT: 0xf0ef86267018 ([anon:zend_alloc]) chunkrel=0xf0ef86267018
+[2026-10-22 01:28:23] SIG-HIT: 0xf0ef8626f018 ([anon:zend_alloc]) chunkrel=0xf0ef8626f018
+[2026-10-22 01:28:23] SIG-HIT: 0xf0ef89810123 (anon) chunkrel=0xf0ef89810123

