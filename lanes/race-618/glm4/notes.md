@@ -139,3 +139,10 @@ Adaptation (ce chain in the groom — d chunk is fully attacker bytes):
   (authorized lab hands) so producer+consumer land on the same child
   unambiguously; SIGCONT after. KeepAliveTimeout=5s: keep mid-pair
   pauses < 5s.
+
+## Lab-hands pre-verified by orchestrator (23:2xZ)
+- Host root reads libphp maps: bias = fa2f10be0000 on PID 2939079
+  (matches lane's observation; re-read after every restart).
+- Child pinning: use docker exec -u root ... kill -STOP/-CONT (works;
+  HOST-level kill is not permitted, container root is the right door).
+- Target healthy through it all (8099: 200).
