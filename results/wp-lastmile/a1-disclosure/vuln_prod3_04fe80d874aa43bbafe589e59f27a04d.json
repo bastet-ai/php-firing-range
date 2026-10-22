@@ -1,0 +1,16 @@
+{
+ "tag": "vuln_prod3",
+ "service": "wordpress-x86",
+ "mode": "encode",
+ "sid": "04fe80d874aa43bbafe589e59f27a04d",
+ "fname_len": 430080,
+ "resp": "http_bytes=403 outcome=COMPLETE framing=content-length status=200 t=0.00s",
+ "sig": "pre-script-unknown",
+ "fatal_alloc": 434176,
+ "sess_size": 0,
+ "sess_class": "EMPTY",
+ "sess_head_hex": "",
+ "reader_resp": "http_bytes=0 outcome=TIMEOUT framing=close status=None t=45.04s",
+ "reader_sig": "no-fatal",
+ "reader_fatal_alloc": null
+}

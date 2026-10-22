@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Date: Thu, 22 Oct 2026 15:41:29 GMT
+Server: Apache/2.4.69 (Debian)
+X-Powered-By: PHP/8.2.34
+Vary: Accept-Encoding
+Content-Length: 149
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+
+<br />
+<b>Fatal error</b>:  Allowed memory size of 2097152 bytes exhausted (tried to allocate 434176 bytes) in <b>Unknown</b> on line <b>0</b><br />

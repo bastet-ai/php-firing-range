@@ -1,0 +1,16 @@
+{
+ "tag": "patched_prod2",
+ "service": "wordpress-patched",
+ "mode": "encode",
+ "sid": "5d781c00fe844d58897743a8bc898476",
+ "fname_len": 430080,
+ "resp": "http_bytes=404 outcome=COMPLETE framing=content-length status=200 t=0.00s",
+ "sig": "pre-script-unknown",
+ "fatal_alloc": 2097152,
+ "sess_size": 0,
+ "sess_class": "EMPTY",
+ "sess_head_hex": "",
+ "reader_resp": "http_bytes=2808 outcome=COMPLETE framing=content-length status=500 t=0.02s",
+ "reader_sig": "no-fatal",
+ "reader_fatal_alloc": null
+}

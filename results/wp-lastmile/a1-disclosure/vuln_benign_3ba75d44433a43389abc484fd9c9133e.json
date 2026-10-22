@@ -1,0 +1,13 @@
+{
+ "tag": "vuln_benign",
+ "service": "wordpress-x86",
+ "mode": "benign",
+ "sid": "3ba75d44433a43389abc484fd9c9133e",
+ "fname_len": 8,
+ "resp": "http_bytes=2808 outcome=COMPLETE framing=content-length status=500 t=0.09s",
+ "sig": "no-fatal",
+ "fatal_alloc": null,
+ "sess_size": 0,
+ "sess_class": "EMPTY",
+ "sess_head_hex": ""
+}

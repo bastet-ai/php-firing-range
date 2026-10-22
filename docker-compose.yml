@@ -83,6 +83,39 @@ services:
     depends_on:
       - wpdb
 
+  wordpress-x86-83:
+    # vulnerable WP on PINNED PRE-PATCH php 8.3.35: the minor version the
+    # aarch64 lab's corrupt-token persistence evidence came from. Isolates
+    # the 8.3.x pre-patch WP shape for the disclosure experiments.
+    build: ./range/wordpress-x86-83
+    ports:
+      - "127.0.0.1:8101:80"
+    environment:
+      WORDPRESS_DB_HOST: wpdb-x86
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_NAME: wp_83
+    restart: unless-stopped
+    depends_on:
+      - wpdb-x86
+
+  wordpress-patched:
+    # matched PATCHED negative control for wordpress-x86 (php 8.2.35 =
+    # the fixed release). Control fires are pre-script (session machinery);
+    # wp_patched DB is intentionally not created - no table sharing with
+    # the vulnerable lane.
+    build: ./range/wordpress-patched
+    ports:
+      - "127.0.0.1:8100:80"
+    environment:
+      WORDPRESS_DB_HOST: wpdb-x86
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_NAME: wp_patched
+    restart: unless-stopped
+    depends_on:
+      - wpdb-x86
+
   wordpress-x86:
     build: ./range/wordpress-x86
     ports:

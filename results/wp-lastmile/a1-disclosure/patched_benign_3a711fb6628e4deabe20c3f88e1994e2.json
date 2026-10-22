@@ -1,0 +1,13 @@
+{
+ "tag": "patched_benign",
+ "service": "wordpress-patched",
+ "mode": "benign",
+ "sid": "3a711fb6628e4deabe20c3f88e1994e2",
+ "fname_len": 8,
+ "resp": "http_bytes=2808 outcome=COMPLETE framing=content-length status=500 t=0.02s",
+ "sig": "no-fatal",
+ "fatal_alloc": null,
+ "sess_size": 0,
+ "sess_class": "EMPTY",
+ "sess_head_hex": ""
+}

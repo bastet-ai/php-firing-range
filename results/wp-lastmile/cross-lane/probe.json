@@ -1,0 +1,59 @@
+{
+ "wp-vuln": {
+  "sid": "fa80a1489d1c44f6b14709c7aed40e0a",
+  "resp": "http_bytes=366 outcome=COMPLETE framing=content-length status=200 t=0.01s",
+  "fatal_alloc": 434176,
+  "polls": {
+   "0.3": [
+    0,
+    ""
+   ],
+   "1": [
+    0,
+    ""
+   ],
+   "3": [
+    0,
+    ""
+   ],
+   "10": [
+    0,
+    ""
+   ]
+  },
+  "reader": {
+   "resp": "http_bytes=0 outcome=TIMEOUT framing=close status=None t=30.03s",
+   "fatal_alloc": null
+  }
+ },
+ "wp-patched": {
+  "sid": "ffbcd2a3bae243919263180656c690dc",
+  "resp": "http_bytes=367 outcome=COMPLETE framing=content-length status=200 t=0.00s",
+  "fatal_alloc": 2097152,
+  "polls": {
+   "0.3": null,
+   "1": null,
+   "3": null,
+   "10": null
+  },
+  "reader": {
+   "resp": "http_bytes=2808 outcome=COMPLETE framing=content-length status=500 t=0.06s",
+   "fatal_alloc": null
+  }
+ },
+ "lab83": {
+  "sid": "0a251b5bd33d431d8e7fac0aef8ba823",
+  "resp": "http_bytes=367 outcome=COMPLETE framing=content-length status=200 t=0.05s",
+  "fatal_alloc": 2097152,
+  "polls": {
+   "0.3": null,
+   "1": null,
+   "3": null,
+   "10": null
+  },
+  "reader": {
+   "resp": "http_bytes=375 outcome=COMPLETE framing=content-length status=200 t=2.01s",
+   "fatal_alloc": null
+  }
+ }
+}
