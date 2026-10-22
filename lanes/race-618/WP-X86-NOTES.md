@@ -3,8 +3,16 @@
 Target: stock WordPress 6.x (core copied unmodified from the official
 wordpress:6-php8.2-apache image) on PINNED PRE-PATCH php 8.2.34
 (CVE-2026-109618/619 were fixed in 8.2.35; the floating php:8.2 tag now
-ships the patched release - see HOWTO-RANGE.md SS5). x86_64 native,
-wpdb-x86 (native mysql:8.0) for the app. WP is functional and unmodified;
+ships the patched release - see HOWTO-RANGE.md SS5). ARCH CORRECTION
+(2026-10-22, glm4): the service NEVER had a platform pin in
+docker-compose.yml and this host is aarch64, so the built image is
+NATIVE ARM64 (verified: `uname -m`=aarch64, libphp.so = ELF aarch64).
+The "x86_64 native" claim below was a mislabel; the lane name is
+cosmetic. ALL proven state (producer, 4/6 segfault) was observed on
+this ARM64 binary - still valid. Implication: glm3's aarch64 design
+applies DIRECTLY (handler@+72, fcall_info params@+32); NO x86_64 port
+of find_fake_func.py needed. wpdb-x86 (native arm64 mysql:8.0) for the
+app. WP is functional and unmodified;
 the entire attack surface is PHP core's session.upload_progress.
 
 Script: lanes/race-618/glm/poc_wp_stock.py (poc.py's chain, parameterized).
@@ -103,6 +111,10 @@ The crash means the stale BG(unserialize) IS consumed but the reclaimed
 reclaiming the chunk with a FAKE php_unserialize_data; token stream fully
 controlled (the session file!) -> var_push_dtor dup-key gadget -> fake
 zend_internal_function from libphp .data.rel.ro -> zif_readfile("/CANARY").
-x86_64 offsets for 8.2.34: zend_internal_function handler@+88, fcall_info
-params@+48 (vs aarch64 +72/+32 - see GLM3-BRIEF). Extract this lane's
-libphp.so and adapt lanes/race-618/glm3/find_fake_func.py (aarch64-only).
+Offsets for the SERVING binary (aarch64 8.2.34, NOT x86_64 - see ARCH
+CORRECTION above): zend_internal_function handler@+72, fcall_info
+params@+32 (aarch64; from GLM3-BRIEF, to be re-derived vs THIS binary).
+This lane's libphp.so IS extracted: lanes/race-618/glm3/bin/
+libphp-wp-x86.so (md5 181eea162c2271dae75c3d4f13acf3e7, matches
+container copy; aarch64 php 8.2.34, different build from glm3's php83
+libphp.so) - use lanes/race-618/glm3/find_fake_func.py as-is (aarch64).
