@@ -60,3 +60,31 @@ Run: lanes/race-618/glm4-x64/eval_fake_func.py
    lane (:8100) A/B, wpfire.py honest transport, per-fire evidence JSON.
 3. cb5-style token stream goes in the staged session file (full content
    control - this box's A1 finding), NOT session-progress shaping.
+
+## Assisted leak collection (2026-10-22, the vendor's four values, ours)
+
+The calif php2shell in-band LEAKED block decodes as: main_heap (heap-chunk
+base - groom geometry), stale_reference (the freed structure the stale
+global points at - the reclaim target), zval_ptr_dtor + zend_call_function
+(libphp code ptrs - PIE bias defeat), natural_tables=149 (heap-shaping
+calibration constant, leaked not assumed). Their channel = the corrupt-
+token round-trip (memory-derived values become token lengths; the reader
+OOM fatal prints them) = our A3.
+
+We recorded OUR equivalents (ASSISTED tier - lab reads, not in-band):
+scripts/a2_leak_collect.py - producer fire (pure stock, pre-auth) then a
+CAP_SYS_PTRACE helper container joins the lane PID namespace and reads
+BG(unserialize).level/.data straight from basic_globals of the surviving
+child. Note: the lane container's own root CANNOT read children (docker
+default caps drop SYS_PTRACE; Yama forbids sibling ptrace) - the helper
+(docker run --cap-add SYS_PTRACE --pid=container:...) is the assisted
+channel. Results (fresh child, deterministic across fires):
+  stale_reference    0x72d17c069000  (BG(unserialize).data, dangling, level=1)
+  stale_chunk_base   0x72d17c000000  (dedicated 2MB region of the freed
+                     8216B d-chunk - emalloc_large class, NOT the main
+                     heap; vendor's 8.5 build keeps their stale ref inside
+                     the main heap chunk - allocation class differs)
+  zval_ptr_dtor      0x72d17e0f7650  (= bias + 0x487650)
+  zend_call_function 0x72d17e0ea710  (= bias + 0x47a710)
+Unauthenticated equivalents = A3 (needs the groom first). natural_tables
+calibration on this lane: pending groom-placement scan.

