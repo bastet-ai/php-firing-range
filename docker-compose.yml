@@ -83,6 +83,31 @@ services:
     depends_on:
       - wpdb
 
+  wordpress-x86:
+    build: ./range/wordpress-x86
+    ports:
+      - "127.0.0.1:8099:80"
+    environment:
+      WORDPRESS_DB_HOST: wpdb-x86
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_NAME: wp
+    restart: unless-stopped
+    depends_on:
+      - wpdb-x86
+
+  wpdb-x86:
+    # native-amd64 twin of wpdb for the wordpress-x86 lane (wpdb itself is
+    # arm64-pinned for the original arm64 census lane)
+    image: mysql:8.0
+    platform: linux/amd64
+    environment:
+      MYSQL_DATABASE: wp
+      MYSQL_USER: wp
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    restart: unless-stopped
+
   wpdb:
     image: mysql:8.0
     platform: linux/arm64
