@@ -186,3 +186,25 @@ R-7 -> /tmp/noaslr = uid=33(www-data). Same chain, no code change, works
 with ASLR fully ON (all other targets, bases 4TB apart) AND fully OFF.
 Note: leak-derived bases = identical result either way; no-ASLR just means
 hardcoders could skip R-2/R-3. That is the answer to "does it work on ASLR".
+
+## Arbitrary-target census + stock-SPL probe (23:4x-00:0xZ)
+GADGET AVAILABILITY IN STOCK APPS IS WORSE THAN ASSUMED:
+- WordPress core 6.x (wp-includes, PHP 8.2.31): grep "implements
+  Serializable" = ZERO. Modern WP has no Serializable gadget at all.
+- Magento (shinsenter image): only hit = igbinary's doc file. Zero app
+  gadget. => vendor's phpbleed exploit class is effectively LEGACY-APP
+  (Joomla-3-era etc.), not "any PHP app". Correct impact framing.
+STOCK-SPL NATIVE GADGET (C: -> ArrayObject::unserialize) - PARTIAL:
+- Envelope cracked: C:N:"ArrayObject":L:{x:i:0;<serialized-array>;m:a:0:{}}
+  parses natively on t4a (sink = serialize(unserialize($_POST))); the SPL
+  handler re-enters php_var_unserialize via PHP_VAR_UNSERIALIZE_INIT
+  (spl_array.c:1674) = the nested-parse shape the bug needs, with ZERO
+  app code beyond one unserialize() line.
+- But leak did NOT fire with our spray shaping (6 probes; R:refs after
+  the gadget echo CORRECTLY => var_hash not corrupted by nested native
+  parse alone). CachedData's userland ->x=0 property-write resize was
+  load-bearing for the shaping. SplDoublyLinkedList/SplQueue CRASHED
+  (500s) on some shapes - unexplored, could be its own bug, not our UAF.
+NEXT: ASan-instrumented t4a to see whether var_hash free/reuse even
+happens without the property-write (shaping problem, not impossibility).
+STRATEGIC: 618 remains the only zero-gadget path (parser-level, pre-app).
