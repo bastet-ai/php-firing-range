@@ -98,9 +98,12 @@ services:
 
   wpdb-x86:
     # native-amd64 twin of wpdb for the wordpress-x86 lane (wpdb itself is
-    # arm64-pinned for the original arm64 census lane)
+    # arm64-pinned for the original arm64 census lane). skip-name-resolve:
+    # mysqld reverse-DNS added a flat 5s to every fresh WP db connection
+    # (and ate the Apache KeepAliveTimeout window mid-request).
     image: mysql:8.0
     platform: linux/amd64
+    command: --skip-name-resolve
     environment:
       MYSQL_DATABASE: wp
       MYSQL_USER: wp
