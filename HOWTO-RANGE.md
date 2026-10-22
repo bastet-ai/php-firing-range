@@ -99,3 +99,12 @@ curl -s http://127.0.0.1:8083/lab/ | grep -c Fatal      # baseline 0
   readiness - crash-loops answer between restarts.
 - t4b/8096 and the CVE-618 mile are WORK IN PROGRESS; don't expect a
   canary there yet.
+
+## amd64 lanes on an arm64 host (wordpress-x86 :8099)
+This host is aarch64 and there is no native amd64 box on the network,
+so the -x86 lanes need qemu binfmt WITH the F (fix-binary) flag — plain
+tonistiigi/binfmt registration does not reach container execs (mysql
+crash-looped 'exec format error'). Register:
+  sudo apt-get install -y qemu-user-static
+  sudo python3 scripts/register-amd64-binfmt.py   # prints x86_64 on success
+Note: QEMU slows mysqld init noticeably; wait for first HTTP answer.
