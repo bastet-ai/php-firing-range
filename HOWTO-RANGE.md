@@ -35,6 +35,8 @@ curl -s -X POST http://127.0.0.1:8088/index.php --data-urlencode 'cook=s:2:"ok";
 - 8090 bleed81arm   php 8.1-apache ARM64 (arch diversity)
 - 8092 bleedsrv     php 8.4 php -S (SAPI diversity)
 - 8096 t4b          zero-gadget session-decode experiment (WIP)
+- 8098 t4a          arbitrary-target sink: serialize(unserialize($_POST['cook'])),
+                    zero app classes (stock-SPL shaping, WIP; baked canary)
 - 8097 bleednoaslr  8.5.11 under setarch --addr-no-randomize (contrast;
                     seccomp unconfined ON THIS SERVICE ONLY, loopback)
 - 8093 phpinfo, 8094 wordpress+mysql, 8095 magento-fpm (diversity/census)

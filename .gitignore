@@ -10,3 +10,18 @@ research/fuzz/fuzz-results/
 research/phpbleed/publications/
 .env-range
 .env
+__pycache__/
+heap.dump
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Dump artifacts
+*.dump
