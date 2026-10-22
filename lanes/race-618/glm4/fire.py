@@ -22,9 +22,12 @@ LOG = "lanes/race-618/glm4/fires.log"
 BND = b"GLM4FR"
 
 
-def sh(cmd, inp=None, binary=False):
-    r = subprocess.run(cmd, shell=isinstance(cmd, str), input=inp,
-                       capture_output=True)
+def sh(cmd, inp=None, binary=False, timeout=20):
+    try:
+        r = subprocess.run(cmd, shell=isinstance(cmd, str), input=inp,
+                           capture_output=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        raise RuntimeError(f"cmd timed out after {timeout}s: {cmd}")
     if r.returncode:
         raise RuntimeError(f"cmd failed: {cmd}\n{r.stderr.decode()[:400]}")
     return r.stdout if binary else r.stdout.decode().strip()

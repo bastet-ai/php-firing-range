@@ -205,3 +205,11 @@ Constants frozen (B=0xfa2f10be0000, re-read per restart):
 - Child pinning: use docker exec -u root ... kill -STOP/-CONT (works;
   HOST-level kill is not permitted, container root is the right door).
 - Target healthy through it all (8099: 200).
+
+## Orchestrator: lane-hang postmortem (23:33-00:20)
+The lane's 46-min freeze: a shell command built with broken quoting
+(tail /var/log/apache.log nonexistent + docker=1 bare token) plus NO
+timeout, invoked via docker exec while children were pinned -> exec sat
+in pipe_read forever; pi waited on it. Killing the host-side docker exec
+CLI unfroze pi. RULE for all fire/oracle tooling: timeout 20 on every
+shell-out, and never SIGSTOP-pin before completing exec-based staging.
