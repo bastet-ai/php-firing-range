@@ -51,20 +51,20 @@ Route B (glm3 design) mapped onto this lane; their P3 content problem is
 GONE here - the token stream is fully controlled via the staged session
 file.
 
-- [ ] 1. Extract this lane's libphp from the wordpress-x86 container
-      (grep -r php_module /etc/apache2 gives the LoadModule path;
-      docker cp it out) to lanes/race-618/glm3/bin/libphp-wp-x86.so.
-- [ ] 2. Derive x86_64 php 8.2.34 offsets from THAT binary (derive, never
-      hardcode): zend_call_function, zif_system/zif_readfile, .data.rel.ro
-      zend_function_entry candidates. x86_64 deltas vs the glm3 aarch64
-      notes: zend_internal_function handler@+88 (aarch64 +72),
-      zend_fcall_info params@+48 (aarch64 +32).
-      php_unserialize_data=8216, var_dtor_entries=4096 (arch-independent;
-      confirm vs php-src 8.2/DWARF).
-- [ ] 3. Port lanes/race-618/glm3/find_fake_func.py (aarch64-only) to
-      x86_64: F = E-64 where E=&zend_function_entry with
-      handler=bias+zif_readfile; requirements: type!=2, ZEND_ACC_STATIC in
-      fn_flags, num_args>=1, by-value arg_info.
+- [x] 1. Extract this lane's libphp from the wordpress-x86 container
+      DONE (glm4): lanes/race-618/glm3/bin/libphp-wp-x86.so, md5-verified
+      vs container copy. NOTE: binary is aarch64 (lane was NEVER x86_64 -
+      no platform pin on an aarch64 host); see glm4/notes.md + WP-X86-NOTES
+      ARCH CORRECTION.
+- [x] 2. Derive offsets DONE (glm4/notes.md): all symbols + candidate
+      fake funcs derived from THIS binary. DIVERGENCE FOUND: GNU_RELRO
+      covers all .data.rel.ro → glm3 static-L self-write (W+352) is
+      read-only here; adaptation = ce chain (V,C) in the groom. tmp_var
+      reuse path does NOT set first_dtor → groom sets first_dtor=last_dtor=L.
+- [x] 3. Port find_fake_func.py aarch64->x86_64: MOOT (binary is aarch64).
+      glm3 find_fake_func.py used as-is + new glm4/eval_fake_func.py
+      (post-reloc candidate evaluator). Best candidates:
+      highlight_file (send-mode 0), readfile (send-mode 1, PREF ok).
 - [ ] 4. Consumer groom: multipart field NAME ~8193B (estrdup -> raw
       alloc -> 17-page zend-mm class) reclaiming the freed 8216B chunk
       with a FAKE php_unserialize_data (last=L2 bss VA, first_dtor=NULL,
