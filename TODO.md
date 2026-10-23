@@ -249,3 +249,29 @@ actual landing page in the delivered child's map. Empirical data:
 NEXT: clean M-sweep (rm the catcher logs per iteration) until
 buf_page <= page_d <= buf_page + file_pages - 1, then place the fake-d
 at (page_d - buf_page)*0x1000 and fire. All other stages are ready.
+
+## RCE FINAL-MILE LEDGER (2026-10-23 late): per-child buffer calibration
+
+Every stage is now individually PROVEN on the x86_64 lane:
+- trigger/pool-poison (leak-first d+bias) [proven]
+- session-file groom carrier: the ps_read buffer IS the groom; the
+  zend_string header (+0x18 data offset) and the s: header backed out
+  [proven: crash rax values traced OUR bytes through the stale walk]
+- the serialize_lock overlay (dup-key u2 write via last_dtor=LOCK-0x1C)
+  [proven: var_destroy bp1 hits fire ONLY with the overlay - the lock
+  opens the destroy gate on the level-2 stale path]
+- the dtor route, the .data.rel.ro fake function (highlight_file
+  candidate), the /CANARY param [all source/binary-verified]
+
+THE LAST VARIABLE (empirically pinned): the ps_read buffer's page in
+the RECEIVING child's map is per-child/per-epoch (it is the first
+free run >= file pages - and the receiving child's map differs from
+kids[0]'s: measured buffer@105 for one child, but a delivered fire's
+d-region held another child's OOM-fatal message string instead).
+=> NEXT STEP (mechanical): per-fire calibration - the gdb "find" volley
+   (search the crashed child for the LPP signature) gives the buffer's
+   actual page per fire; arm → fire → read → rebuild the carrier with
+   fake_off = d - (buffer_data_start) → fire again. OR: make the
+   carrier file bigger than any gap below d so the buffer MUST cover
+   d (file_pages > the largest run below d's run; then fake_off from
+   the buffer's measured start). The crash-dump instrument is proven.
