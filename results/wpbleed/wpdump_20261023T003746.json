@@ -1,0 +1,954 @@
+{
+ "ts": "2026-10-23T00:36:40.028461+00:00",
+ "target": "http://127.0.0.1:8099/",
+ "tier": "assisted (/proc lab reads; walk oracle is HTTP-only)",
+ "producers": [
+  {
+   "round": 0,
+   "fatal_alloc": 75000032
+  },
+  {
+   "round": 1,
+   "fatal_alloc": 75000032
+  },
+  {
+   "round": 2,
+   "fatal_alloc": 75000032
+  }
+ ],
+ "dumps": [
+  {
+   "pid": "5129",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000100000016000000000000000000000022000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f6c616e67756167657300000000d29c4091067cd1720000000000000000000025000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f64622d6572726f722e706870000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c060140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c056380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c055340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [
+    " you sure you have typed the correct hos",
+    "/html/wp-includes/class-wp-hook.php",
+    "/var/www/html/index.php",
+    "/var/www/html/wp-content/db-error.php",
+    "/var/www/html/wp-content/languages",
+    "/var/www/html/wp-includes/pomo/mo.php",
+    "/var/www@",
+    "<code>wp",
+    "<code>wpdb-x86</code>",
+    "<li>Are you sure the database server0",
+    "Apache/2.4.69 (Debian)",
+    "CONTEXT_DOCUMENT_ROOT",
+    "Expires: Wed, 11 Jan 1984 05:00:00 GMT",
+    "GATEWAY_INTERFACE",
+    "SERVER_SIGNATURE",
+    "dex.php",
+    "ex.php",
+    "ing?</li>",
+    "webmaster@localhost"
+   ],
+   "walk_delivered": false
+  },
+  {
+   "pid": "7846",
+   "d": "0x72d17c06a000",
+   "chunk": {},
+   "d_raw_head": "38a0067cd172000000d0067cd172000000d0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010d0067cd172000020d0067cd172000030d0067cd172000040d0067cd172000050d0067cd172000060d0067cd172000070d0067cd172000080d0067cd172000090d0067cd1720000a0d0067cd1720000b0d0067cd1720000c0d0067cd1720000d0d0067cd17200004045067cd17200006045067cd17200000100000016000000000000000000000016000000000000004170616368652f322e342e3639202844656269616e29000090a0067cd17200006bd06b54c7c0d29c1500000000000000434f4e544558545f444f43554d454e545f524f4f5400000001000000160000006bd06b54c7c0d29c1500000000000000434f4e544558545f",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06d010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06d020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c060140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06d030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06d040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06d050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c070000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06d060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06d070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06d080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06d090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c075000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06d0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c075500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06d0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c07a000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06d0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c07a300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06d0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c056380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c055340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06d020"
+    }
+   ],
+   "d_strings": [
+    "/var/www/html/index.php",
+    "<code>wpdb-x86</code>",
+    "<li>Are you sure the database server is running?</li>",
+    "<li>Are you sure you have typed the correct hostname?</li>",
+    "Apache/2.4.69 (Debian)",
+    "CONTEXT_DOCUMENT_ROOT",
+    "GATEWAY_INTERFACE",
+    "webmaster@localhost"
+   ],
+   "walk_delivered": false
+  },
+  {
+   "pid": "5129",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000100000016000000000000000000000022000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f6c616e67756167657300000000d29c4091067cd1720000000000000000000025000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f64622d6572726f722e706870000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c060140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c056380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c055340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [
+    " you sure you have typed the correct hos",
+    "/html/wp-includes/class-wp-hook.php",
+    "/var/www/html/index.php",
+    "/var/www/html/wp-content/db-error.php",
+    "/var/www/html/wp-content/languages",
+    "/var/www/html/wp-includes/pomo/mo.php",
+    "/var/www@",
+    "<code>wp",
+    "<code>wpdb-x86</code>",
+    "<li>Are you sure the database server0",
+    "Apache/2.4.69 (Debian)",
+    "CONTEXT_DOCUMENT_ROOT",
+    "Expires: Wed, 11 Jan 1984 05:00:00 GMT",
+    "GATEWAY_INTERFACE",
+    "SERVER_SIGNATURE",
+    "dex.php",
+    "ex.php",
+    "ing?</li>",
+    "webmaster@localhost"
+   ],
+   "walk_delivered": true
+  },
+  {
+   "pid": "7845",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000100000016000000000000000000000022000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f6c616e6775616765730000000000004091067cd1720000000000000000000025000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f64622d6572726f722e706870000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c060140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c056380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c055340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [
+    "/var/www/html/index.php",
+    "/var/www/html/wp-content/db-error.php",
+    "/var/www/html/wp-content/languages",
+    "<code>wpdb-x86</code>",
+    "Apache/2.4.69 (Debian)",
+    "CONTEXT_DOCUMENT_ROOT",
+    "GATEWAY_INTERFACE",
+    "SERVER_SIGNATURE",
+    "webmaster@localhost"
+   ],
+   "walk_delivered": true
+  },
+  {
+   "pid": "7607",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000100000016000000000000000000000022000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f6c616e67756167657300000000d29c4091067cd1720000000000000000000025000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f64622d6572726f722e706870000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c060140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c056380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c055340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [
+    "/var/www/html/index.php",
+    "/var/www/html/wp-content/db-error.php",
+    "/var/www/html/wp-content/languages",
+    "/var/www/html/wp-includes/pomo/mo.php",
+    "/var/www@",
+    "<code>wp",
+    "<li>Are you sure the database server is running?</li>",
+    "<li>Are you sure you have typed the correct hostname?</li>",
+    "GATEWAY_INTERFACE",
+    "dex.php",
+    "webmaster@localhost"
+   ],
+   "walk_delivered": true
+  },
+  {
+   "pid": "7845",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000100000016000000000000000000000022000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f6c616e6775616765730000000000004091067cd1720000000000000000000025000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f64622d6572726f722e706870000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c060140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c056380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c055340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [
+    "/var/www/html/index.php",
+    "/var/www/html/wp-content/db-error.php",
+    "/var/www/html/wp-content/languages",
+    "<code>wpdb-x86</code>",
+    "Apache/2.4.69 (Debian)",
+    "CONTEXT_DOCUMENT_ROOT",
+    "GATEWAY_INTERFACE",
+    "SERVER_SIGNATURE",
+    "webmaster@localhost"
+   ],
+   "walk_delivered": true
+  }
+ ]
+}

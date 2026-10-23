@@ -66,6 +66,41 @@ different binaries.
 - [ ] cb5 token stream: designed, unverified
 - [ ] cb6 win: highlight_file("/CANARY") in-band -> score.sh
 
+## STATUS 2026-10-23: SOLID BLEED DEMO LIVE - phpbleed wpdump works against vanilla WP
+
+`python3 phpbleed-bastet.py wpdump http://127.0.0.1:8099/ --rounds 3`
+- producer: unauthenticated multipart POST + staged session file
+  (12 marker pairs + 75MB-class token) -> IN-BAND OOM fatal
+  "tried to allocate 75000032" pre-RINIT, pure stock INIs, vanilla
+  WP 7.1.2, deterministic on fresh children (7-8/8 rounds).
+- walk oracle (HTTP-only): R:n self-resolve consumer - only resolves
+  when the stale remnant used_slots offset is present; fresh children
+  fail cleanly. Round-trip evidence: 'k|a:2:{i:0;s:8:"WALKOK1!";
+  i:1;R:14;}' and once merged with upload_progress_poc|a:5:{...}
+- dump (assisted /proc, honestly labeled): the stale BG(unserialize)
+  chunk + FOLLOW the var_entries data[] pointers; the freed region
+  holds REUSED WORKER MEMORY: /var/www/html/wp-content/db-error.php,
+  /var/www/html/wp-includes/class-wp-hook.php, Apache/2.4.69 (Debian),
+  CONTEXT_DOCUMENT_ROOT, WP error-page strings, ASLR-dependent hashes,
+  heap pointers - real server memory through the 619 stale pointer.
+- reports: results/wpbleed/wpdump_*.json (structured, per-child).
+Hard lessons this session: hand-written s:N tokens MUST match length
+(bit me twice: s:22 with 19 chars, s:3 with 1 char - generate all
+tokens programmatically); prefix self-validation must use the SESSION
+format (name|value), not plain unserialize().
+
+Remaining for FULL-solid (priority order, RCE deferred per operator):
+- [ ] delivery retries until walk-HIT (auto-retry; pool-poison with
+      more producers per round)
+- [ ] R:-resolve -> session-file CONTENT channel reliability (the
+      freed zval slots get reused by worker allocations: sometimes
+      valid IS_STRING (bleeds real memory!), sometimes garbage (crash),
+      sometimes NULL (clean fail) - characterize + retry policy)
+- [ ] in-band length-oracle hardening (fatal alloc size as 8-byte
+      memory-derived value per fire)
+- [ ] arbitrary-address reads = the groom (cb4 placement, same frontier
+      as the arm64 lane) - needed for RCE later, not for the dump demo
+
 ## x86_64 box next actions (A2 here)
 
 - [ ] Extract THIS box's lane libphp (wordpress-x86 container) and

