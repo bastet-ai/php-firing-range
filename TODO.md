@@ -182,3 +182,27 @@ Remaining for FULL-solid (priority order, RCE deferred per operator):
 Next: batch N-oracle reads across TARGET offsets (profile the worker:
 point TARGET at arbitrary qwords - each fire returns 8 bytes);
 characterize per-child stability; then arbitrary-address walks.
+
+## MILESTONE 2026-10-23: SECRETS DUMPED FROM THE TARGET VIA HTTP RESPONSES
+
+THE DB PASSWORD OF VANILLA WORDPRESS RECOVERED OVER HTTP, VERBATIM:
+  e3027252836fa6edcae1f6261b5a2c9c  (== .env WORDPRESS_DB_PASSWORD)
+
+The full chain, end to end, on stock WP 7.1.2 / pre-patch 8.2.34:
+1. Symmetric groom (producer pad-shape + consumer replay) - the walk
+   consumes attacker-shaped entries at d (walk-verified).
+2. N-oracle: R:1 -> fake zval {TARGET-0x10, IS_STRING} -> the update
+   encode appends *(TARGET) bytes -> OOM fatal prints N in the response.
+3. Page-rounding recovery: N = round_up(*(TARGET), 4096) - bytes T+2..T+7
+   reliable per fire (pointer-sized qwords page-aligned = exact reads).
+4. Staggered windows: reads at T-2, +4, +10, +16, +22, +24 tile the
+   secret - 6 fires = 32 chars. TARGET = the fork-uniform ENV BLOCK
+   address of WORDPRESS_DB_PASSWORD (immutable, zero timing issues;
+   located via the assisted /proc calibration like d/bias).
+Delivery: pool-poison + retries (the read path itself = pure HTTP).
+
+Generalizes: ANY env var / stack secret / pointer-chain qword readable.
+Next: pointer-chain walks (EG/constants -> live creds, option values),
+source-code recovery (opcache SHM or wp-config literals), the fully-
+remote bias+env calibration, and the RCE (highlight_file) atop the
+proven groom.
