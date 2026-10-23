@@ -130,15 +130,14 @@ services:
       - wpdb-x86
 
   wpdb-x86:
-    # native-amd64 twin of wpdb for the wordpress-x86 lane (wpdb itself is
-    # arm64-pinned for the original arm64 census lane). skip-name-resolve:
-    # mysqld reverse-DNS added a flat 5s to every fresh WP db connection
-    # (and ate the Apache KeepAliveTimeout window mid-request).
-    # amd64 mysql AND mariadb both SIGSEGV under qemu-user on this
-    # aarch64 host; the DB's arch is irrelevant to the lane (wire
-    # protocol over TCP; DB route already closed anyway). Run native.
+    # the wordpress-x86 lane's own DB (wpdb itself is for the original
+    # arm64 census lane). NO platform pin: mysql:8.0 is multi-arch, so
+    # each range box (x86_64 and aarch64) runs its HOST-NATIVE build -
+    # a pin here breaks the OTHER box (bit us 2026-10-22: arm64 pin
+    # exec-format-error'd on the x86_64 box; amd64 pin SIGSEGVs under
+    # qemu on the aarch64 box). skip-name-resolve: mysqld reverse-DNS
+    # added a flat 5s to every fresh WP db connection.
     image: mysql:8.0
-    platform: linux/arm64
     command: --skip-name-resolve
     environment:
       MYSQL_DATABASE: wp
