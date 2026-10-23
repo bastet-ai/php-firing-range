@@ -133,3 +133,41 @@ deterministic at the pool level; keep ~3+ poisoned.
   producer/consumer shaping per the arm64 cb4 playbook (fd3510b);
   (c) the oracle stack is ready: surviving-child d readback (marker at
   d+0x138) + junk-trailer rewrite + destroyed-warning signatures.
+
+## cb4 placement - full diagnosis (2026-10-23, x86_64 box)
+
+The groom = the multipart form-field VALUE read_body buffer (raw, binary,
+3-page class at 8193B). Diagnosis chain, each step source- or map-verified:
+1. The stale child's ZENDMM PAGE MAP (chunk+0x218, 512 dwords; free=0) is
+   readable via the assisted helper and is THE placement ground truth:
+   typical post-poison map: runs (8,76),(85,1),(87,1),(89,5),(101,2),
+   (104,10),(115,15),(131,381) with d at page 106 INSIDE the 10-page run
+   (104,10) - not an isolated 3-page run.
+2. The RAW-BODY TEMP buffer (php_stream_temp -> memory stream -> ONE
+   zend_string, capacity DOUBLING) pre-allocates pow2ceil(body) pages from
+   the lowest fitting run BEFORE any part parses - it eats the bottom of
+   (8,76) and shifts every march model that ignores it.
+3. The marchers: each filler's $_POST copy = 2 pages (5000B class),
+   marching bottom-up; the read_body holes recycle at the bottom. The
+   copies march THROUGH AND PAST d's run for the filler counts that
+   reach it - filler zend_string headers land ON d, not the raw groom.
+4. March arithmetic on this map: tpages(body) + 2M (+filename pages)
+   must equal (page_d - first_free) with the groom chunk1 landing at
+   page_d - the POW2 GRANULARITY of the temp makes this UNSOLVABLE on
+   an unshaped map (the 32->64-page jump skips the needed totals).
+5. THEREFORE: THE PRODUCER MUST PRE-SHAPE THE MAP (the vendor's
+   "symmetric design" decoded): the producer's own multipart fillers
+   + session-file decode position d at a CONTROLLED page (its next
+   >=3 free run after ITS filler march), and everything frees at its
+   shutdown. The consumer REPLAYS THE SAME filler count: its copies
+   deterministically re-consume the identical freed 2-page runs, and
+   the groom's read_body chunk1 (2 pages) first-fits d's run start,
+   in-place-extending to 3 = EXACTLY d. Next implementation: the
+   symmetric producer (filler-shaped session decode) + replay consumer.
+   The N-oracle (fake zval {TARGET-0x10,IS_STRING} -> update-encode
+   appends *(TARGET) -> "tried to allocate N" in the RESPONSE) is built
+   and waiting (a3_groom_v3.py); TARGET=basic_globals+0x350 gives the
+   self-verifying N==d proof of an arbitrary-qword remote read.
+6. Old-mystery closure: same-class fillers (8193B) make the groom
+   re-take the freed bottom hole every time - filler class MUST be
+   smaller than the groom class (2-page fillers, 3-page groom).
