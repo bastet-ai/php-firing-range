@@ -1,0 +1,7 @@
+{
+ "ts": "2026-10-23T01:12:43.169397+00:00",
+ "target": "http://127.0.0.1:8099/",
+ "tier": "assisted (/proc lab reads; walk oracle is HTTP-only)",
+ "producers": [],
+ "dumps": []
+}

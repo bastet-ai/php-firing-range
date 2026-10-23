@@ -1,0 +1,585 @@
+{
+ "ts": "2026-10-23T00:58:24.958945+00:00",
+ "target": "http://127.0.0.1:8099/",
+ "tier": "assisted (/proc lab reads; walk oracle is HTTP-only)",
+ "producers": [
+  {
+   "round": 0,
+   "fatal_alloc": 75000032
+  },
+  {
+   "round": 1,
+   "fatal_alloc": 75000032
+  }
+ ],
+ "dumps": [
+  {
+   "pid": "9264",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c061140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c057380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c056340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [],
+   "walk_delivered": true
+  },
+  {
+   "pid": "10044",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c061140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c057380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c056340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [],
+   "walk_delivered": true
+  },
+  {
+   "pid": "10044",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c061140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c057380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c056340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [],
+   "walk_delivered": true
+  },
+  {
+   "pid": "10899",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c061140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c057380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c056340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [],
+   "walk_delivered": true
+  }
+ ]
+}

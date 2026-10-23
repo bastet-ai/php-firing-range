@@ -127,18 +127,29 @@ def walk_oracle():
 
 # ----------------------------------------------------- assisted /proc dump
 
-def helper_read_at(pid, addr, size):
-    script = (f"dd if=/proc/{pid}/mem bs=1 skip={addr} count={size} 2>/dev/null | "
-              f"od -An -v -tx1 | tr -d \" \\n\"")
+def helper_read_pages(pid, page_addr, npages):
+    """Fast page-aligned read (bs=4096) - one helper run for a big region."""
+    script = ("dd if=/proc/" + pid + "/mem bs=4096 skip=" +
+              str(page_addr // 4096) + " count=" + str(npages) +
+              " 2>/dev/null | od -An -v -tx1 | tr -d ' \\n'")
     r = subprocess.run(["docker", "run", "--rm", "--cap-add", "SYS_PTRACE",
-                        f"--pid=container:{CNAME}", "php:8.2-apache",
+                        "--pid=container:" + CNAME, "php:8.2-apache",
                         "bash", "-c", script],
-                       capture_output=True, text=True, timeout=60, cwd=REPO)
-    h = r.stdout.strip().replace(" ", "")
+                       capture_output=True, text=True, timeout=120, cwd=REPO)
     try:
-        return bytes.fromhex(h)
+        return bytes.fromhex(r.stdout.strip().replace(" ", ""))
     except ValueError:
         return b""
+
+def helper_read_at(pid, addr, size):
+    """Small arbitrary read: page-grab + slice (one helper run)."""
+    base = addr & ~0xFFF
+    data = helper_read_pages(pid, base,
+                             (addr - base + size + 0xFFF) // 0x1000)
+    if not data:
+        return b""
+    off = addr - base
+    return data[off:off + size]
 
 def helper_scan():
     script = (
@@ -169,6 +180,63 @@ def helper_scan():
 
 IS_TYPE = {0: "UNDEF", 1: "FALSE", 2: "TRUE", 3: "LONG", 4: "DOUBLE",
            5: "STRING?", 6: "STRING", 7: "STRING?", 8: "ARRAY", 9: "OBJECT"}
+
+def analyze_chunk(pid, chunk_base, bias, marker_pats):
+    """Full 2MB heap-chunk dump + analysis: strings, pointer census,
+    live IS_STRING zvals (real worker data). Returns (report, blob)."""
+    blob = helper_read_pages(pid, chunk_base, 512)
+    rep = {"chunk": hex(chunk_base), "bytes_read": len(blob)}
+    if len(blob) < 0x1000:
+        rep["error"] = "chunk read failed"
+        return rep, blob
+    strings = {}
+    for m in re.finditer(rb"[ -~]{8,}", blob):
+        raw = m.group()
+        if raw[:6] in marker_pats or raw[:8] in (b"S" * 8, b"A" * 8, b"P" * 8):
+            continue
+        strings[raw.decode(errors="replace")] = hex(chunk_base + m.start())
+    uniq = sorted(strings, key=len, reverse=True)
+    rep["strings_count"] = len(uniq)
+    rep["strings_top"] = [{ "s": s[:90], "at": strings[s]} for s in uniq[:40]]
+    cens = {"heap_self": 0, "libphp_pie": 0, "libc_or_mmap": 0, "other_high": 0}
+    libphp_hi = bias + 0x1800000
+    for off in range(0, len(blob) - 8, 8):
+        q = struct.unpack_from("<Q", blob, off)[0]
+        if q == 0:
+            continue
+        if chunk_base <= q < chunk_base + 0x200000:
+            cens["heap_self"] += 1
+        elif bias <= q < libphp_hi:
+            cens["libphp_pie"] += 1
+        elif 0x700000000000 <= q < 0x800000000000:
+            cens["libc_or_mmap"] += 1
+        elif q > 0x1000000000000:
+            cens["other_high"] += 1
+    rep["pointer_census"] = cens
+    zvals = []
+    follow_budget = 60
+    for off in range(0, len(blob) - 16, 8):
+        if follow_budget <= 0:
+            break
+        u1 = struct.unpack_from("<I", blob, off + 8)[0]
+        if (u1 & 0xFF) == 6:  # IS_STRING
+            p = struct.unpack_from("<Q", blob, off)[0]
+            if chunk_base <= p < chunk_base + 0x200000:
+                follow_budget -= 1
+                ln_b = helper_read_at(pid, p + 0x10, 8)
+                if len(ln_b) == 8:
+                    ln = struct.unpack("<Q", ln_b)[0]
+                    if 0 < ln <= 2048:
+                        content = helper_read_at(pid, p + 0x18, min(ln, 96))
+                        if content and not any(mp in content[:6] for mp in marker_pats):
+                            zvals.append({"at": hex(chunk_base + off),
+                                          "len": ln,
+                                          "val": content.decode(errors="replace")[:80]})
+    rep["live_string_zvals_count"] = len(zvals)
+    rep["live_string_zvals"] = zvals[:30]
+    rep["heap_header_hex"] = blob[:0x80].hex()
+    return rep, blob
+
 
 def dump_child(pid, d):
     """Read d, follow the entries data[] pointers, decode zvals + strings."""
@@ -202,6 +270,17 @@ def dump_child(pid, d):
     out["d_strings"] = sorted(set(
         m.decode(errors="replace") for m in
         re.findall(rb"[ -~]{6,}", data)))[:24]
+    # FULL-CHUNK analysis: 2MB around d = the actual Zend heap dump
+    chunk_base = d & ~0x1FFFFF
+    bias = 0
+    scan = helper_scan()
+    for k in scan:
+        if k["pid"] == pid:
+            bias = k["bias"]
+    marker_pats = set(m[:6] for m in MARKERS) | {b"MK00", b"MK01"}
+    rep, blob = analyze_chunk(pid, chunk_base, bias, marker_pats)
+    out["chunk_analysis"] = rep
+    out["_blob_len"] = len(blob)
     return out
 
 # --------------------------------------------------------------------- main
@@ -231,11 +310,19 @@ def wpdump(rounds=3, ev_dir="results/wpbleed"):
             print(f"  [{rnd}] DUMP child {k['pid']} d={dump['d']} "
                   f"used_slots={dump['used_slots']} "
                   f"entries={len(dump['entries'])}")
-            for ent in dump["entries"][:6]:
-                if ent.get("content"):
-                    print(f"        slot{ent['slot']} {ent['type']}: {ent['content'][:48]!r}")
-            if dump["d_strings"]:
-                print(f"        chunk strings: {dump['d_strings'][:6]}")
+            ca = dump.get("chunk_analysis", {})
+            if ca and "error" not in ca:
+                print(f"        FULL CHUNK {ca['chunk']}: {ca['bytes_read']}B read, "
+                      f"{ca['strings_count']} strings, "
+                      f"pointer census: {ca['pointer_census']}, "
+                      f"{ca['live_string_zvals_count']} live string zvals")
+                for z in ca["live_string_zvals"][:8]:
+                    print(f"          live zval @{z['at']} len={z['len']}: {z['val'][:60]!r}")
+                for e in ca["strings_top"][:8]:
+                    print(f"          string @{e['at']}: {e['s'][:70]!r}")
+                blob_path = os.path.join(ev_dir, f"chunk_{k['pid']}_{dump['d'][2:]}.bin")
+                with open(blob_path, "wb") as bf:
+                    pass  # blob re-read saved below if needed
     p = os.path.join(ev_dir, f"wpdump_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S')}.json")
     with open(p, "w") as f:
         json.dump(report, f, indent=1)

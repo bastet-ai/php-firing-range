@@ -1,0 +1,1780 @@
+{
+ "ts": "2026-10-23T01:12:50.526533+00:00",
+ "target": "http://127.0.0.1:8099/",
+ "tier": "assisted (/proc lab reads; walk oracle is HTTP-only)",
+ "producers": [
+  {
+   "round": 0,
+   "fatal_alloc": 75000032
+  },
+  {
+   "round": 2,
+   "fatal_alloc": 75000032
+  }
+ ],
+ "dumps": [
+  {
+   "pid": "13446",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000100000016000000000000000000000022000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f6c616e6775616765730000000000004091067cd1720000000000000000000025000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f64622d6572726f722e706870000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c060140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c056380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c055340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [
+    "/var/www/html/wp-content/db-error.php",
+    "/var/www/html/wp-content/languages",
+    "/var/www/html/wp-includes/pomo/mo.php",
+    "<li>Are you sure the database server is running?</li>",
+    "<li>Are you sure you have typed the correct hostname?</li>"
+   ],
+   "chunk_analysis": {
+    "chunk": "0x72d17c000000",
+    "bytes_read": 2097152,
+    "strings_count": 104,
+    "strings_top": [
+     {
+      "s": "<p>This either means that the username and password information in your <code>wp-config.ph",
+      "at": "0x72d17c09f04a"
+     },
+     {
+      "s": "<p>If you are unsure what these terms mean you should probably contact your host. If you s",
+      "at": "0x72d17c09f218"
+     },
+     {
+      "s": "hould probably contact your host. If you still need help you can always visit the <a href=",
+      "at": "0x72d17c060648"
+     },
+     {
+      "s": "b>Warning</b>:  PHP Request Startup: Failed to decode session object. Session has been des",
+      "at": "0x72d17c05f508"
+     },
+     {
+      "s": " host. If you still need help you can always visit the <a href=\"https://wordpress.org/supp",
+      "at": "0x72d17c0940a0"
+     },
+     {
+      "s": "ect(): (HY000/2002): php_network_getaddresses: getaddrinfo for wpdb-x86 failed: Temporary ",
+      "at": "0x72d17c060828"
+     },
+     {
+      "s": "al/lib/php/extensions/no-debug-non-zts-20220829/sodium: cannot open shared object file: No",
+      "at": "0x72d17c006008"
+     },
+     {
+      "s": "(HY000/2002): php_network_getaddresses: getaddrinfo for wpdb-x86 failed: Temporary failure",
+      "at": "0x72d17c060718"
+     },
+     {
+      "s": "ork_getaddresses: getaddrinfo for wpdb-x86 failed: Temporary failure in name resolution",
+      "at": "0x72d17c05f128"
+     },
+     {
+      "s": "Allowed memory size of 134217728 bytes exhausted (tried to allocate 75000032 bytes)",
+      "at": "0x72d17c07c018"
+     },
+     {
+      "s": "PHP Request Startup: Failed to decode session object. Session has been destroyed",
+      "at": "0x72d17c0530f8"
+     },
+     {
+      "s": "addresses: getaddrinfo for wpdb-x86 failed: Temporary failure in name resolution",
+      "at": "0x72d17c06051d"
+     },
+     {
+      "s": "ed. This could mean your host&#8217;s database server is down.</p>",
+      "at": "0x72d17c094125"
+     },
+     {
+      "s": "<li>Are you sure you have the correct username and password?</li>",
+      "at": "0x72d17c09f15f"
+     },
+     {
+      "s": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "at": "0x72d17c05f078"
+     },
+     {
+      "s": "Failed to decode session object. Session has been destroyed",
+      "at": "0x72d17c0601f8"
+     },
+     {
+      "s": "<li>Are you sure you have typed the correct hostname?</li>",
+      "at": "0x72d17c09f1a1"
+     },
+     {
+      "s": "al/lib/php/extensions/no-debug-non-zts-20220829/sodium.so",
+      "at": "0x72d17c007008"
+     },
+     {
+      "s": "al/lib/php/extensions/no-debug-non-zts-20220829/sodium",
+      "at": "0x72d17c007108"
+     },
+     {
+      "s": "<li>Are you sure the database server is running?</li>",
+      "at": "0x72d17c09f1dc"
+     },
+     {
+      "s": "/usr/local/etc/php/conf.d/docker-php-ext-sodium.ini",
+      "at": "0x72d17c003018"
+     },
+     {
+      "s": "<h1>Error establishing a database connection</h1>",
+      "at": "0x72d17c09f018"
+     },
+     {
+      "s": "al/etc/php/conf.d/docker-php-ext-pdo_mysql.ini",
+      "at": "0x72d17c0040b0"
+     },
+     {
+      "s": "al/etc/php/conf.d/docker-php-ext-opcache.ini",
+      "at": "0x72d17c004078"
+     },
+     {
+      "s": "al/etc/php/conf.d/docker-php-ext-mysqli.ini",
+      "at": "0x72d17c004040"
+     },
+     {
+      "s": "PHPSESSID=wpbf1eb8ca901654b8381ff0c20f75",
+      "at": "0x72d17c05c068"
+     },
+     {
+      "s": "<p>If you are unsure what these terms me",
+      "at": "0x72d17c060618"
+     },
+     {
+      "s": " form-data; name=\"u\"; filename=\"a.txt\"",
+      "at": "0x72d17c05d020"
+     },
+     {
+      "s": "form-data; name=\"u\"; filename=\"a.txt\"",
+      "at": "0x72d17c05f200"
+     },
+     {
+      "s": "/var/www/html/wp-content/db-error.php",
+      "at": "0x72d17c069118"
+     },
+     {
+      "s": "/var/www/html/wp-includes/pomo/mo.php",
+      "at": "0x72d17c069158"
+     },
+     {
+      "s": "/var/www/html/wp-content/languages",
+      "at": "0x72d17c0690d8"
+     },
+     {
+      "s": "type: text/html; charset=UTF-8",
+      "at": "0x72d17c054260"
+     },
+     {
+      "s": "wpbf1eb8ca901654b8381ff0c20f75",
+      "at": "0x72d17c0562f0"
+     },
+     {
+      "s": "t/form-data; boundary=WPFIRE",
+      "at": "0x72d17c054008"
+     },
+     {
+      "s": "gettext_with_context_default",
+      "at": "0x72d17c07fe18"
+     },
+     {
+      "s": "PHP_SESSION_UPLOAD_PROGRESS",
+      "at": "0x72d17c056210"
+     },
+     {
+      "s": "recursivedirectoryiterator",
+      "at": "0x72d17c0040f8"
+     },
+     {
+      "s": "Content-Type: text/plain",
+      "at": "0x72d17c05d0f9"
+     },
+     {
+      "s": "/var/www/html/wp-content",
+      "at": "0x72d17c07fb08"
+     }
+    ],
+    "pointer_census": {
+     "heap_self": 5337,
+     "libphp_pie": 319,
+     "libc_or_mmap": 274,
+     "other_high": 8041
+    },
+    "live_string_zvals_count": 28,
+    "live_string_zvals": [
+     {
+      "at": "0x72d17c0124c0",
+      "len": 2,
+      "val": "wp"
+     },
+     {
+      "at": "0x72d17c012620",
+      "len": 9,
+      "val": "dir='ltr'"
+     },
+     {
+      "at": "0x72d17c012670",
+      "len": 724,
+      "val": "<h1>Error establishing a database connection</h1>\n<p>This either means that the "
+     },
+     {
+      "at": "0x72d17c012680",
+      "len": 212,
+      "val": "<p>If you are unsure what these terms me\ufffd\u0006\u0006|\ufffdr\u0000\u0000hould probably contact your host"
+     },
+     {
+      "at": "0x72d17c012690",
+      "len": 212,
+      "val": "<p>If you are unsure what these terms me\ufffd\u0006\u0006|\ufffdr\u0000\u0000hould probably contact your host"
+     },
+     {
+      "at": "0x72d17c012700",
+      "len": 724,
+      "val": "<h1>Error establishing a database connection</h1>\n<p>This either means that the "
+     },
+     {
+      "at": "0x72d17c0127b0",
+      "len": 724,
+      "val": "<h1>Error establishing a database connection</h1>\n<p>This either means that the "
+     },
+     {
+      "at": "0x72d17c012840",
+      "len": 724,
+      "val": "<h1>Error establishing a database connection</h1>\n<p>This either means that the "
+     },
+     {
+      "at": "0x72d17c012940",
+      "len": 9,
+      "val": "dir='ltr'"
+     },
+     {
+      "at": "0x72d17c0566c8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c0567a8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056888",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056968",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056a48",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056b28",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056c08",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056ce8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056dc8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056ea8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056f88",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c060008",
+      "len": 30,
+      "val": "wpbf1eb8ca901654b8381ff0c20f75"
+     },
+     {
+      "at": "0x72d17c061018",
+      "len": 40,
+      "val": "PHPSESSID=wpbf1eb8ca901654b8381ff0c20f75"
+     },
+     {
+      "at": "0x72d17c061288",
+      "len": 6,
+      "val": "\ufffd\u0012\u0006|\ufffdr"
+     },
+     {
+      "at": "0x72d17c061468",
+      "len": 6,
+      "val": "\ufffd\u0014\u0006|\ufffdr"
+     },
+     {
+      "at": "0x72d17c064040",
+      "len": 30,
+      "val": "wpbf1eb8ca901654b8381ff0c20f75"
+     },
+     {
+      "at": "0x72d17c064060",
+      "len": 3,
+      "val": "poc"
+     },
+     {
+      "at": "0x72d17c064180",
+      "len": 30,
+      "val": "wpbf1eb8ca901654b8381ff0c20f75"
+     },
+     {
+      "at": "0x72d17c0641a0",
+      "len": 3,
+      "val": "poc"
+     }
+    ],
+    "heap_header_hex": "4000007cd17200000000007cd17200000000007cd1720000ff01000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "_blob_len": 2097152,
+   "walk_delivered": false
+  },
+  {
+   "pid": "14393",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c061140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c057380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c056340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [],
+   "chunk_analysis": {
+    "chunk": "0x72d17c000000",
+    "bytes_read": 2097152,
+    "strings_count": 42,
+    "strings_top": [
+     {
+      "s": "b>Warning</b>:  PHP Request Startup: Failed to decode session object. Session has been des",
+      "at": "0x72d17c060508"
+     },
+     {
+      "s": "al/lib/php/extensions/no-debug-non-zts-20220829/sodium: cannot open shared object file: No",
+      "at": "0x72d17c006008"
+     },
+     {
+      "s": "Allowed memory size of 134217728 bytes exhausted (tried to allocate 75000032 bytes)",
+      "at": "0x72d17c07c018"
+     },
+     {
+      "s": "PHP Request Startup: Failed to decode session object. Session has been destroyed",
+      "at": "0x72d17c0540f8"
+     },
+     {
+      "s": "Failed to decode session object. Session has been destroyed",
+      "at": "0x72d17c0611f8"
+     },
+     {
+      "s": "al/lib/php/extensions/no-debug-non-zts-20220829/sodium.so",
+      "at": "0x72d17c007008"
+     },
+     {
+      "s": "al/lib/php/extensions/no-debug-non-zts-20220829/sodium",
+      "at": "0x72d17c007108"
+     },
+     {
+      "s": "/usr/local/etc/php/conf.d/docker-php-ext-sodium.ini",
+      "at": "0x72d17c003018"
+     },
+     {
+      "s": "al/etc/php/conf.d/docker-php-ext-pdo_mysql.ini",
+      "at": "0x72d17c0040b0"
+     },
+     {
+      "s": "al/etc/php/conf.d/docker-php-ext-opcache.ini",
+      "at": "0x72d17c004078"
+     },
+     {
+      "s": "al/etc/php/conf.d/docker-php-ext-mysqli.ini",
+      "at": "0x72d17c004040"
+     },
+     {
+      "s": "PHPSESSID=wpb2e62c1eb77334dd8ad3fd0704f3",
+      "at": "0x72d17c05d068"
+     },
+     {
+      "s": " form-data; name=\"u\"; filename=\"a.txt\"",
+      "at": "0x72d17c05e020"
+     },
+     {
+      "s": "form-data; name=\"u\"; filename=\"a.txt\"",
+      "at": "0x72d17c060200"
+     },
+     {
+      "s": "type: text/html; charset=UTF-8",
+      "at": "0x72d17c055260"
+     },
+     {
+      "s": "wpb2e62c1eb77334dd8ad3fd0704f3",
+      "at": "0x72d17c0572f0"
+     },
+     {
+      "s": "t/form-data; boundary=WPFIRE",
+      "at": "0x72d17c055008"
+     },
+     {
+      "s": "PHP_SESSION_UPLOAD_PROGRESS",
+      "at": "0x72d17c057210"
+     },
+     {
+      "s": "recursivedirectoryiterator",
+      "at": "0x72d17c0040f8"
+     },
+     {
+      "s": "Content-Type: text/plain",
+      "at": "0x72d17c05e0f9"
+     },
+     {
+      "s": "Content-Disposition",
+      "at": "0x72d17c062000"
+     },
+     {
+      "s": "upload_progress_poc",
+      "at": "0x72d17c060318"
+     },
+     {
+      "s": "PHP Request Startup",
+      "at": "0x72d17c061298"
+     },
+     {
+      "s": "recursiveiterator",
+      "at": "0x72d17c00a018"
+     },
+     {
+      "s": " filename=\"a.txt\"",
+      "at": "0x72d17c05e0e6"
+     },
+     {
+      "s": "d-By: PHP/8.2.34",
+      "at": "0x72d17c056008"
+     },
+     {
+      "s": "l; charset=UTF-8",
+      "at": "0x72d17c056388"
+     },
+     {
+      "s": "bytes_processed",
+      "at": "0x72d17c0551f8"
+     },
+     {
+      "s": "content_length",
+      "at": "0x72d17c055130"
+     },
+     {
+      "s": "Content-Type",
+      "at": "0x72d17c05e048"
+     },
+     {
+      "s": "ocal/etc/php",
+      "at": "0x72d17c008008"
+     },
+     {
+      "s": " text/plain",
+      "at": "0x72d17c05e0c8"
+     },
+     {
+      "s": "start_time",
+      "at": "0x72d17c0551d0"
+     },
+     {
+      "s": "field_name",
+      "at": "0x72d17c055180"
+     },
+     {
+      "s": "--WPFIRE--",
+      "at": "0x72d17c05e118"
+     },
+     {
+      "s": "text/plain",
+      "at": "0x72d17c060400"
+     },
+     {
+      "s": "PHPSESSID",
+      "at": "0x72d17c0550b8"
+     },
+     {
+      "s": "n=sodium",
+      "at": "0x72d17c004008"
+     },
+     {
+      "s": "standard",
+      "at": "0x72d17c009018"
+     },
+     {
+      "s": "tmp_name",
+      "at": "0x72d17c0551a8"
+     }
+    ],
+    "pointer_census": {
+     "heap_self": 2826,
+     "libphp_pie": 16,
+     "libc_or_mmap": 2,
+     "other_high": 1033
+    },
+    "live_string_zvals_count": 9,
+    "live_string_zvals": [
+     {
+      "at": "0x72d17c061008",
+      "len": 30,
+      "val": "wpb2e62c1eb77334dd8ad3fd0704f3"
+     },
+     {
+      "at": "0x72d17c062018",
+      "len": 40,
+      "val": "PHPSESSID=wpb2e62c1eb77334dd8ad3fd0704f3"
+     },
+     {
+      "at": "0x72d17c064040",
+      "len": 30,
+      "val": "wpb2e62c1eb77334dd8ad3fd0704f3"
+     },
+     {
+      "at": "0x72d17c064060",
+      "len": 3,
+      "val": "poc"
+     },
+     {
+      "at": "0x72d17c064180",
+      "len": 30,
+      "val": "wpb2e62c1eb77334dd8ad3fd0704f3"
+     },
+     {
+      "at": "0x72d17c0641a0",
+      "len": 3,
+      "val": "poc"
+     },
+     {
+      "at": "0x72d17c064400",
+      "len": 1,
+      "val": "u"
+     },
+     {
+      "at": "0x72d17c064420",
+      "len": 5,
+      "val": "a.txt"
+     },
+     {
+      "at": "0x72d17c064540",
+      "len": 3,
+      "val": "abc"
+     }
+    ],
+    "heap_header_hex": "4000007cd17200000000007cd17200000000007cd1720000ff01000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "_blob_len": 2097152,
+   "walk_delivered": false
+  },
+  {
+   "pid": "13446",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000100000016000000000000000000000022000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f6c616e6775616765730000000000004091067cd1720000000000000000000025000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f64622d6572726f722e706870000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c060140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c056380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c055340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [
+    "/var/www/html/wp-content/db-error.php",
+    "/var/www/html/wp-content/languages",
+    "/var/www/html/wp-includes/pomo/mo.php",
+    "<li>Are you sure the database server is running?</li>",
+    "<li>Are you sure you have typed the correct hostname?</li>"
+   ],
+   "chunk_analysis": {
+    "chunk": "0x72d17c000000",
+    "bytes_read": 2097152,
+    "strings_count": 104,
+    "strings_top": [
+     {
+      "s": "<p>This either means that the username and password information in your <code>wp-config.ph",
+      "at": "0x72d17c09f04a"
+     },
+     {
+      "s": "<p>If you are unsure what these terms mean you should probably contact your host. If you s",
+      "at": "0x72d17c09f218"
+     },
+     {
+      "s": "hould probably contact your host. If you still need help you can always visit the <a href=",
+      "at": "0x72d17c060648"
+     },
+     {
+      "s": "b>Warning</b>:  PHP Request Startup: Failed to decode session object. Session has been des",
+      "at": "0x72d17c05f508"
+     },
+     {
+      "s": " host. If you still need help you can always visit the <a href=\"https://wordpress.org/supp",
+      "at": "0x72d17c0940a0"
+     },
+     {
+      "s": "ect(): (HY000/2002): php_network_getaddresses: getaddrinfo for wpdb-x86 failed: Temporary ",
+      "at": "0x72d17c060828"
+     },
+     {
+      "s": "al/lib/php/extensions/no-debug-non-zts-20220829/sodium: cannot open shared object file: No",
+      "at": "0x72d17c006008"
+     },
+     {
+      "s": "(HY000/2002): php_network_getaddresses: getaddrinfo for wpdb-x86 failed: Temporary failure",
+      "at": "0x72d17c060718"
+     },
+     {
+      "s": "ork_getaddresses: getaddrinfo for wpdb-x86 failed: Temporary failure in name resolution",
+      "at": "0x72d17c05f128"
+     },
+     {
+      "s": "Allowed memory size of 134217728 bytes exhausted (tried to allocate 75000032 bytes)",
+      "at": "0x72d17c07c018"
+     },
+     {
+      "s": "PHP Request Startup: Failed to decode session object. Session has been destroyed",
+      "at": "0x72d17c0530f8"
+     },
+     {
+      "s": "addresses: getaddrinfo for wpdb-x86 failed: Temporary failure in name resolution",
+      "at": "0x72d17c06051d"
+     },
+     {
+      "s": "ed. This could mean your host&#8217;s database server is down.</p>",
+      "at": "0x72d17c094125"
+     },
+     {
+      "s": "<li>Are you sure you have the correct username and password?</li>",
+      "at": "0x72d17c09f15f"
+     },
+     {
+      "s": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "at": "0x72d17c05f078"
+     },
+     {
+      "s": "Failed to decode session object. Session has been destroyed",
+      "at": "0x72d17c0601f8"
+     },
+     {
+      "s": "<li>Are you sure you have typed the correct hostname?</li>",
+      "at": "0x72d17c09f1a1"
+     },
+     {
+      "s": "al/lib/php/extensions/no-debug-non-zts-20220829/sodium.so",
+      "at": "0x72d17c007008"
+     },
+     {
+      "s": "al/lib/php/extensions/no-debug-non-zts-20220829/sodium",
+      "at": "0x72d17c007108"
+     },
+     {
+      "s": "<li>Are you sure the database server is running?</li>",
+      "at": "0x72d17c09f1dc"
+     },
+     {
+      "s": "/usr/local/etc/php/conf.d/docker-php-ext-sodium.ini",
+      "at": "0x72d17c003018"
+     },
+     {
+      "s": "<h1>Error establishing a database connection</h1>",
+      "at": "0x72d17c09f018"
+     },
+     {
+      "s": "al/etc/php/conf.d/docker-php-ext-pdo_mysql.ini",
+      "at": "0x72d17c0040b0"
+     },
+     {
+      "s": "al/etc/php/conf.d/docker-php-ext-opcache.ini",
+      "at": "0x72d17c004078"
+     },
+     {
+      "s": "al/etc/php/conf.d/docker-php-ext-mysqli.ini",
+      "at": "0x72d17c004040"
+     },
+     {
+      "s": "PHPSESSID=wpbf1eb8ca901654b8381ff0c20f75",
+      "at": "0x72d17c05c068"
+     },
+     {
+      "s": "<p>If you are unsure what these terms me",
+      "at": "0x72d17c060618"
+     },
+     {
+      "s": " form-data; name=\"u\"; filename=\"a.txt\"",
+      "at": "0x72d17c05d020"
+     },
+     {
+      "s": "form-data; name=\"u\"; filename=\"a.txt\"",
+      "at": "0x72d17c05f200"
+     },
+     {
+      "s": "/var/www/html/wp-content/db-error.php",
+      "at": "0x72d17c069118"
+     },
+     {
+      "s": "/var/www/html/wp-includes/pomo/mo.php",
+      "at": "0x72d17c069158"
+     },
+     {
+      "s": "/var/www/html/wp-content/languages",
+      "at": "0x72d17c0690d8"
+     },
+     {
+      "s": "type: text/html; charset=UTF-8",
+      "at": "0x72d17c054260"
+     },
+     {
+      "s": "wpbf1eb8ca901654b8381ff0c20f75",
+      "at": "0x72d17c0562f0"
+     },
+     {
+      "s": "t/form-data; boundary=WPFIRE",
+      "at": "0x72d17c054008"
+     },
+     {
+      "s": "gettext_with_context_default",
+      "at": "0x72d17c07fe18"
+     },
+     {
+      "s": "PHP_SESSION_UPLOAD_PROGRESS",
+      "at": "0x72d17c056210"
+     },
+     {
+      "s": "recursivedirectoryiterator",
+      "at": "0x72d17c0040f8"
+     },
+     {
+      "s": "Content-Type: text/plain",
+      "at": "0x72d17c05d0f9"
+     },
+     {
+      "s": "/var/www/html/wp-content",
+      "at": "0x72d17c07fb08"
+     }
+    ],
+    "pointer_census": {
+     "heap_self": 5337,
+     "libphp_pie": 319,
+     "libc_or_mmap": 274,
+     "other_high": 8041
+    },
+    "live_string_zvals_count": 28,
+    "live_string_zvals": [
+     {
+      "at": "0x72d17c0124c0",
+      "len": 2,
+      "val": "wp"
+     },
+     {
+      "at": "0x72d17c012620",
+      "len": 9,
+      "val": "dir='ltr'"
+     },
+     {
+      "at": "0x72d17c012670",
+      "len": 724,
+      "val": "<h1>Error establishing a database connection</h1>\n<p>This either means that the "
+     },
+     {
+      "at": "0x72d17c012680",
+      "len": 212,
+      "val": "<p>If you are unsure what these terms me\ufffd\u0006\u0006|\ufffdr\u0000\u0000hould probably contact your host"
+     },
+     {
+      "at": "0x72d17c012690",
+      "len": 212,
+      "val": "<p>If you are unsure what these terms me\ufffd\u0006\u0006|\ufffdr\u0000\u0000hould probably contact your host"
+     },
+     {
+      "at": "0x72d17c012700",
+      "len": 724,
+      "val": "<h1>Error establishing a database connection</h1>\n<p>This either means that the "
+     },
+     {
+      "at": "0x72d17c0127b0",
+      "len": 724,
+      "val": "<h1>Error establishing a database connection</h1>\n<p>This either means that the "
+     },
+     {
+      "at": "0x72d17c012840",
+      "len": 724,
+      "val": "<h1>Error establishing a database connection</h1>\n<p>This either means that the "
+     },
+     {
+      "at": "0x72d17c012940",
+      "len": 9,
+      "val": "dir='ltr'"
+     },
+     {
+      "at": "0x72d17c0566c8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c0567a8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056888",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056968",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056a48",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056b28",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056c08",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056ce8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056dc8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056ea8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056f88",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c060008",
+      "len": 30,
+      "val": "wpbf1eb8ca901654b8381ff0c20f75"
+     },
+     {
+      "at": "0x72d17c061018",
+      "len": 40,
+      "val": "PHPSESSID=wpbf1eb8ca901654b8381ff0c20f75"
+     },
+     {
+      "at": "0x72d17c061288",
+      "len": 6,
+      "val": "\ufffd\u0012\u0006|\ufffdr"
+     },
+     {
+      "at": "0x72d17c061468",
+      "len": 6,
+      "val": "\ufffd\u0014\u0006|\ufffdr"
+     },
+     {
+      "at": "0x72d17c064040",
+      "len": 30,
+      "val": "wpbf1eb8ca901654b8381ff0c20f75"
+     },
+     {
+      "at": "0x72d17c064060",
+      "len": 3,
+      "val": "poc"
+     },
+     {
+      "at": "0x72d17c064180",
+      "len": 30,
+      "val": "wpbf1eb8ca901654b8381ff0c20f75"
+     },
+     {
+      "at": "0x72d17c0641a0",
+      "len": 3,
+      "val": "poc"
+     }
+    ],
+    "heap_header_hex": "4000007cd17200000000007cd17200000000007cd1720000ff01000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "_blob_len": 2097152,
+   "walk_delivered": false
+  },
+  {
+   "pid": "15157",
+   "d": "0x72d17c069000",
+   "chunk": {},
+   "d_raw_head": "3890067cd172000000c0067cd172000000c0067cd172000000000000000000000000000000000000010000000000000000100000000000000f00000000000000000000000000000010c0067cd172000020c0067cd172000030c0067cd172000040c0067cd172000050c0067cd172000060c0067cd172000070c0067cd172000080c0067cd172000090c0067cd1720000a0c0067cd1720000b0c0067cd1720000c0c0067cd1720000d0c0067cd17200004045067cd17200006045067cd17200000100000016000000000000000000000022000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f6c616e6775616765730000000000004091067cd1720000000000000000000025000000000000002f7661722f7777772f68746d6c2f77702d636f6e74656e742f64622d6572726f722e706870000000",
+   "used_slots": 15,
+   "entries": [
+    {
+     "slot": 0,
+     "zval_ptr": "0x72d17c06c010",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06d000",
+     "len": 65,
+     "content": "MK00-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 1,
+     "zval_ptr": "0x72d17c06c020",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c060140",
+     "len": 125,
+     "content": "MK01-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 2,
+     "zval_ptr": "0x72d17c06c030",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06e000",
+     "len": 185,
+     "content": "MK02-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 3,
+     "zval_ptr": "0x72d17c06c040",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c064640",
+     "len": 245,
+     "content": "MK03-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 4,
+     "zval_ptr": "0x72d17c06c050",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c06f000",
+     "len": 305,
+     "content": "MK04-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 5,
+     "zval_ptr": "0x72d17c06c060",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c072000",
+     "len": 365,
+     "content": "MK05-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 6,
+     "zval_ptr": "0x72d17c06c070",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073000",
+     "len": 425,
+     "content": "MK06-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 7,
+     "zval_ptr": "0x72d17c06c080",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c073200",
+     "len": 485,
+     "content": "MK07-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 8,
+     "zval_ptr": "0x72d17c06c090",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074000",
+     "len": 545,
+     "content": "MK08-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 9,
+     "zval_ptr": "0x72d17c06c0a0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c074500",
+     "len": 605,
+     "content": "MK09-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 10,
+     "zval_ptr": "0x72d17c06c0b0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079000",
+     "len": 665,
+     "content": "MK10-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 11,
+     "zval_ptr": "0x72d17c06c0c0",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c079300",
+     "len": 725,
+     "content": "MK11-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+    },
+    {
+     "slot": 12,
+     "zval_ptr": "0x72d17c06c0d0",
+     "type_info": "0x307",
+     "type": "STRING?",
+     "value_ptr": "0x72d17c056380"
+    },
+    {
+     "slot": 13,
+     "zval_ptr": "0x72d17c064540",
+     "type_info": "0x106",
+     "type": "STRING",
+     "value_ptr": "0x72d17c055340",
+     "len": 3,
+     "content": "abc"
+    },
+    {
+     "slot": 14,
+     "zval_ptr": "0x72d17c064560",
+     "type_info": "0x1",
+     "type": "FALSE",
+     "value_ptr": "0x72d17c06c020"
+    }
+   ],
+   "d_strings": [
+    "/var/www/html/wp-content/db-error.php",
+    "/var/www/html/wp-content/languages",
+    "/var/www/html/wp-includes/pomo/mo.php",
+    "<li>Are you sure the database server is running?</li>",
+    "<li>Are you sure you have typed the correct hostname?</li>"
+   ],
+   "chunk_analysis": {
+    "chunk": "0x72d17c000000",
+    "bytes_read": 2097152,
+    "strings_count": 104,
+    "strings_top": [
+     {
+      "s": "<p>This either means that the username and password information in your <code>wp-config.ph",
+      "at": "0x72d17c09f04a"
+     },
+     {
+      "s": "<p>If you are unsure what these terms mean you should probably contact your host. If you s",
+      "at": "0x72d17c09f218"
+     },
+     {
+      "s": "hould probably contact your host. If you still need help you can always visit the <a href=",
+      "at": "0x72d17c060648"
+     },
+     {
+      "s": "b>Warning</b>:  PHP Request Startup: Failed to decode session object. Session has been des",
+      "at": "0x72d17c05f508"
+     },
+     {
+      "s": " host. If you still need help you can always visit the <a href=\"https://wordpress.org/supp",
+      "at": "0x72d17c0940a0"
+     },
+     {
+      "s": "ect(): (HY000/2002): php_network_getaddresses: getaddrinfo for wpdb-x86 failed: Temporary ",
+      "at": "0x72d17c060828"
+     },
+     {
+      "s": "al/lib/php/extensions/no-debug-non-zts-20220829/sodium: cannot open shared object file: No",
+      "at": "0x72d17c006008"
+     },
+     {
+      "s": "(HY000/2002): php_network_getaddresses: getaddrinfo for wpdb-x86 failed: Temporary failure",
+      "at": "0x72d17c060718"
+     },
+     {
+      "s": "ork_getaddresses: getaddrinfo for wpdb-x86 failed: Temporary failure in name resolution",
+      "at": "0x72d17c05f128"
+     },
+     {
+      "s": "Allowed memory size of 134217728 bytes exhausted (tried to allocate 75000032 bytes)",
+      "at": "0x72d17c07c018"
+     },
+     {
+      "s": "PHP Request Startup: Failed to decode session object. Session has been destroyed",
+      "at": "0x72d17c0530f8"
+     },
+     {
+      "s": "addresses: getaddrinfo for wpdb-x86 failed: Temporary failure in name resolution",
+      "at": "0x72d17c06051d"
+     },
+     {
+      "s": "ed. This could mean your host&#8217;s database server is down.</p>",
+      "at": "0x72d17c094125"
+     },
+     {
+      "s": "<li>Are you sure you have the correct username and password?</li>",
+      "at": "0x72d17c09f15f"
+     },
+     {
+      "s": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "at": "0x72d17c05f078"
+     },
+     {
+      "s": "Failed to decode session object. Session has been destroyed",
+      "at": "0x72d17c0601f8"
+     },
+     {
+      "s": "<li>Are you sure you have typed the correct hostname?</li>",
+      "at": "0x72d17c09f1a1"
+     },
+     {
+      "s": "al/lib/php/extensions/no-debug-non-zts-20220829/sodium.so",
+      "at": "0x72d17c007008"
+     },
+     {
+      "s": "al/lib/php/extensions/no-debug-non-zts-20220829/sodium",
+      "at": "0x72d17c007108"
+     },
+     {
+      "s": "<li>Are you sure the database server is running?</li>",
+      "at": "0x72d17c09f1dc"
+     },
+     {
+      "s": "/usr/local/etc/php/conf.d/docker-php-ext-sodium.ini",
+      "at": "0x72d17c003018"
+     },
+     {
+      "s": "<h1>Error establishing a database connection</h1>",
+      "at": "0x72d17c09f018"
+     },
+     {
+      "s": "al/etc/php/conf.d/docker-php-ext-pdo_mysql.ini",
+      "at": "0x72d17c0040b0"
+     },
+     {
+      "s": "al/etc/php/conf.d/docker-php-ext-opcache.ini",
+      "at": "0x72d17c004078"
+     },
+     {
+      "s": "al/etc/php/conf.d/docker-php-ext-mysqli.ini",
+      "at": "0x72d17c004040"
+     },
+     {
+      "s": "PHPSESSID=wpba65b9526a9024662ada7bd9fcee",
+      "at": "0x72d17c05c068"
+     },
+     {
+      "s": "<p>If you are unsure what these terms me",
+      "at": "0x72d17c060618"
+     },
+     {
+      "s": " form-data; name=\"u\"; filename=\"a.txt\"",
+      "at": "0x72d17c05d020"
+     },
+     {
+      "s": "form-data; name=\"u\"; filename=\"a.txt\"",
+      "at": "0x72d17c05f200"
+     },
+     {
+      "s": "/var/www/html/wp-content/db-error.php",
+      "at": "0x72d17c069118"
+     },
+     {
+      "s": "/var/www/html/wp-includes/pomo/mo.php",
+      "at": "0x72d17c069158"
+     },
+     {
+      "s": "/var/www/html/wp-content/languages",
+      "at": "0x72d17c0690d8"
+     },
+     {
+      "s": "type: text/html; charset=UTF-8",
+      "at": "0x72d17c054260"
+     },
+     {
+      "s": "wpba65b9526a9024662ada7bd9fcee",
+      "at": "0x72d17c0562f0"
+     },
+     {
+      "s": "t/form-data; boundary=WPFIRE",
+      "at": "0x72d17c054008"
+     },
+     {
+      "s": "gettext_with_context_default",
+      "at": "0x72d17c07fe18"
+     },
+     {
+      "s": "PHP_SESSION_UPLOAD_PROGRESS",
+      "at": "0x72d17c056210"
+     },
+     {
+      "s": "recursivedirectoryiterator",
+      "at": "0x72d17c0040f8"
+     },
+     {
+      "s": "Content-Type: text/plain",
+      "at": "0x72d17c05d0f9"
+     },
+     {
+      "s": "/var/www/html/wp-content",
+      "at": "0x72d17c07fb08"
+     }
+    ],
+    "pointer_census": {
+     "heap_self": 5337,
+     "libphp_pie": 319,
+     "libc_or_mmap": 274,
+     "other_high": 8041
+    },
+    "live_string_zvals_count": 28,
+    "live_string_zvals": [
+     {
+      "at": "0x72d17c0124c0",
+      "len": 2,
+      "val": "wp"
+     },
+     {
+      "at": "0x72d17c012620",
+      "len": 9,
+      "val": "dir='ltr'"
+     },
+     {
+      "at": "0x72d17c012670",
+      "len": 724,
+      "val": "<h1>Error establishing a database connection</h1>\n<p>This either means that the "
+     },
+     {
+      "at": "0x72d17c012680",
+      "len": 212,
+      "val": "<p>If you are unsure what these terms me\ufffd\u0006\u0006|\ufffdr\u0000\u0000hould probably contact your host"
+     },
+     {
+      "at": "0x72d17c012690",
+      "len": 212,
+      "val": "<p>If you are unsure what these terms me\ufffd\u0006\u0006|\ufffdr\u0000\u0000hould probably contact your host"
+     },
+     {
+      "at": "0x72d17c012700",
+      "len": 724,
+      "val": "<h1>Error establishing a database connection</h1>\n<p>This either means that the "
+     },
+     {
+      "at": "0x72d17c0127b0",
+      "len": 724,
+      "val": "<h1>Error establishing a database connection</h1>\n<p>This either means that the "
+     },
+     {
+      "at": "0x72d17c012840",
+      "len": 724,
+      "val": "<h1>Error establishing a database connection</h1>\n<p>This either means that the "
+     },
+     {
+      "at": "0x72d17c012940",
+      "len": 9,
+      "val": "dir='ltr'"
+     },
+     {
+      "at": "0x72d17c0566c8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c0567a8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056888",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056968",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056a48",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056b28",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056c08",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056ce8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056dc8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056ea8",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c056f88",
+      "len": 6,
+      "val": "access"
+     },
+     {
+      "at": "0x72d17c060008",
+      "len": 30,
+      "val": "wpba65b9526a9024662ada7bd9fcee"
+     },
+     {
+      "at": "0x72d17c061018",
+      "len": 40,
+      "val": "PHPSESSID=wpba65b9526a9024662ada7bd9fcee"
+     },
+     {
+      "at": "0x72d17c061288",
+      "len": 6,
+      "val": "\ufffd\u0012\u0006|\ufffdr"
+     },
+     {
+      "at": "0x72d17c061468",
+      "len": 6,
+      "val": "\ufffd\u0014\u0006|\ufffdr"
+     },
+     {
+      "at": "0x72d17c064040",
+      "len": 30,
+      "val": "wpba65b9526a9024662ada7bd9fcee"
+     },
+     {
+      "at": "0x72d17c064060",
+      "len": 3,
+      "val": "poc"
+     },
+     {
+      "at": "0x72d17c064180",
+      "len": 30,
+      "val": "wpba65b9526a9024662ada7bd9fcee"
+     },
+     {
+      "at": "0x72d17c0641a0",
+      "len": 3,
+      "val": "poc"
+     }
+    ],
+    "heap_header_hex": "4000007cd17200000000007cd17200000000007cd1720000ff01000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   },
+   "_blob_len": 2097152,
+   "walk_delivered": false
+  }
+ ]
+}
