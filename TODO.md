@@ -206,3 +206,46 @@ Next: pointer-chain walks (EG/constants -> live creds, option values),
 source-code recovery (opcache SHM or wp-config literals), the fully-
 remote bias+env calibration, and the RCE (highlight_file) atop the
 proven groom.
+
+## RCE STATUS 2026-10-23: the chain is built end-to-end; ONE calibration left
+
+THE FULL CHAIN (all stages source-verified or empirically proven):
+1. Producer (stale BG(unserialize)) - PROVEN (the pool-poisoned 75MB-token
+   decode OOM; the assisted leak gives d + bias per run).
+2. GROOM CARRIER = THE SESSION FILE ITSELF - NEW DESIGN, PROVEN LANDING:
+   the ps_read allocates the WHOLE staged session file as one buffer
+   (file-size pages, first-fit); the fake php_unserialize_data goes at
+   the exact file offset that maps to d's page inside that buffer.
+   NO heap marching, no multipart groom part, no filler-class games.
+   Empirically: the walk READ our fake-d bytes through the stale d
+   (crash RIPs moved through OUR structures - the 'J' padding reads
+   = the placement offset bugs, found and fixed: the s:%d:" header
+   must be backed out of the content offset - fake-d at FILE offset).
+3. THE DESTROY GATE - SOLVED (source + binary verified): the stale path
+   never sees level==1 (init 1->2, paired destroy 2->1) -> var_destroy
+   never runs on the normal path. THE LOCK OVERLAY: last_dtor pointed
+   at BG(serialize_lock)-0x1C so the dup-key var_push_dtor_value's
+   Z_EXTRA_P write (=VAR_UNSERIALIZE_FLAG=2) lands ON the serialize_lock
+   field -> the destroy's `BG(serialize_lock) || level==1` gate opens
+   unconditionally -> var_destroy walks first_dtor (our dtor entries).
+   (The wakeup-flag variant u2=1 needs a real __wakeup class - WP has
+   none; the dup-key u2=2 is the WP-compatible write.)
+4. THE DTOR ROUTE - source-verified at 0x3ec177/0x3ec17b:
+   ce=*(V+0x10), __unserialize=*(ce+0x160), the call to
+   zend_call_known_function(F, V, NULL, &param).
+5. THE FAKE FUNCTION - validated on this binary: F=0xf26820 (E-64 from
+   the .data.rel.ro zend_function_entry; handler@F+72 = the relocated
+   zif_highlight_file; type 218 & 3 == 2 != ZEND_USER_FUNCTION ->
+   the internal dispatch; send_mode 0 = by-value).
+6. THE PARAM - the fake zend_string "/CANARY" (refcount 5) as data[1].
+
+THE REMAINING UNKNOWN (one calibration): the session-read buffer's
+actual landing page in the delivered child's map. Empirical data:
+- M=0 multipart: buffer at [8,76] (first-fit) - d (106) uncovered.
+- M=33 fillers: buffer overshot to ~page 249 (the march + bookkeeping).
+- crash-time gdb memory search (find the LPP signature in the stopped
+  child) = THE measurement instrument; per-iteration log clearing
+  needed (the f5 measurements read stale crashes).
+NEXT: clean M-sweep (rm the catcher logs per iteration) until
+buf_page <= page_d <= buf_page + file_pages - 1, then place the fake-d
+at (page_d - buf_page)*0x1000 and fire. All other stages are ready.
