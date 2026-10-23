@@ -152,3 +152,33 @@ Remaining for FULL-solid (priority order, RCE deferred per operator):
       requirement.
 - [ ] t4a stock-SPL shaping (ASan-instrumented t4a per PLAN NEXT note).
 - [ ] php2shell-bastet.py last-mile runs vs production php83.
+
+## BREAKTHROUGH 2026-10-23: N-ORACLE LIVE - target memory in the HTTP response
+
+`scripts/a3_symmetric.py` + the walk/oracle sequence proved:
+1. GROOM PLACEMENT SOLVED (cb4) on the x86_64 box: the symmetric design
+   implemented - the producer's PAD part (8193B dummy value) pre-shapes
+   the map (its freed read_body 3-page hole = where the decode's d
+   lands); the consumer replays the identical body (8 fillers of 5000B
+   whose copies consume exactly the freed raw-body-temp block, then the
+   groom's read_body chunk1 first-fits the pad hole = d, in-place
+   extend to 3 pages). Walk-discriminator (R:3, groom-indexed)
+   round-tripped THROUGH OUR GROOM's entries => the stale walk consumes
+   attacker-shaped data at d. DELIVERED + SURVIVED + ROUNDTRIPPED.
+2. N-ORACLE: R:1 resolves the fake zval {TARGET-0x10, IS_STRING}; the
+   FILE_START update-encode appends *(TARGET) bytes; OOM prints
+   "tried to allocate N" IN THE RESPONSE with N = *(TARGET).
+   TARGET = basic_globals+0x350 -> N = the serving child's live
+   BG(unserialize).data pointer (0x72d17c091000, 5/5 stable) - the
+   number matched the SERVING child's own heap state (different from
+   the leak-time child's d) = proof the read is live target memory,
+   delivered in-band, from vanilla WP.
+3. SELF-BOOTSTRAPPING: the oracle's own output leaks the true d of the
+   serving child -> regroom precisely. Remaining assisted inputs:
+   the consumer token staging (session-file injection) and the bias
+   (fork-uniform; a remote bias leak is future work - oracle-pointed
+   scans like phpbleed R-2). The READ path itself is pure HTTP.
+
+Next: batch N-oracle reads across TARGET offsets (profile the worker:
+point TARGET at arbitrary qwords - each fire returns 8 bytes);
+characterize per-child stability; then arbitrary-address walks.
