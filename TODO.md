@@ -275,3 +275,38 @@ d-region held another child's OOM-fatal message string instead).
    carrier file bigger than any gap below d so the buffer MUST cover
    d (file_pages > the largest run below d's run; then fake_off from
    the buffer's measured start). The crash-dump instrument is proven.
+
+## php2shell-bastet.py on WP (2026-10-23 final)
+
+WHAT WORKS (proven tonight):
+- --bias flag added (WP has no ?probe=all lab oracle)
+- x86_64 fcall_info offsets CORRECTED from php-src 8.2 headers:
+  off_params=32 (was 48), off_param_count=48 (new), off_handler=64+72=136
+  (was 64+88=152; handler@+72 confirmed by execute_internal disasm and
+  zend_compile.h struct count: type1+pad3+fn_flags4+fn_name8+scope8+
+  prototype8+num_args4+req4+arg_info8+attributes8+T4+pad4+run_time_cache8
+  = 56 then handler@+56+8pad=... wait: common=64, handler=64+8=72 ✓)
+- ZEND_INTERNAL_FUNCTION=1 confirmed (zend_compile.h)
+- --progress-len flag added (vendor's 1MB PROGRESS OOM trigger)
+- APACHE-LEVEL memory_limit staging: conf.d ini files DON'T reach the
+  Apache mod_php workers on the WP Docker image (WP overrides via
+  WP_MEMORY_LIMIT). Fix: php_admin_value in /etc/apache2/conf-available/
+  zz-2m.conf + a2enconf + apache2ctl graceful = WORKS (1MB value OOMs).
+- At 2M with small PROGRESS "x": rfc1867 completes all parts, WP then
+  OOMs (593B dual-fatal response) - the multipart IS fully processed.
+- At 2M with 1MB PROGRESS: OOM fires DURING the PROGRESS value copy
+  (367B response) - TOO EARLY for the groom (kills request before the
+  file/t[] parts are parsed).
+
+WHY IT STILL FAILS: the 618 two-update groom mechanism (stall + t[]
+reclaim of the freed progress HashTable arData) does not produce execution
+on the WP heap. n_groom swept 1-350: zero crashes, zero blind-exec
+(file-drop verify), zero in-band output. The vendor's bleed82 success used
+their specific heap tuning + the 2M .htaccess lab environment. The WP
+heap geometry differs (different request lifecycle, different allocation
+pattern, different 320-bin freelist ordering).
+NEXT: (a) use the crashcatcher to set a bp on php_session_rfc1867_update
+and dump the freed HashTable's size/bin + the t[] string landing positions;
+(b) retune blob size + n_groom for the WP heap; (c) or accept that the
+vendor's 618 groom needs per-target tuning and use the proven phpbleed
+chain (the N-oracle RCE from the earlier milestones) as the WP shell.

