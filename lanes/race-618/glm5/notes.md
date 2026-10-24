@@ -26,3 +26,9 @@
 - Harness: lanes/race-618/glm5/matrixbleed.py {wp-fpm,mediawiki,phpbb} [--rounds N] [--big N] - programmatic serialized data (gotcha #3), SESSION format (gotcha #4).
 - cb-A stock-INI revalidation therefore runs ON THESE TARGETS (:8099 is race-glm4's): producer + carrier = MATCHED at stock 128M production INI on apache/MW + apache/phpBB; NOT-MATCHED-on-fpm for persistence (above). Full wpdump/N-oracle on 128M still needs the ARM64 stale-child lane work (next).
 - Laravel: honest skip - no maintained laravel-on-8.2.34 lane image (upstream pins newer PHP); noted, not built this pass.
+
+## cb-B UNDER LOAD (24-Oct, lanes/race-618/glm5/loadprobe.py, mediawiki :8104)
+- Method: producer OOM marks a mod_php child stale; walk oracle (R:14 consumer) fired after delay D; 30-concurrent GET flood between.
+- UNDER 30-CONCURRENT FLOOD: delivered 0/15 across D = 1/3/6/12/24s. The stale-vs-fresh discrimination COLLAPSES under load on this lane: with ~8 prefork children saturated by flood traffic, the consumer never lands its round-trip on a usable stale child within even 1s. Attack window with the session-decode OOM producer under load ~= 0s on our stack.
+- IDLE (no flood) contrast, small sample: 0s 2/4, 5s 0/3, 15s 0/3, 30s 3/3 delivered - NO clean survival curve; delivery is dominated by which child the consumer's connection lands on (p ~= 1/#children per fire). The 30s 3/3 is child-lottery, not window growth.
+- VERDICT: ToB "under load" is NOT-MATCHED for the stale-child disclosure consumer with this producer shape on our ARM64/MW lane (0/15 under load); their under-load demo presumably rides the 618-update non-fatal route instead of the fatal session-decode. Honest row added to the claim map.

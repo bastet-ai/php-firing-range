@@ -76,3 +76,4 @@ Do NOT execute the vendor bundle; re-derive from their written mechanics.
 | MediaWiki/phpBB app matrix | MATCHED (MW 1.42 + phpBB 3.3.16 on php 8.2.34 pre-patch, stock core, CLI/log-side staging) |
 | Laravel | SKIPPED (no maintained 8.2.34 laravel lane image; honest gap) |
 | ARM64 + x86-64 | producer/carrier proven ARM64 here; x86_64 proven on the other box (TODO @ 732775d) |
+| under-load stability of stale-child consumption | NOT-MATCHED (0/15 walk deliveries under 30-concurrent flood, delays 1-24s, MW :8104 lane; idle delivery is a child-lottery, no clean window) |
