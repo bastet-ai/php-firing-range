@@ -1,0 +1,7 @@
+         apache2  494253 [012] 3319298.183639: probe_libphp:ps_srlzr_decode_php: (e4d28bfa2dc4) val=251592905777176 vallen=8192
+         apache2  494253 [012] 3319298.184079: probe_libphp:ps_srlzr_decode_php: (e4d28bfa2dc4) val=251592727065192 vallen=0
+         apache2  496086 [012] 3319298.480353: probe_libphp:ps_srlzr_decode_php: (e4d28bfa2dc4) val=251592905777176 vallen=8192
+         apache2  496086 [012] 3319298.480738: probe_libphp:ps_srlzr_decode_php: (e4d28bfa2dc4) val=251592727065192 vallen=0
+         apache2  494430 [014] 3319298.771344: probe_libphp:ps_srlzr_decode_php: (e4d28bfa2dc4) val=251592905777176 vallen=8192
+         apache2  494430 [014] 3319298.771954: probe_libphp:ps_srlzr_decode_php: (e4d28bfa2dc4) val=251592727065192 vallen=0
+         apache2  496239 [006] 3319299.250629: probe_libphp:ps_srlzr_decode_php: (e4d28bfa2dc4) val=251592649474072 vallen=75004927
