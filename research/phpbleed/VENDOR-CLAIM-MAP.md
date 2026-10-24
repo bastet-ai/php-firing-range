@@ -77,3 +77,4 @@ Do NOT execute the vendor bundle; re-derive from their written mechanics.
 | Laravel | SKIPPED (no maintained 8.2.34 laravel lane image; honest gap) |
 | ARM64 + x86-64 | producer/carrier proven ARM64 here; x86_64 proven on the other box (TODO @ 732775d) |
 | under-load stability of stale-child consumption | NOT-MATCHED (0/15 walk deliveries under 30-concurrent flood, delays 1-24s, MW :8104 lane; idle delivery is a child-lottery, no clean window) |
+| ARM64 lane at stock INIs: memory-derived in-band qword read (N-oracle) | MATCHED (24-Oct, MW :8104, arm64: ps_read 32KB-1MB carrier covers the stale d at f_d=0x7FE8; fake-zval groom -> N=*(bg+0x330) fired repeatedly in-band under display_errors=Off; adaptive retarget + env-secret tile pending) |
