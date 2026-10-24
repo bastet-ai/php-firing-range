@@ -88,3 +88,66 @@ Strength properties:
   unknown H (BG.data after arm) is instead derived deterministically
   as chunk+0x6a000 from the leak, because their arm CHOOSES H (emalloc
   0x2018 from the dummy's freed page) rather than discovering it.
+
+## worker-pinning (rung 3 — their chunked-POST pin vs our child-lottery wall)
+
+### Their mechanism (code citations)
+
+Two pin modes (run_ext.py:130-171):
+- FIXED (pin_slow_pause.py): opens exactly workers-1 (default 149)
+  connections, each an UNFINISHED chunked POST
+  (`Transfer-Encoding: chunked`, one 4KiB chunk sent, terminating
+  zero-chunk NEVER sent, pin_slow_pause.py:16-27). Holds them for
+  `hold` seconds, re-sending 4KiB/s per socket (lines 55-66), replacing
+  dropped pins until a pause-file appears.
+- ADAPTATIVE (pin_adaptive.py, the default): opens pins one at a time
+  (20ms apart), probing each time with `GET /readme.html` (static file,
+  no PHP); when the probe times out the pool is saturated
+  (pin_adaptive.py:74-79); then closes pins from the TAIL until a probe
+  succeeds → exactly one free worker (lines 82-94). Reports "dropped N"
+  if any pin connection dies during the chain (lines 103-107).
+
+Why a chunked-body pin and not keep-alive: a mid-body POST is BUSY, so
+MPM MaxSpareServers reaping (10 idle max) cannot reclaim it (REPORT §3).
+Their rate-hardening finding (pin_adaptive.py:16-21 comment): Debian's
+mod_reqtimeout `body=10,minrate=500` closed 512B/s pins on jitter;
+4KiB/s = 8x minimum survives. Their fixed-149 mode failed silently
+exactly this way before the fix (REPORT §12 row "Pin holds fewer
+workers").
+
+### Does the pin survive the OOM fatal? How is child death verified?
+
+- The OOM fatal (E_ERROR) only kills the REQUEST; mod_php child survives.
+  The pin sockets live in OTHER children — untouched by the free
+  worker's fatal. When rotate() deliberately kills the free worker via
+  an oversized OOB read (SIGSEGV), 149 workers remain busy → prefork
+  must immediately fork a replacement for the demand → the single-free-
+  worker invariant is maintained THROUGH the fatal and the refork.
+- Child death verification is purely IN-BAND: rotate() (run_ext.py:253-275)
+  accepts ONLY `resp 0` / no status line from b_leak20.py as death; a
+  complete response (any 200/500) means survival → escalate the read
+  (0x800000 → 0xC00000 → 0x1800000), 3 tries each. No /proc, no gdb,
+  no docker exec (run_ext.py:3-8 docstring). REPORT §6.1.
+
+### Comparison to our findings
+
+| question | our status | their answer |
+|---|---|---|
+| stale-child consumption under load | cb-B: 0/15 at 30-concurrent flood, window ~0s, pure child-lottery (glm5 notes 24-Oct, :8104) | SOLVED BY CONSTRUCTION: pin leaves exactly 1 free worker → every attack request lands on the same child; no lottery, no flood needed |
+| idle delivery | lottery p≈1/#children (glm5) | pin makes p=1; also makes "retry in place" (leak) valid, which our walk-oracle design forbids (we rotate via R:n self-resolve instead) |
+| SIGSTOP-pin gotcha (glm4 arm64, TODO: "never SIGSTOP-pin before exec staging"; lane-hang postmortem) | host/container-level pin froze the lane | theirs is pure HTTP — no exec, no signals, no lane-freeze risk; also no flock interaction |
+| flock pinning (our tooling serializes fires) | flocks serialize OUR OWN tools per target | orthogonal: their pin doesn't touch session files, no flock window interaction |
+| fpm children EXIT on the fatal (glm5 :8103, code 70) | stale-global persistence fails on fpm | pin still works on fpm topology in principle (busy children can't be reaped), but their whole chain rides mod_php child-survival; fpm remains open for them too |
+| worker count discovery | N/A (we assumed) | adaptive probe-and-close — works on ANY prefork count, no config read; directly answers our ":8099 has how many children" class of unknowns |
+
+### Verdict
+
+The chunked-POST pin is SUPERIOR to every same-worker technique we have
+tried (flood-based discrimination, R:n walk oracle, SIGSTOP). It is the
+clean fix for the cb-B under-load wall: our 0/15 was because the
+consumer competed with flood traffic for random children; pinning N-1
+workers removes the competition entirely. Adaptation is low-risk:
+loopback, no /proc, no exec, Apache-only (mod_php AND fpm topologies
+both have busy-worker semantics), and the reqtimeout rate floor
+(4KiB/s × ~150 pins ≈ 600KB/s loopback) is trivially affordable. Design
+sketch in adaptations.md (rung 7b).
