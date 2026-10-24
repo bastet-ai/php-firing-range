@@ -173,6 +173,25 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     restart: unless-stopped
 
+  mediawiki:
+    # cb-D: MediaWiki on the SAME pre-patch php 8.2.34 - app-identity
+    # matrix. Host-native arch, NO platform pin. DB schema on wpdb-fpm.
+    build: ./range/mw
+    ports:
+      - "127.0.0.1:8104:80"
+    restart: unless-stopped
+    depends_on:
+      - wpdb-fpm
+
+  phpbb:
+    # cb-D: phpBB on the SAME pre-patch php 8.2.34.
+    build: ./range/phpbb
+    ports:
+      - "127.0.0.1:8105:80"
+    restart: unless-stopped
+    depends_on:
+      - wpdb-fpm
+
   wpdb-x86:
     # the wordpress-x86 lane's own DB (wpdb itself is for the original
     # arm64 census lane). NO platform pin: mysql:8.0 is multi-arch, so
