@@ -286,3 +286,69 @@ not measured (opcache capacity math; 8.5 version gate). The PG overwrite
 rejection is the mirror image of our destroy-gate success: where they
 hit the zval-slot value wall and stopped, our LOCK-0x1C/var_destroy
 route weaponizes exactly the destruction path that blocked them.
+
+## aslr-gate (rung 6 — the one random condition, and the fork-uniformity reconciliation)
+
+### What exactly the gate is (code citations)
+
+- run_ext.py:238-249 choose_str_off(): scans H+0x400..H+0xF00 step
+  0x100 for a fake-zend_string address whose 8 POINTER BYTES avoid
+  0x7C ('|'). Gate = every candidate fails → SystemExit "unfavorable
+  ASLR: start a fresh container".
+- Why the constraint exists at all: the fake call frame must be carried
+  INSIDE the PHP_SESSION_UPLOAD_PROGRESS KEY (producer-frame,
+  stage_rce.py:69-77 + frame_key() stage_rce.py:66-82), and PHP rejects
+  the whole upload-progress key if it contains the session delimiter
+  '|' (stage_rce.py:79-82 comment). arg1.value = H+str_off is embedded
+  in that key, so an 0x7C byte in the pointer kills the key.
+- REPORT §12: "Per-process ASLR: every mmap address in this child
+  shares that byte" — i.e., if the byte position of H's address that
+  varies at boot happens to be 0x7C, ALL of H+{0x400..0xF00} inherit
+  it (same 2MiB region → same middle bytes). Fresh container = new
+  draw. Detected BEFORE any session-file work (run_ext.py leak stage),
+  so the cost of a bad draw is one cheap leak, not a burned chain.
+
+### Reconciliation with OUR fork-uniform d finding (the brief's question)
+
+- THEIR data: chunk is fork-stable across rotate() kills and reforks
+  within a container (REPORT §6.1: "The new worker's ZendMM chunk base
+  remains consistent with the leaked chunk"; --base/--h REUSE works on
+  the same container across rotations, REPORT §10 row "same container
+  C, --base/--h reuse, 24s"). libphp base likewise (their anchors
+  agree across children within a run).
+- OUR data: 8.2.34 arm64 MW lane — d FORK-UNIFORM at 0xe4d289c76000
+  across every stale child (glm5 24-Oct); x86 8.2.34 WP lane — E=
+  0xf26860 .data.rel.ro anchors stable across children.
+- RESOLVED: NO contradiction, and NO 8.2-vs-8.3 divergence. Both
+  observations describe the same two-level structure: (a) the mmap
+  layout is drawn ONCE per parent-process boot and INHERITED by every
+  prefork child via fork() → fork-uniform chunk/base/d WITHIN a
+  container; (b) the drawn value itself is per-boot entropy → the 0x7C
+  lottery sits ABOVE the fork-uniformity, and only a fresh container
+  redraws it. Their "per-process" wording = per-(parent-)process boot
+  draw, inherited by children. Our earlier phrasing "per-child d-region"
+  (x86 session-buffer calibration problem, TODO §4) concerned the
+  PER-CHILD ps_read BUFFER page — a request-time allocation whose
+  address depends on the child's request history, which is genuinely
+  per-child — NOT the fork-uniform base. Their chain avoids that
+  variable entirely by CHOOSING H via reclaim (rung 4), which is why
+  they only see the boot-time byte gate and we see a per-child page
+  calibration.
+- Practical for our chain: --base/--h-style reuse is valid on our
+  apache lanes (fork-uniform base + d); a 0x7C-in-pointer gate exists
+  for us ONLY on routes that embed pointers in upload-progress keys.
+  Our phpbleed chain plants pointers in session FILES (ps_read path,
+  no '|' filtering of file content) → we do NOT inherit this gate; our
+  N-oracle in-band encode append likewise filters nothing byte-wise
+  (it URL-encodes). Keep it in mind if we ever adopt their frame-key
+  carrier: adapt by choosing str_off or by planting the frame in the
+  session file instead of the key (their producer-frame chose the key
+  because they control the key but the FILE content only via 30MB
+  filename string — see rung 4).
+
+### Gate probability sketch
+12 candidates × ~2-3 truly-random bytes per candidate address → bad
+draw ≈ (1/256)-class per byte; observed once in 10 fresh containers
+(REPORT §10: A-I pass, J stopped). ~10% observed, consistent with a
+couple of effective random bytes. Not a heap/timing failure — pure
+byte-value lottery, detected at leak time.
