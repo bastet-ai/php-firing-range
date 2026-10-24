@@ -182,3 +182,30 @@ WordPress-x86-83 (:8101): 8.3.35 pre-patch (corrupt-token lane).
 - NEVER pin platform: on shared compose services.
 - NEVER let a floating php tag roll a vulnerable lane.
 - Time-box long turns; write files in chunks and iterate.
+
+## VA (vendor-audit) next actions — GLM6, from Percivalll static audit (24-Oct)
+
+(Analyses + sketches: lanes/vendor-audit/{notes,recon,adaptations}.md;
+claim map: research/phpbleed/VENDOR-CLAIM-MAP.md §Percivalll.)
+
+1. Implement + fire scripts/va_pin.py (adaptive chunked-POST pin,
+   adaptations.md #1) on :8088/:8089, then re-run the cb-B under-load
+   matrix (glm5 loadprobe shape): expect N/N delivery vs 0/15 baseline.
+2. Port the stale-PS(id) Set-Cookie OOB leak (va_leak.py,
+   adaptations.md #2) with OUR per-build anchors; goal: fully-remote
+   bootstrap replacing the /proc-assisted bias discovery (priority 3
+   above); verify base+chunk on 8.2.34 x86.
+3. Derive OUR PS(serializer) field offset on 8.2.34 (disasm
+   php_session_decode on wordpress-x86 libphp.so; their +0x148 is
+   8.3.35) — unblocks the serializer plan-B route if the phpbleed
+   last-mile calibration fails again.
+4. Compose target action (do NOT build until authorized): new lane
+   `wordpress-712-83` from image wordpress:7.1.2 digest
+   sha256:e04cf657f24889e96b5544828cdd5a92a0b51819f3e1899183f9be6ea0485edf
+   (PHP 8.3.35, matches the audited target EXACTLY; loopback-only
+   published port, NO platform pin, separate mysql service with
+   --skip-name-resolve) — needed for a faithful live-fire comparison
+   of the vendor chain after orchestrator authorization.
+5. Direct lane test of the chunked-TE post_max_size bypass on an 8M
+   stock lane (150MB multipart via Transfer-Encoding: chunked, no
+   Content-Length) — cheap, closes a claim-map UNVERIFIED row.
