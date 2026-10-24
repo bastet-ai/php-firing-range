@@ -38,3 +38,24 @@
 - OPEN (next turn, priority): cb-A full half = wpdump/N-oracle + DB-password tiling at stock 128M on the NEW ARM64 targets - needs arm64 N-oracle offsets (glm3/glm4 notes hold the arm64 lane design; per-child d-region), PLUS cb-E RCE final mile (TODO priority 1; oversized-carrier hint: the fpm/matrix lanes already proved 200M carriers read fine when owner==uid, and php-fpm child-exit finding redirects cb-E work to apache lanes).
 - Laravel: honest skip noted in claim map.
 - Host mem discipline: free -g checked before every build (12G avail at last check); no co-tenant touched; :8099 never fired.
+
+## TURN 2 (24-Oct): arm64 N-oracle port + carrier experiments (a3_arm64_mw.py)
+### DERIVED arm64 offsets (mediawiki image libphp.so, ARM aarch64, PHP 8.2.34, BuildID fd4e9a3d...; verified LIVE not hardcoded)
+- basic_globals = .so BSS 0xf1e748; runtime addr READ VIA GOT (slot at .so vaddr 0xEFF220, from adrp eff000+544 in php_var_unserialize_init) - matches base+0xf1e748 live (0xe4d28cbae748, bias 0xe4d28bc90000).
+- BG(unserialize).data @ bg+0x330 (str x0,[x19,#816]), .level @ bg+0x338 (w1,[x19,#824]); d = emalloc_large(0x2018=8216) from init disasm; init reuses d when level!=0 (level++ branch at init+0x68).
+
+### PROVEN on the MW :8104 lane at FULLY STOCK php.ini-production
+- Producer OOM (75MB staged session + pad-shape multipart) poisons the pool: 5-6 stale children, d FORK-UNIFORM at 0xe4d289c76000 across every child (deterministic; = heap primary chunk 0xe4d289c00000-0xe4d289e00000 + 0x76000).
+- /proc helper scan (GOT-based) reads per-child BG live; d chunks are ZEND_MM-cached (freed, NEVER munmapped) - post-mortem dumps show full var_hash content (last=d+0x38, first/last_dtor=0xe4d289c6e000 chain).
+- The stale d IS live-dangling: a consumer request on a stale child WALKS the freed entries (consumed, level flips to 0 on normal completion - clean destroy).
+
+### NOT TRANSFERRING from x86 (per-box heap geometry - the x86 lane's own warning)
+- a3_symmetric multipart groom (8193B read_body hole model): consumers land but the groom does NOT take the producer's d hole; R:1 resolves against leftover producer entries; occasionally SIGSEGV later in MW's own zif_array_map (x1=-1 walk of freed entries). Same wall x86 hit ("n_groom 1-350 all miss; vendor needs per-target heap tuning").
+- 200MB-class oversized carrier: IMPOSSIBLE at stock memory_limit=128M - ps_read emalloc(200MB) alone exceeds the limit -> instant OOM fatal, request dies before decode, stale state SURVIVES (500 returned in <5ms; d untouched). ToB's "normal memory_limit" claim makes >127MB ps_read carriers structurally impossible - their oversized-carrier route must ride a lower limit or a different buffer.
+- 1.9MB and 8192B (8216 alloc class, zend_string +0x18 header accounted) session-file carriers: 10+ fires on stale children, MAGIC markers NEVER appear at d - the ps_read large-class alloc does NOT first-fit into the freed d run on arm64 (chunk placement goes to fresh chunks above the heap, not the primary chunk's freed large run).
+- GOTCHA (new, bash): od -An -tx1 byte order must be converted little-endian (or use od -An -tu8 for direct decimal qwords); cost an hour of phantom-empty scans.
+
+### NEXT (lane, ordered)
+1. gdb bp march-map: break emalloc_large + php_var_unserialize_init; log alloc (ptr,size,caller) sequence for producer vs consumer bodies; find the arm64 hole that the groom must take (the a3 symmetric replay needs per-box retune - same as x86's n_groom sweep).
+2. Then wire the N-oracle groom at the mapped hole; self-verify N==*(bg+0x330)==d at stock INIs => production-grade closure row.
+3. RCE last mile follows only after 1-2 (the x86 chain's serialize_lock overlay + route offsets need arm64 derivation from this same binary).
