@@ -32,3 +32,9 @@
 - UNDER 30-CONCURRENT FLOOD: delivered 0/15 across D = 1/3/6/12/24s. The stale-vs-fresh discrimination COLLAPSES under load on this lane: with ~8 prefork children saturated by flood traffic, the consumer never lands its round-trip on a usable stale child within even 1s. Attack window with the session-decode OOM producer under load ~= 0s on our stack.
 - IDLE (no flood) contrast, small sample: 0s 2/4, 5s 0/3, 15s 0/3, 30s 3/3 delivered - NO clean survival curve; delivery is dominated by which child the consumer's connection lands on (p ~= 1/#children per fire). The 30s 3/3 is child-lottery, not window growth.
 - VERDICT: ToB "under load" is NOT-MATCHED for the stale-child disclosure consumer with this producer shape on our ARM64/MW lane (0/15 under load); their under-load demo presumably rides the 618-update non-fatal route instead of the fatal session-decode. Honest row added to the claim map.
+
+## SESSION LEDGER (24-Oct, turn 1 complete)
+- DONE cb-C build+fire, cb-D build+fire, cb-A (new-target version, producer/carrier half), cb-B. All committed+pushed.
+- OPEN (next turn, priority): cb-A full half = wpdump/N-oracle + DB-password tiling at stock 128M on the NEW ARM64 targets - needs arm64 N-oracle offsets (glm3/glm4 notes hold the arm64 lane design; per-child d-region), PLUS cb-E RCE final mile (TODO priority 1; oversized-carrier hint: the fpm/matrix lanes already proved 200M carriers read fine when owner==uid, and php-fpm child-exit finding redirects cb-E work to apache lanes).
+- Laravel: honest skip noted in claim map.
+- Host mem discipline: free -g checked before every build (12G avail at last check); no co-tenant touched; :8099 never fired.
