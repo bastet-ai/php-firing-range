@@ -78,3 +78,25 @@ Do NOT execute the vendor bundle; re-derive from their written mechanics.
 | ARM64 + x86-64 | producer/carrier proven ARM64 here; x86_64 proven on the other box (TODO @ 732775d) |
 | under-load stability of stale-child consumption | NOT-MATCHED (0/15 walk deliveries under 30-concurrent flood, delays 1-24s, MW :8104 lane; idle delivery is a child-lottery, no clean window) |
 | ARM64 lane at stock INIs: memory-derived in-band qword read (N-oracle) | MATCHED (24-Oct, MW :8104, arm64: ps_read 32KB-1MB carrier covers the stale d at f_d=0x7FE8; fake-zval groom -> N=*(bg+0x330) fired repeatedly in-band under display_errors=Off; adaptive retarget + env-secret tile pending) |
+
+## Percivalll (2026-10-24) — php2shell-wordpress-rce (static audit, GLM6 lane)
+
+Source: github Percivalll/php2shell-wordpress-rce @ 907ceb5 (cloned
+READ-ONLY to vendor-audit/, NEVER executed; audit notes in
+lanes/vendor-audit/{notes,recon,adaptations}.md). Distinct vendor from
+calif.io above: this is a SECOND independent php2shell implementation,
+targeting default wordpress:7.1.2 (PHP 8.3.35 NTS, Apache prefork
+mod_php, image digest e04cf657…, stock INIs incl. memory_limit=128M,
+post_max_size=8M, upload_progress on, strict_mode off).
+
+| claim | our verdict (static code audit; no execution) |
+|---|---|
+| chunked-POST worker pin: 149 unfinished chunked POSTs free exactly one worker; 4KiB/s survives mod_reqtimeout body=10,minrate=500; adaptive probe frees exactly one | MATCHES-OUR-MECHANICS and SUPERIOR TO OUR PRACTICE — solves our cb-B child-lottery wall by construction (glm5: 0/15 under 30-concurrent flood); pure HTTP, no SIGSTOP/flock hazards; death verified in-band (resp 0 = child died, escalate OOB read 8/12/24MiB) |
+| A request leaves stale PS(id) + dirty SAPI header state after FILE_START php_url_encode 4096B OOM; worker survives | matches-our-observed (mod_php children survive E_ERROR — our cb-A/wpdump base fact); the specific stale-PS(id)+send_cookie residue is new-to-us-unverified (plausible; same bailout-skips-cleanup physics as our 618 observations) |
+| 4KiB Set-Cookie OOB read: bin7 groom (31×32B names), 63B value forges next-slot zend_string len=0x1000, new session id overlaps it, php_url_encode leaks 4096B heap → base (16-offset vote, min 4) + chunk (2MiB bucket), H=chunk+0x6a000, all in ONE 200 response | new-to-us-unverified; STRONGER than our N-oracle on volume/staging (4KiB contiguous, no session-file staging, base+chunk together) but NOT arbitrary read (fixed groomed window); complementary — see adaptations.md |
+| op_array-at-chunk-head requirement: leak must run before index.php executes/opcache caches it; retry in place | new-to-us; consistent with our gotcha #8 (raw-body prealloc shifts march models) physics; no analog tested by us |
+| two session-file producers: /tmp/sess_r1big = 30MiB filename (31,457,602B), /tmp/sess_trig2 = 16,697B fake zend_execute_data via 0x4000 progress key; chunked TE bypasses post_max_size=8M for 150MB bodies | new-to-us-unverified; the chunked-TE post_max_size bypass contradicts nothing we observed (we stage at 2M via php_admin_value; theirs rides stock 8M with no Content-Length) — worth a direct lane test |
+| arm: dummy 1MiB-filename part's freed page reclaimed by emalloc(0x2018) at FILE_START → BG.data=H chosen deterministically; 500=success oracle, 302=retry | matches-our-observed structurally (BG(unserialize).data = emalloc_large(0x2018), our a3/arm64 init disasm); the H-choosing reclaim is the elegant delta vs our H-discovering N-oracle |
+| R1: var_push 64-bit wrap-write PS(serializer)=H+0x310 (fake name/encode/decode=zif_system); R2: ps_read(sess_trig2) → serializer->decode(fake frame) → zif_system(cmd) as www-data | new-to-us-unverified; FEWER primitives than our forged zend_fcall_info chain (no fcall_info/execute_internal/destroy-gate); targets verified writable on OUR 8.2.34 build: ps_globals 0xf0c998 (.bss), zif_system 0x36ff48 (readelf 24-Oct, wordpress-x86 container); serializer field offset +0x148 is their 8.3.35 measurement, needs per-build derivation for 8.2 |
+| 9/9 fresh containers, 24-26s, one ASLR gate (0x7c in H pointer bytes), --base/--h reuse within a container | UNVERIFIED (no execution this turn); internally consistent with fork-uniformity we measured (d fork-uniform 8.2/arm64): chunk/base fork-stable within container, byte lottery per boot above it; gate is key-delimiter-specific — our session-file carriers do not inherit it |
+| rejected: PG(auto_prepend_file) (var_push writes zval slot, value-shape wall), opcache type confusion (needs ~3700 scripts vs 1513; SMEM persist ≠ request OOM), 8.5 fatal-backtrace (absent 8.3/8.4) | MATCHES our walls (value-shape, carrier-placement coupling = our gotchas #7/#8/#9; symmetric-groom misses); opcache capacity math and the 8.5 gate are NEW-TO-US negative results |
