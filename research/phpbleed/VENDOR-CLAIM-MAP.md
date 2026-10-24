@@ -65,3 +65,14 @@ WP path is the 618/619 + generalized-interruption machinery.
    shaping + teardown consumption per their bucket diagram.
 4. php2shell-bastet.py last-mile runs against production php83.
 Do NOT execute the vendor bundle; re-derive from their written mechanics.
+
+## ToB "production-grade" claim (23-Oct post) - GLM5 verification (24-Oct, ARM64 box, matrix targets :8102-:8105)
+
+| claim element | our status |
+|---|---|
+| stock php.ini-production knobs (display_errors=off, memory_limit 128M), unauth producer OOM after rfc1867 | MATCHED on mediawiki :8104 and phpbb :8105 (tried-to-allocate 75000032, log-side fatal under display_errors=Off; matrixbleed.py) |
+| session carrier / stale child reuse (walk oracle R:14 round-trip) | MATCHED on mediawiki + phpbb (apache mod_php children survive the E_ERROR) |
+| nginx/php-fpm -> root lane | MATCHED-with-caveat: producer OOM fires on the fpm lane at stock 128M, BUT the fpm child EXITS (code 70) on the session-decode fatal - per-worker stale-global persistence does NOT hold with this producer; their route must be the non-fatal rfc1867-update shape (618 chain) |
+| MediaWiki/phpBB app matrix | MATCHED (MW 1.42 + phpBB 3.3.16 on php 8.2.34 pre-patch, stock core, CLI/log-side staging) |
+| Laravel | SKIPPED (no maintained 8.2.34 laravel lane image; honest gap) |
+| ARM64 + x86-64 | producer/carrier proven ARM64 here; x86_64 proven on the other box (TODO @ 732775d) |
