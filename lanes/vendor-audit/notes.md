@@ -7,11 +7,15 @@ dispatch RCE, :8088 proven), scripts/a3_*.py (N-oracle), TODO.md §PROVEN.
 ## Ladder progress
 - [x] rung 1 pipeline reconstruction → recon.md (commit 25fb6db)
 - [x] rung 2 leak channel → "set-cookie-oob" below
-- [ ] rung 3 worker pinning
-- [ ] rung 4 RCE route (serializer vs fcall_info)
-- [ ] rung 5 rejected primitives
-- [ ] rung 6 ASLR gate
-- [ ] rung 7 integration (claim map, adaptations, TODO, compose action)
+- [x] rung 3 worker pinning → "worker-pinning" below (commit 19ab0a2)
+- [x] rung 4 RCE route → "rce-route" below (commit 1bdad73)
+- [x] rung 5 rejected primitives → "rejected-primitives" below (commit 60ccc16)
+- [x] rung 6 ASLR gate → "aslr-gate" below (commit 0707e07)
+- [x] rung 7 integration → VENDOR-CLAIM-MAP §Percivalll (fe1d17e),
+      adaptations.md (6b2ad7f), TODO VA section + compose action
+      (679cdd3). AUDIT LADDER COMPLETE 24-Oct; live-fire of the pin is
+      the top next action (TODO VA #1), orchestrator authorization
+      required for any execution against vendor-derived shapes.
 
 ## set-cookie-oob (rung 2 — their 4KiB leak channel vs ours)
 
