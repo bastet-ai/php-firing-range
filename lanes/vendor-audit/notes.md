@@ -151,3 +151,94 @@ loopback, no /proc, no exec, Apache-only (mod_php AND fpm topologies
 both have busy-worker semantics), and the reqtimeout rate floor
 (4KiB/s × ~150 pins ≈ 600KB/s loopback) is trivially affordable. Design
 sketch in adaptations.md (rung 7b).
+
+## rce-route (rung 4 — fake ps_serializer vs our forged zend_fcall_info)
+
+### Their route (stage_rce.py:38-62, REPORT §7-§8)
+
+Primitives consumed:
+1. leak: base + chunk + H (one B request).
+2. heap placement: arm forces BG.data = H by RECLAIMING a chosen page
+   (dummy 1MiB filename buffer freed right before the 0x2018 emalloc at
+   FILE_START — arm_file2.py docstring). H is CHOSEN, not discovered.
+3. ONE pointer write: R1's var_push wrap-write
+   (stage_rce.py:47: N0 = (psg+0x148-(H+0x200)-0x10)//8, 64-bit negative
+   wrap) lands PS(serializer) = H+0x310. Value written = pointer into
+   their own fake var_entries (no arbitrary-value gadget needed — the
+   value is `rval`, the dtor temp zval address they planted).
+4. call frame: NOT forged in memory — it is the SESSION FILE CONTENT.
+   sess_trig2 = 0x4000B key = fake zend_execute_data (num_args=1,
+   arg1.value=H+str_off, arg1.type=IS_STRING — stage_rce.py:69-77), read
+   verbatim as `val` by ps_read and handed to
+   PS(serializer)->decode(val) = zif_system(execute_data=val).
+5. The fake zend_string (cmd) lives INSIDE the R2 900-field re-plant of
+   H (fake_r2, stage_rce.py:65-74: gc=1|0x106<<32, len, data).
+
+So the total forged-state bill: one var_entries table + one zval-sized
+serializer struct + one zend_string + one call frame in a file. NO
+fcall_info, NO ce->__unserialize dance, NO execute_internal dispatch
+trick, NO LOCK-0x1C destroy gate.
+
+### Our route (phpbleed R-7, per TODO §4)
+
+Consumes: last_dtor=LOCK-0x1C unconditional destroy gate, dup-key u2=2
+→ Z_OBJCE_P → ce->__unserialize → zend_call_known_function, fake
+function E=.data.rel.ro F=E-64 handler=zif_highlight_file relocated,
+type-218 internal-dispatch trick, param fake zend_string "/CANARY".
+More machinery, and the one unresolved variable is the per-CHILD
+session-buffer page (per-fire calibration).
+
+### Primitive-count verdict
+
+Their route needs FEWER exploit primitives in the classic sense (one
+wrap-write + file-content call frame) BUT more setup dependencies:
+- TWO staged session files, one of them 30MiB (post_max_size bypassed
+  via chunked TE — REPORT §5.1), written on a FRESH fork each;
+- the R1 wrap-write only works because BG.data=H is chosen by reclaim,
+  so the arithmetic is deterministic — this is the elegant core;
+- per-build constants: ps_globals, zif_system, PS(serializer) field
+  offset, N0 arithmetic, +0x6a000. All five are build-fragile.
+
+### Writable-target check on OUR builds (read-only, range containers)
+
+- Their offsets (8.3.35 image): ps_globals=base+0x10432a0, zif_system=
+  base+0x3ac080, PS(serializer)=psg+0x148 (stage_rce.py:11-12, REPORT §9).
+- OUR wordpress-x86 container (PHP 8.2.34, /usr/lib/apache2/modules/
+  libphp.so, `readelf -sW` 24-Oct): ps_globals = vaddr 0xf0c998,
+  symbol type B (.bss — WRITABLE, not .data.rel.ro), 432 bytes;
+  zif_system = 0x36ff48 (local FUNC). Both anchors EXIST on our 8.2
+  build. The +0x148 serializer field offset is an 8.3.35 measurement;
+  8.2's php_session_globals field order differs (verified struct
+  layout drift in ext/session/php_session.h vs 8.3-plain source) —
+  per-build derivation required (disasm of php_session_decode's PS
+  (serializer) load). NOT a blocker: the target is a .bss POINTER
+  field, no RELRO to defeat — same class as our basic_globals+0x350
+  N-oracle target.
+- ps_serializer struct: {name, encode, decode} = +0x00/+0x08/+0x10
+  (php-src-83-plain ext/session/php_session.h:222-226) — matches their
+  +0x310/+0x318/+0x320 fake layout exactly.
+
+### The "line 195 / neither" sentence (REPORT §15.3)
+
+Answer to the brief's question: the sentence is about the FATAL-ERROR
+BACKTRACE alternative primitive. `last_fatal_error_backtrace` and the
+`fatal_error_backtraces` INI were added in PHP **8.5**; "PHP 8.3/8.4,
+including this image's 8.3.35, contain neither" the stale backtrace
+field nor the setting. Their assessment: on 8.5 the backtrace route is
+the confirmed mod_php path (display_errors=Off does not block it;
+mitigation = fatal_error_backtraces=0). So the main chain (serializer)
+is 8.3.35; the backtrace alternative is 8.5-ONLY and ABSENT on 8.3/8.4
+— this version-gates their rejected-primitive #3, not their shipped
+chain. For us: no 8.5 lane exists yet; backtrace route is moot on
+8.2.34/8.3.35 boxes.
+
+### Interaction with our known walls
+
+- Their route sidesteps our last-mile wall entirely: it never needs the
+  session-buffer page to cover a leaked d — BG.data is PLANTED by
+  reclaim. Our per-child map calibration problem (TODO §4 REMAINING)
+  does not exist in their design because H is deterministic
+  (chunk+0x6a000, fork-stable).
+- Their route still needs the same "fresh fork for each memory-hungry
+  producer" discipline (real_size carry-over — REPORT §12), matching
+  our producer-freshness practice.
