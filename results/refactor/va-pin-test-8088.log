@@ -1,0 +1,4 @@
+BASELINE (no pin): delivered 10/10 under 30-concurrent flood
+saturated at 256 pins
+READY held=255 freed=True
+PINNED (held=255 freed=True): delivered 10/10 under 30-concurrent flood

