@@ -129,6 +129,50 @@ services:
     depends_on:
       - wpdb-x86
 
+  wpfpm:
+    # cb-C: WP on PRE-PATCH php 8.2.34-FPM, pool AS ROOT, stock
+    # php.ini-production. ToB "nginx/php-fpm -> root" lane. Host-native
+    # arch (NO platform pin). DB: own schema on the shared wpdb-x86
+    # container (loopback; the mysql instance is multi-arch).
+    build:
+      context: ./range/wpfpm
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:8102:9000"
+    environment:
+      WORDPRESS_DB_HOST: wpdb-fpm
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_NAME: wp_fpm
+    restart: unless-stopped
+    depends_on:
+      - wpdb-fpm
+
+  wpfpm-nginx:
+    # cb-C: nginx front over wpfpm - the HTTP entry for the fpm lane.
+    build:
+      context: ./range/wpfpm
+      dockerfile: nginx.Dockerfile
+    ports:
+      - "127.0.0.1:8103:80"
+    restart: unless-stopped
+    depends_on:
+      - wpfpm
+
+  wpdb-fpm:
+    # dedicated DB for the GLM5 matrix lane (wp_fpm/mediawiki/phpbb
+    # schemas). Separate container so this lane never touches the
+    # race-glm4 :8099 lane's wpdb-x86 data. Host-native arch (multi-arch
+    # mysql:8.0, NO platform pin).
+    image: mysql:8.0
+    command: --skip-name-resolve
+    environment:
+      MYSQL_DATABASE: wp_fpm
+      MYSQL_USER: wp
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    restart: unless-stopped
+
   wpdb-x86:
     # the wordpress-x86 lane's own DB (wpdb itself is for the original
     # arm64 census lane). NO platform pin: mysql:8.0 is multi-arch, so
