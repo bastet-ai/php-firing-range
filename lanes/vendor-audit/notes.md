@@ -242,3 +242,47 @@ chain. For us: no 8.5 lane exists yet; backtrace route is moot on
 - Their route still needs the same "fresh fork for each memory-hungry
   producer" discipline (real_size carry-over — REPORT §12), matching
   our producer-freshness practice.
+
+## rejected-primitives (rung 5 — commit 907ceb5 doc additions vs our walls)
+
+Their three documented rejections (REPORT §15, added in 907ceb5):
+
+### 15.1 PG(auto_prepend_file) overwrite — REJECTED (value-shape wall)
+- Write target reachable: core_globals=base+0x1059100, runtime INI
+  mh_arg1/2 resolve auto_prepend_file to base+0x10591a0; the fake
+  var_entries wrap-write REACHES it (write not the problem).
+- Wall: var_push/var_push_dtor write a ZVAL SLOT (dtor temp zval), not
+  a string; PG(auto_prepend_file) would receive a pointer, and any path
+  planted at H+0x310 is clobbered by the dtor before use.
+- Layout walls: 326B session file → buffer lands AT H → SIGSEGV at
+  base+0x3fa1fe (var_tmp_var deref of 326); 5MiB progress key breaks
+  the 64-field H re-plant (crash at base+0x4b7d4b); upload-progress
+  stores only ONE file entry, no controllable post-name allocation.
+- Conclusion: needs a raw 8-byte arbitrary-value write.
+
+### 15.2 OPcache type confusion — REJECTED (capacity wall)
+- Measured: 1513 webroot scripts = 52.3/128 MiB opcache; needs ~3700
+  scripts; the persist failure is a SHARED-MEMORY alloc failure, NOT a
+  request memory_limit OOM → ordinary OOM requests cannot substitute.
+- No unauth way to add thousands of unique PHP files.
+
+### 15.3 Fatal-error backtrace — VERSION-GATED OUT
+- 8.5-only field+INI; 8.3/8.4 "contain neither" (see rung 4 note).
+
+### Comparison to our negative results
+
+| their rejection | our corresponding wall | match? |
+|---|---|---|
+| var_push writes a zval slot, not a value; dtor clobbers planted data | SAME family: our destroy-gate/last_dtor work exists precisely because the dtor/var_destroy consumes planted state; our u2=2 dup-key write also lands slot-shaped data | MATCHES mechanism; they stopped at the value-shape wall, we engineered the destroy-gate to weaponize the clobber instead (phpbleed route) — a 3rd-party confirmation that the var_push primitive family is value-constrained |
+| 326B session file → ps_read buffer lands at H and shifts geometry | our gotchas #7/#8/#9: raw-body pre-allocation + zend_string +0x18 header shift; same "carrier size determines buffer placement" physics | MATCHES |
+| 5MiB carrier breaks a 64-slot groom → crash | our 128M oversized-carrier wall + "same-class fillers re-take the freed hole" (gotcha #7); symmetric-groom misses on arm64 (glm5: markers never appear at d) | MATCHES — both sides found carrier-size↔groom-position coupling |
+| opcache SMEM persist ≠ request OOM | (we have no opcache-route notes — new info to us) | NEW-TO-US; closes off any opcache route on default WP without plugin-level script injection |
+| 8.5 backtrace gate | n/a for us (no 8.5 lane) | NEW-TO-US; version-gates a future primitive |
+| cross-request bleed | they do NOT document a cross-request stale-data bleed NEGATIVE — their whole chain IS cross-request residue by design (BG.data, PS(id), PS(serializer) persistence) | DIVERGES from our framing: we tested "cross-request bleed" as data-content bleed and got NEGATIVE; they never needed content bleed — only STRUCTURAL residue (globals). Consistent once distinguished: content-bleed NEGATIVE (ours), structure-residue POSITIVE (both). |
+
+Verdict: their rejection surface CONFIRMS our walls (value-shape,
+carrier-placement coupling) and adds two hard negative results we had
+not measured (opcache capacity math; 8.5 version gate). The PG overwrite
+rejection is the mirror image of our destroy-gate success: where they
+hit the zval-slot value wall and stopped, our LOCK-0x1C/var_destroy
+route weaponizes exactly the destruction path that blocked them.
