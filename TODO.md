@@ -1,5 +1,11 @@
 # TODO - active work items (single authoritative version, 2026-10-23 final)
 
+> REFACTOR 2026-10-24 (Dean directive): php2shell-bastet.py is THE RCE
+> TOOL (--route dispatch|serializer|groom; dispatch = the moved R-1..R-7
+> phpbleed chain, re-proven on :8088); phpbleed-bastet.py is BLEEDER ONLY
+> (dump/probe/wpdump/wpprofile, importable as leak module). The flock is
+> shared (netloc-keyed) across both tools. See lanes/refactor/.
+
 ## TWO BOXES - read this first
 
 There are TWO independent machines sharing this repo:
@@ -20,6 +26,8 @@ shared compose services (breaks the other box; bit us 2026-10-22).
 Each of these is a WORKING, DEMONSTRATED capability with committed evidence:
 
 ### 1. Memory disclosure from vanilla WP via HTTP (MILESTONE - proven)
+[`phpbleed-bastet.py` — BLEEDER ONLY since the 2026-10-24 refactor;
+RCE modes moved to php2shell-bastet.py]
 ```
 python3 phpbleed-bastet.py wpdump http://127.0.0.1:8099/ --rounds 3
 ```
@@ -44,6 +52,11 @@ python3 phpbleed-bastet.py wpdump http://127.0.0.1:8099/ --rounds 3
 - Generalizes to ANY env var / stack secret / pointer-chain qword.
 
 ### 4. RCE via the phpbleed forged dispatch (BUILT, one calibration left)
+[2026-10-24 refactor: the EXECUTION side of this chain now lives in
+`php2shell-bastet.py --route dispatch` (modes rce/shell/id/canary, proven
+on :8088/:8097 at refactor time); the LEAK side stays in phpbleed. The
+remaining per-child session-buffer calibration below is unchanged and
+belongs to the dispatch/groom lanes.]
 - The groom = the session file ITSELF (the ps_read buffer covers d's page;
   fake-d at the exact file offset; no heap marching, no multipart groom).
 - The destroy gate: dup-key u2=2 write lands on BG(serialize_lock) via
@@ -125,10 +138,11 @@ WordPress-x86-83 (:8101): 8.3.35 pre-patch (corrupt-token lane).
 ## TOOLS AND SCRIPTS
 
 ### Main tools
-- `phpbleed-bastet.py` - dump/probe/canary/id/rce/shell/wpdump/wpprofile
-  (the var_hash UAF gadget lanes :8088/:8089/:8092/:8097)
-- `php2shell-bastet.py` - the 618 two-update groom chain
-  (see its OWN gotchas above)
+- `php2shell-bastet.py` - THE RCE TOOL: --route dispatch (moved var_hash
+  forged-dispatch chain, proven :8088/:8097) | serializer (va-borrowed
+  fake-ps_serializer design, EXPERIMENTAL) | groom (618 two-update path)
+- `phpbleed-bastet.py` - BLEEDER ONLY (dump/probe/wpdump/wpprofile);
+  importable leak module for php2shell (see its docstring)
 
 ### x86_64 WordPress-lane scripts (all in scripts/)
 - `wpbleed.py` - wpdump engine (producer + walk oracle + heap dump)
@@ -158,9 +172,13 @@ WordPress-x86-83 (:8101): 8.3.35 pre-patch (corrupt-token lane).
 
 ## NEXT ACTIONS (priority order)
 
-1. RCE final mile (phpbleed chain): per-fire gdb-find calibration loop
+1. RCE final mile (phpbleed chain; lives in `php2shell-bastet.py --route
+   dispatch` now): per-fire gdb-find calibration loop
    for the session-buffer position (the only remaining variable).
    OR: oversized carrier forcing the buffer to cover d regardless of map.
+   (Plan-B alt route: `php2shell-bastet.py --route serializer` — the
+   va-borrowed fake-ps_serializer chain; blocked on TODO VA #3, the 8.2.34
+   PS(serializer) field offset derivation.)
 2. php2shell 618 groom tuning: gdb bp on php_session_rfc1867_update +
    dump the freed HashTable size/bin + t[] string landing positions.
 3. Fully-remote calibration (no /proc): oracle-pointed sweeps for the

