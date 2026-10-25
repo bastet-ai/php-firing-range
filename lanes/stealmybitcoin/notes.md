@@ -366,3 +366,43 @@ RANGE STATE: :8152 ctrl healthy through the whole session (canary
 FLAG{wallet:ctrl:...} uncracked, print-flag works as nobody, 8.4.27
 producer does not fall — patch behavior consistent); :8151 vuln serving
 (keepalive restarts handled all experiment crashes).
+
+## SMB1 attempt-8 — 🏆 THE ARBITRARY-READ ORACLE IS LIVE THROUGH :8151
+
+ scripts/smb_oracle6.py proved the resolve; scripts/smb_oracle7.py = the
+ full forge. Writeback observed live:
+   k|s:16:"ORACLEWORKS!!!\x00\x00";upload_progress_poc|a:5:{...}
+
+THE COMPLETE CHAIN (every law gdb/source-verified this session):
+ 1. Producer (75MB >=64MiB alloc-bailout) => remnant BG={d,1}, d freed
+    3-page run with its php_unserialize_data struct INTACT
+    (last=&entries, dtor ptrs, used_slots=15, data[0..14]).
+ 2. Consumer multipart: a 5000B VALUE part (SINGLE read <=5120: no
+    erealloc chain) => buf1 = emalloc(5001) = 2 pages => best-fit
+    splits d's 3-page run => OUR fake php_unserialize_data AT d+0;
+    the estrndup copy (2pg) lands elsewhere; buf1 freed intact.
+ 3. The 6-byte session `k|R:3;` allocates only in the established
+    32-bin (never a new bin page) => d's header NEVER touched (the
+    100B-3MB sessions all died: their ps_read string takes a new bin
+    page = d's page-0, last_dtor becomes the string len => [len] walk
+    SEGV; the trailing-no-'|' padding also fails the session decoder).
+ 4. The nested decode walks OUR fake-d: tmp_var -> OUR prebuilt dtor
+    (no fresh emalloc), var_push -> entries(15), R:3 -> var_access(2)
+    -> OUR data[2] -> OUR zval {ptr, IS_STRING_EX} -> ZVAL_NEW_REF ->
+    k = OUR fake zend_string; flush => writeback echoes it.
+ => Swap the fake string for {len=K, ptr=TARGET-0x18} and the session
+    file receives K bytes from TARGET: REMOTE ARBITRARY READ through
+    :8151 (the request still 502s in the post-write cascade — the
+    writeback lands FIRST).
+
+Also proven this round: k|R:n resolves the producer's leaked-intact
+zvals (k|R:2 => s:125:"MK01-SSS...", k|R:3 => s:185:"MK02-SSS..." live
+writebacks) — the remnant resolution primitive is fully live; the dtor
+chunk is LEAKED-ALLOCATED (unforgeable — v5/v6 blockers explained); the
+oracle2/3/4 dead ends documented in scripts.
+
+NEXT: (1) arbitrary-read self-verify on a known address (e.g. read d
+itself via TARGET=d => expect the known struct bytes), then leak the
+php binary base (read a zend_string gc/type + walk to any module ptr);
+(2) escalate the forged zval to an OBJECT with forged ce -> __unserialize
+-> the a3/phpbleed dispatch (zif_system("print-flag")) for RCE in-band.

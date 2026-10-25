@@ -21,12 +21,15 @@ sys.path.insert(0, "/home/user/php-firing-range/scripts")
 import smb_q1_fatal_window as q
 
 
-def helper(kind, script, timeout=30):
+def helper(kind, script, timeout=30, which="pid"):
+    """`which` = memread mode: 'pid' (main :8080) or 'pid81' (debug :8081)."""
     """Run script in a SYS_PTRACE helper sharing the target pid-ns. The
     helper = the target's own php image (native arm64; the box's debian
     images are x86_64-QEMU, and busybox dd returns zeros on /proc/mem).
     script runs via the memread.php modes: 'pid', 'maps', 'read HEX LEN'."""
     args = script.split()
+    if which != "pid":
+        args = args + [which]
     r = subprocess.run(["timeout", "27", "docker", "run", "--rm", "--cap-add",
                         "SYS_PTRACE", "--pid=container:" + q.CT[kind],
                         "-v", "/home/user/php-firing-range/scripts:/sc:ro",
@@ -36,8 +39,8 @@ def helper(kind, script, timeout=30):
     return r.stdout, r.stderr
 
 
-def get_maps(kind):
-    out, err = helper(kind, "maps")
+def get_maps(kind, which="pid"):
+    out, err = helper(kind, "maps", which=which)
     return [l for l in out.splitlines() if l.strip()]
 
 
@@ -50,8 +53,8 @@ def rw_image_region(maps):
     return None
 
 
-def read_mem(kind, addr, size):
-    out, err = helper(kind, f"read {addr:x} {size}")
+def read_mem(kind, addr, size, which="pid"):
+    out, err = helper(kind, f"read {addr:x} {size}", which=which)
     try:
         return base64.b64decode(out.strip())
     except Exception:

