@@ -1,0 +1,53 @@
+== Q2: php -S process model / ASLR / heap — benign session probes ==
+target :8151 (nginx->php -S 8.4.26, single keepalive wrapper)
+
+[F] session surface: benign roundtrip via :8151
+    POST message=ping (sid=q2a000..) -> 200 b'pong' (0.00s)
+    sess file: present, -rw-------    1 nobody   nobody           0 Oct 25 19:06 /tmp/sess_q2a00000000000000000000000
+nobody
+    sess[q2a000] MID-FLIGHT during stalled upload: ''
+    sess[q2a000] after completed multipart (cleanup=On): '' (key wiped: True)
+    sess[q2b000] = '' -> cross-sid bleed: False
+[F] 618 upload-progress surface LIVE: False | [G] cross-sid benign bleed: False
+
+[A] process model
+    start: pid=7 pie_base=0xb1c553e60000 threads=1 VmRSS=19712kB VmSize=174980kB
+    php processes DURING a trickling request: 1 -> 7 nobody    0:00 php -S 0.0.0.0:8080 -d display_errors=Off -d memory_limit=128M
+    => fork-per-request: NO
+    after: pid=7 (stable: True)
+
+[B] concurrency: 4 parallel 8MB POSTs direct at phpsrv:8080
+    single 8MB POST: real	0m 0.01s
+user	0m 0.00s
+sys	0m 0.00s
+    4 parallel 8MB POSTs: total_ms=0
+
+[C] ASLR across requests (same process)
+    bases: ['0xb1c553e60000', '0xb1c553e60000', '0xb1c553e60000'] -> stable within process: True
+    RSS before/after 64KB multipart: 19712kB -> 19712kB
+
+[E] heap continuity: 30MB benign multipart (no OOM)
+    response: b'HTTP/1.1 413 Request Entity Too Large'
+    RSS 19712kB -> 19712kB (delta 0kB); pid stable: True
+
+[D] ASLR per-exec: pkill php -S -> keepalive restart (3s) x3
+    restart 1: pid 7->233 base 0xb1c553e60000->0xaafea5690000 (new roll: True) recovery~3.1986780166625977s
+    restart 2: pid 233->253 base 0xaafea5690000->0xb4c08dc30000 (new roll: True) recovery~3.197089672088623s
+    restart 3: pid 253->274 base 0xb4c08dc30000->0xb0b85a940000 (new roll: True) recovery~3.199429988861084s
+
+== Q2 VERDICT: see notes.md for the synthesized answer ==
+[1] client_max_body_size (stock default 1m):
+    0.9MB  -> HTTP/1.1 200 OK (0.01s)
+    1.5MB  -> HTTP/1.1 413 Request Entity Too Large (0.00s)
+
+[2] proxy_request_buffering: stalled 0.9MB POST through :8151
+    DURING 4.0s pause: upstream conns from php netns:
+      netstat->8080: 'tcp        0      0 127.0.0.1:8080          127.0.0.1:55148         TIME_WAIT   \ntcp        0      0 127.0.0.1:8080          127.0.0.1:45596         TIME_WAIT   \ntcp        0      0 172.25.0.2:8080         172.25.0.3:52560        TIME_WAIT'
+      php proc tcp:   'sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode                                                     \n   0: 00000000:1F90 00000000:0000 0A 00000000:00000000 00:00000000 00000000 65534        0 157124329 1 0000000000000000 100 0 0 10 0                 \n   1: 0B00007F:A587 00000000:0000 0A 00000000:00000000 00:00000000 00000000     0        0 157101962 1 0000000000000000 100 0 0 10 0                 \n   2: 0100007F:1F90 0100007F:D76C 06 00000000:00000000 03:0000034A 00000000     0        0 0 3 0000000000000000                                      \n   3: 0100007F:1F90 0100007F:B21C 06 00000000:00000000 03:000008D4 00000000     0        0 0 3 0000000000000000                                      \n   4: 020019AC:1F90 030019AC:CD50 06 00000000:00000000 03:000015C9 00000000     0        0 0 3 0000000000000000'
+    total: HTTP/1.1 200 OK (4.37s — includes the 4s pause)
+
+[3] heap continuity (RSS via helper /proc read):
+    RSS 23368kB -> 23212kB after 0.9MB POST through nginx (delta -156kB)
+    8x4MB direct conc: conc-done n=8 mb=4 wall_ms=183
+    RSS after 32MB of direct POSTs: 23356kB (delta vs pre -12kB)
+    RSS after 8MB more: 23224kB (monotonic growth, no per-request reset)
