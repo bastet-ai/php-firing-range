@@ -1,0 +1,36 @@
+== Q1: fatal-window analysis — cli-server under a 619 OOM producer ==
+
+--- :8151 vuln trial 1: producer fire x1 ---
+    pre:  pid=274 base=0xb0b85a940000
+    staged producer sess q1vuln1792955629 (75000113 bytes): True
+    producer response: HTTP/1.1 500 Internal Server Error (0.04s)
+    post-fire poll: [200, 200]
+    => PROCESS SURVIVED (request-level fatal only). pid stable: True, base stable: True
+--- :8151 vuln trial 2: producer fire x1 ---
+    pre:  pid=274 base=0xb0b85a940000
+    staged producer sess q1vuln1792955630 (75000113 bytes): True
+    producer response: HTTP/1.1 500 Internal Server Error (0.05s)
+    post-fire poll: [200, 200]
+    => PROCESS SURVIVED (request-level fatal only). pid stable: True, base stable: True
+--- :8151 vuln trial 3: producer fire x1 ---
+    pre:  pid=274 base=0xb0b85a940000
+    staged producer sess q1vuln1792955632 (75000113 bytes): True
+    producer response: HTTP/1.1 500 Internal Server Error (0.04s)
+    post-fire poll: [200, 200]
+    => PROCESS SURVIVED (request-level fatal only). pid stable: True, base stable: True
+--- :8151 vuln (post-fatals): consumer walk-oracle (R:14 self-resolve) ---
+    consumer resp: HTTP/1.1 200 OK; sess file now: ''
+    => stale 619 state absent
+
+--- :8152 ctrl (patched): producer fire x1 ---
+    pre:  pid=7 base=0xbcc976060000
+    staged producer sess q1ctrl1792955633 (75000113 bytes): True
+    producer response: HTTP/1.1 500 Internal Server Error (0.04s)
+    post-fire poll: [200, 200]
+    => PROCESS SURVIVED (request-level fatal only). pid stable: True, base stable: True
+--- :8152 ctrl (patched): consumer walk-oracle (R:14 self-resolve) ---
+    consumer resp: HTTP/1.1 200 OK; sess file now: ''
+    => stale 619 state absent
+    ctrl healthy: True (last=None)
+
+== Q1 verdict: see notes.md ==

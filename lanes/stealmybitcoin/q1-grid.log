@@ -1,0 +1,7 @@
+== grid: fresh restart first (clear any stale BG state) ==
+plainPOST 0mk 75MB (session_start) st=500                      staged= 75000042 after=sh: can't open /tmp/sess_g1a: no such file hwm [19776, 19776]->[92896, 19796] kB  (0.00s)
+mp 0mk 75MB                        st=HTTP/1.1 500 Internal Server Error staged= 75000042 after=sh: can't open /tmp/sess_g1b: no such file hwm [19868, 19868]->[92988, 19880] kB  (0.04s)
+mp 1mk 75MB                        st=HTTP/1.1 500 Internal Server Error staged= 75000118 after=sh: can't open /tmp/sess_g1c: no such file hwm [19628, 19628]->[92748, 19648] kB  (0.10s)
+mp 12mk 75MB (wpbleed-exact)       st=HTTP/1.1 500 Internal Server Error staged= 75004927 after=sh: can't open /tmp/sess_g1d: no such file hwm [19792, 19792]->[92912, 19816] kB  (0.10s)
+mp 12mk 200MB                      st=HTTP/1.1 500 Internal Server Error staged=200004928 after=200004928 hwm [19456, 19456]->[19456, 19456] kB  (0.00s)
+mp 12mk 60MB                       st=HTTP/1.1 500 Internal Server Error staged= 60004927 after= 60004927 hwm [19592, 19592]->[136712, 19616] kB  (0.11s)

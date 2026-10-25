@@ -66,3 +66,47 @@ NO — and the question dissolves: cli-server does not fork at all.
 ## Q1 — can php2shell land without killing the server? (in progress)
 Next: fatal-window measurement (619 OOM producer -> 502 window, bias
 re-roll confirmation, stale-state death), then zero-fatal phasing.
+
+## Q1 ANSWER (core) — does an OOM-fatal kill cli-server? NO. The window is a SEGV-only phenomenon.
+
+Measured (scripts/smb_q1_fatal_window.py + smb_q1_grid.py, logs
+q1-fatal-window.log / q1-grid.log):
+
+1. THE BRIEF'S PREMISE IS WRONG for the 618/619 class: the 619 OOM
+   producer (staged 75MB session `poc|a:2:{i:0;s:3:"abc";i:1;s:75000000:...}`
+   + tiny multipart; decode fires inside php_session_rfc1867_update's
+   session init during BODY PARSE) returns a clean 500 in ~40-100ms and
+   php -S KEEPS SERVING: PID and PIE bias UNCHANGED across 3 consecutive
+   producer fires, 200s immediately after each. VmHWM proves the OOM
+   (19.8MB -> 92.9MB peak = the 75MB session read; the second 75MB inner
+   alloc exceeds memory_limit 128M -> bailout mid-decode). The bailout is
+   a REQUEST-LEVEL fatal: cli-server runs request shutdown and continues,
+   exactly like mod_php and UNLIKE our fpm-child-exit-70 finding. The
+   "502 window until keepalive restart" exists ONLY for SEGV-class
+   kills (bad forges), not for OOM bailouts.
+   => ZERO-FATAL PHASING IS NOT REQUIRED. The producer is a repeatable,
+   server-surviving OOM; the PIE bias stays valid across producer fires
+   (Q2's re-roll only happens on real crashes). The leak->forge chain has
+   no pre-fatal window problem on cli-server: leak via the stale state
+   left by a SURVIVED fatal, forge when ready, and even a missed forge
+   costs only ~3.2s restart (plus bias re-roll).
+2. POST-FATAL SHUTDOWN RUNS ON CLI-SERVER: after each OOM fatal the
+   staged session file is UNLINKED (empty-session write at corrupted
+   shutdown -> unlink) for 75MB producers; for 200MB (read itself OOMs)
+   and 60MB (OOM at ~137MB peak) the file survives. Shutdown touching
+   the corrupted state = the 618 advisory's susceptible path, live here.
+3. STALE-STATE DIVERGENCE OBSERVED THROUGH HTTP: with stale BG state
+   already present (after earlier fatals, no restart), the same 12-marker
+   producer request returned 200 and TRUNCATED the session file to 0
+   (decode completed "successfully" producing nothing) instead of the
+   fresh-process 500+unlink. State-dependent behavior change = the 619
+   remnant is REAL on cli-server and changes the next decode's outcome.
+4. FIRST WALK-ORACLE (R:14 self-resolve, wpbleed WALK_TOKEN) did NOT
+   resolve post-fatals -> the exact slot arithmetic differs on 8.4.26
+   (their anchors: fpm/php8.2.34) or the remnant needs the producer's
+   marker head at fire time. NEXT: BG(unserialize) runtime-diff probe
+   (stripped binary; RW-segment before/after diff, glm4 LW technique)
+   to read the stale pointer directly, then R-index sweep.
+5. CTRL :8152 (8.4.27 patched) ALSO 500s on the same OOM (OOM fatal is
+   not the bug; the patch is about state corruption) and SURVIVES; ctrl
+   did NOT fall; walk did not resolve there either. Canary intact.
