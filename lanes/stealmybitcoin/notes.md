@@ -192,3 +192,23 @@ walks, i.e. the php2shell GROOM-route class (stale FILE_DATA store /
 reclaimed progress-tree chunks), cross-request instead of intra-request
 (the intra-request two-update stall is timing-dead through nginx
 buffering). The consumer groom = shape the chunks the next update walks.
+
+## SMB1 attempt-2c — crash trigger localized to the FILE_DATA update (the 618 groom-route surface, cross-request)
+
+Consumer-shape matrix after a real producer (fresh restart each trial):
+  no-progress + file part        -> 200 (alive)
+  progress field, NO file part   -> 200 (alive)
+  progress + file part (mp_min)  -> 502 SEGV (dead)
+So the SEGV fires in the rfc1867 update called for FILE DATA processing
+— php_session_rfc1867_update's file-data store, the exact function pair
+whose intra-request double-call is the php2shell groom-route UAF. On
+cli-server the window opens CROSS-REQUEST instead: producer corrupts,
+the next update's file-data store walks the corrupted chunk. NO
+TIMING/STALL NEEDED => nginx request buffering is IRRELEVABLE to this
+variant => the groom route is ALIVE on :8151 (the Q2 'groom-route DEAD'
+conclusion applied only to the intra-request stall variant).
+Weaponization path = the tool's own groom route adapted cross-request:
+consumer multipart = progress field + t[] reclaim fields (shape the
+corrupted bins) + file part (the update walks OUR bytes). Consumer
+fields parse BEFORE the file part, so consumer-controlled allocations
+land in the corrupted window BEFORE the walk.
