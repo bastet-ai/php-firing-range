@@ -331,3 +331,38 @@ GDB-verified facts:
   bss-anon @ ELF+0x12D4000); R:N resolves data[N-1] via the EMBEDDED
   entries chain; the R: handler converts the slot zval in-place to a
   reference (groom RW = fine).
+
+## SMB1 attempt-5b — plain-path R-sweep + placement endgame
+
+- Plain-POST consumer (script session_start, no multipart churn) after a
+  real producer: R:1..R:14 ALL fail cleanly (200, session destroyed,
+  file unlinked) — the request-start allocations themselves churn
+  BG.data's freed pages (d+0x38 used_slots clobbered to < n) — the
+  remnant is NOT a stable cross-request window on cli-server (differs
+  from fpm's 4/6-evidence remnant: cli-server heap is a single LIFO
+  arena, d's pages are the free-pool head, EVERY request's start walks
+  over them).
+- Reordered consumer (small parts first stocking bucket[1], groom last)
+  did not change the outcome: the ps_read session zend_string still
+  lands at d+0 (gc/h/len at d+0/+8/+0x10 = the fake-d's last/
+  first_dtor/last_dtor fields; its val = our staged session bytes
+  covers +0x18..). CONVERGED UNDERSTANDING: the only fully-byte-
+  controlled allocation that reliably lands at d is the ps_read session
+  string; its header fields at d+0/+8/+0x10 are the string's own
+  gc(refcount|type)/h(hash)/len(size) — never attacker-controlled —
+  and they sit EXACTLY on last/first_dtor/last_dtor. var_push derefs
+  last (=0x0000000600000001-class) => SEGV. Embracing the string as
+  the carrier is dead for the header; every multipart carrier bounces
+  its freed buffer on d's pages (LIFO magnet) before the decode.
+- NEXT RUNG (concrete): run the BYTE-FAITHFUL rebuild24 binary as the
+  lab debug server (in-container :8081, unstripped, symbolized) and
+  breakpoint zend_mm_alloc_pages/_emalloc_large to LOG THE EXACT
+  allocation sequence (page numbers, sizes, order) for producer +
+  consumer; engineer the groom from the log instead of from ZEND_MM
+  folklore. All offsets (basic_globals, BG(unserialize)@+0x348,
+  d=8216/3-page, chunk map @chunk+0x218) already verified on-target.
+
+RANGE STATE: :8152 ctrl healthy through the whole session (canary
+FLAG{wallet:ctrl:...} uncracked, print-flag works as nobody, 8.4.27
+producer does not fall — patch behavior consistent); :8151 vuln serving
+(keepalive restarts handled all experiment crashes).
