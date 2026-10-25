@@ -212,3 +212,43 @@ consumer multipart = progress field + t[] reclaim fields (shape the
 corrupted bins) + file part (the update walks OUR bytes). Consumer
 fields parse BEFORE the file part, so consumer-controlled allocations
 land in the corrupted window BEFORE the walk.
+
+## SMB1 attempt-3 — crash structure dumped under gdb (gdb-triage.log)
+
+php 8.4.26 dbg rebuild (smb-php-dbg image; exact official configure line;
+unstripped, 20K symbols) — NOTE: rebuild codegen differs from the
+target's Sep-2026 build (byte-pattern NOT found; per-symbol fidelity
+must be re-validated before trusting any rebuild-derived runtime offset;
+struct layouts from source are fine).
+
+Crash (consumer mp_min post-producer, gdb attached): pc = base+0x47FC34
+(corr.earlier 0x37FC34 was a my-arithmetic bug), `ldr x2,[x1]; cmp x2,#0xfe`
+= php_var_serialize family (rebuild neighborhood: php_var_serialize_
+try_add_sleep_prop / zend_get_typed_property_info_for_slot — object/
+property-info serialization path), x1 = 0x24 (stale zval value
+dereferenced as a pointer).
+
+STRUCTURE (gdb x/16gx of x19..x22):
+- x21 region (0x...869018): THE CONSUMER'S OWN ps_read buffer — the
+  staged walk token `k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:14;}` is VISIBLE
+  there, followed immediately by the consumer's fresh var_entries
+  (array of zval pointers 0x...c010, c020, c030...). The consumer's
+  session content lands ADJACENT to the structures the update walks.
+- x22 region (0x...857180-7200): the RECYCLED POISONED CHUNK the
+  serializer walks: zval-shaped qwords (0x1600000001...), self-
+  referential bucket pairs {0x...571e0, 0x80000000005978e6},
+  {0x...57200, 0x80000000005978e7} — a HashTable arData/bucket run with
+  stale zvals from the producer's aborted tree; one slot's value = 0x24
+  (small-int-as-ptr) -> SEGV when serialized.
+
+INTERPRETATION: the consumer's fresh progress tree allocates into the
+poisoned/freed bins; the FILE_DATA update's session re-encode walks the
+tree incl. stale slots => deref of stale zval values. The stale-slot
+values are RECLAIM-GROOMABLE (consumer multipart part values land in
+the same freed bins BEFORE the file part) — this is the php2shell groom
+route's own mechanism (t[] reclaim of the freed progress-tree bins),
+operating CROSS-REQUEST on cli-server: producer request corrupts+frees,
+consumer request's groom fields reclaim, the file-data update walks the
+forged zvals/fcall. NEXT RUNG: post-producer heap snapshot of the freed
+bin classes (gdb/memread) -> pick consumer groom part sizes -> forged
+zval {TARGET-0x10, IS_STRING} leak oracle via the serialize writeback.
