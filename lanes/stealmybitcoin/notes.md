@@ -162,3 +162,18 @@ own streams (fseek+fread on /proc/PID/mem) read correctly.
    half-mutated globals), yet the request completes 200 (bailout swallowed
    in request startup, never propagating as a request fatal) on the CLEAN
    failure path.
+
+## SMB1 attempt-2 — gdb triage of the poisoned-next-decode SEGV (gdb-triage.log)
+
+gdb 16.3 attached via SYS_PTRACE helper (image smb-gdb-helper = alpine
++ gdb; attach AFTER producer, consumer fired under it):
+- Crash: SIGSEGV at pc = php_base + 0x37FC34, instruction `ldr x2, [x1]`
+  with x1 = 0x24 (small-int-as-pointer: a corrupted structure field
+  dereferenced), followed by `cmp x2, #0xfe` — the pipe-format session
+  decoder scan shape (`while (*q != PS_DELIMITER)` / parser char class).
+  x22/x20/x21 = zend-heap pointers (0xfeb5814571a0 region), x2 = x22+1.
+- The consumer walked producer-corrupted heap state and dereferenced 0x24.
+- Next rung: rebuild php 8.4.26 (official image config) to symbolize
+  0x37FC34 and derive the offset table (stripped target binary; crash
+  bytes at the site can be byte-compared target-vs-rebuild to validate
+  symbol fidelity BEFORE trusting any offset).
