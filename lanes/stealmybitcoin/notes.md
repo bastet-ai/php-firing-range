@@ -177,3 +177,18 @@ gdb 16.3 attached via SYS_PTRACE helper (image smb-gdb-helper = alpine
   0x37FC34 and derive the offset table (stripped target binary; crash
   bytes at the site can be byte-compared target-vs-rebuild to validate
   symbol fidelity BEFORE trusting any offset).
+
+## SMB1 attempt-2b — the poison is in the RFC1867 path, NOT session decode
+
+Producer -> consumer via PLAIN POST (script session_start, no multipart,
+no progress fields): trivial k|i:42; decodes AND WRITE-BACKS fine (200,
+sess file re-encoded 7 bytes, process alive); R:14 walk clean-fails
+(fresh context, expected). The poisoned-next-decode law applies ONLY to
+multipart-with-progress consumers (the rfc1867 update machinery walking
+producer-corrupted heap). MODEL CORRECTION for cli-server: no rideable
+BG(unserialize) remnant (bss cleaned + fresh decode context) — the
+exploitable surface is the 618 progress-path corruption the next update
+walks, i.e. the php2shell GROOM-route class (stale FILE_DATA store /
+reclaimed progress-tree chunks), cross-request instead of intra-request
+(the intra-request two-update stall is timing-dead through nginx
+buffering). The consumer groom = shape the chunks the next update walks.
