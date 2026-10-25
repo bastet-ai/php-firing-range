@@ -252,3 +252,47 @@ consumer request's groom fields reclaim, the file-data update walks the
 forged zvals/fcall. NEXT RUNG: post-producer heap snapshot of the freed
 bin classes (gdb/memread) -> pick consumer groom part sizes -> forged
 zval {TARGET-0x10, IS_STRING} leak oracle via the serialize writeback.
+
+## SMB1 attempt-4 — THE REMNANT FOUND: BG(unserialize) = {data=d, level=1} survives (bss-anon segment!)
+
+CRITICAL TOOLING FIX: the php binary's .bss extends past the file-backed
+rw-p mapping into an ANON rw-p continuation immediately after it
+(0x...374000-0x...396000 here). My earlier "bss clean" diff only read
+the file-backed rw line — WRONG REGION. Diffing BOTH segments after a
+real producer: 57 changed qwords in the bss-anon, including:
+  base+0x12D99F0: 0 -> d (page-aligned heap ptr, emalloc_large class)
+  base+0x12D99F8: 0 -> 1
+  => BG(unserialize) = {data=d, level=1} LEFT SET post-shutdown (offsets
+  per-build; the anon-bss base = ELF base + 0x12D4000 this build).
+The 619 remnant on cli-server = SAME as fpm: php_var_unserialize_init()
+takes the else-branch (d = BG(unserialize).data; ++level) on the next
+decode -> the consumer's session decode NESTS INTO THE FREED d.
+
+MECHANISM (source-verified, 8.4.26):
+- producer: rfc1867-init session decode -> >=64MiB string-alloc bailout
+  -> php_session_decode zend_catch -> cancel+re-bailout -> 500; destroy
+  skipped -> BG(unserialize)={d,1}; d freed at shutdown (content intact-ish)
+- consumer (multipart+progress): own multipart allocations clobber the
+  freed d run (raw-body buffer, part values) BEFORE its decode nests into
+  d -> tmp_var() walks clobbered last_dtor (0x24 small-int-as-ptr) ->
+  SEGV. (Symbolized via byte-faithful rebuild: alpine:3.24 rebuild
+  smb-php-dbg24 reproduces target code bytes — pattern found at
+  rebuild+0x480c40 = target+0x47fc20; crash = tmp_var,
+  ext/standard/var_unserializer.c:163-168.)
+- plain-POST consumers survive because their tiny allocations barely
+  touch the d run (stale walk reads mapped memory).
+
+WEAPON DESIGN (grounded, glm4-carrier + wpbleed-primitive):
+- consumer multipart = PHPSESSID + UPLOAD_PROGRESS + an 8192B VALUE
+  field (emalloc_large 3-page class == d's 8216B class; glm4's groom
+  carrier: "VALUE exactly 8192B, final erealloc 8193 -> same class as d
+  8216") -> the groom value RE-TAKES the freed d run with ATTACKER BYTES
+- the consumer's decode then nests into OUR buffer: we own the ENTIRE
+  fake php_unserialize_data {last/entries/first_dtor/last_dtor} ->
+  fake var_entries/var_dtor_entries with forged zval slots:
+  R:n resolves OUR slots (echo writeback = arbitrary-read oracle),
+  var_destroy walks OUR fake dtor entries (the a3 destroy-gate RCE
+  route: data[0] u2=2 fake object -> ce->__unserialize -> forged
+  function -> handler=zif_system -> system("print-flag") in-band).
+NEXT: groom landing test (benign fake-d, expect 502->other = control),
+then the R:n oracle, then offsets (rebuild24 symbols; zif_system etc).
