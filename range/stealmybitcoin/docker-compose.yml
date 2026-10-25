@@ -1,0 +1,21 @@
+services:
+  smb-php-vuln:
+    build: { context: ., dockerfile: Dockerfile.php, args: { PHP_TAG: "8.4.26" } }
+    expose: ["8080"]
+    restart: unless-stopped
+  smb-nginx-vuln:
+    image: nginx:1.27-alpine
+    volumes: [./nginx.conf:/etc/nginx/nginx.conf:ro]
+    ports: ["127.0.0.1:8151:80"]
+    depends_on: [smb-php-vuln]
+    restart: unless-stopped
+  smb-php-ctrl:
+    build: { context: ., dockerfile: Dockerfile.php, args: { PHP_TAG: "8.4.27" } }
+    expose: ["8080"]
+    restart: unless-stopped
+  smb-nginx-ctrl:
+    image: nginx:1.27-alpine
+    volumes: [./nginx.conf:/etc/nginx/nginx.conf:ro]
+    ports: ["127.0.0.1:8152:80"]
+    depends_on: [smb-php-ctrl]
+    restart: unless-stopped
