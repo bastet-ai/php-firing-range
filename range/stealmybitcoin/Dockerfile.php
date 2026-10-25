@@ -1,11 +1,12 @@
+ARG PHP_TAG=8.4.26
 # stage 1: build print-flag statically (multi-stage: no host-side binary needed)
 FROM alpine:3.20 AS pfbuild
 RUN apk add --no-cache gcc musl-dev
 COPY print-flag.c /src/print-flag.c
 RUN gcc -static -O2 -w -o /print-flag /src/print-flag.c
 
-ARG PHP_TAG=8.4.26
 FROM php:${PHP_TAG}-cli-alpine
+ARG PHP_TAG
 RUN echo "PHP_TAG=${PHP_TAG}" > /etc/php-fixtures-tag
 # print-flag (multi-stage static musl build)
 COPY --from=pfbuild /print-flag /usr/local/bin/print-flag
