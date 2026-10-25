@@ -110,3 +110,55 @@ q1-fatal-window.log / q1-grid.log):
 5. CTRL :8152 (8.4.27 patched) ALSO 500s on the same OOM (OOM fatal is
    not the bug; the patch is about state corruption) and SURVIVES; ctrl
    did NOT fall; walk did not resolve there either. Canary intact.
+
+## SMB1 attempt-1 observations — 619 state on cli-server (scripts/smb_619_state.py, logs sweep-r1-24.log)
+
+TOOLING: /proc reader fixed (scripts/memread.php): helper = the target's
+own php image run with --cap-add SYS_PTRACE --pid=container (native
+arm64). busybox dd silently returns ZEROS on /proc/PID/mem (alpine
+helper); the box's debian:bookworm-slim is x86_64-QEMU (useless). php's
+own streams (fseek+fread on /proc/PID/mem) read correctly.
+
+1. PRODUCER RECIPE FIXED: my 12-marker edit had introduced a missing ';'
+   (s:3:"abc"i:1;) -> every "producer" fire after the edit was a CLEAN
+   parse failure (200, session destroyed, NO stale state). The REAL
+   producer (12 markers + `poc|a:2:{i:0;s:3:"abc";i:1;s:75000000:...`)
+   -> 500 via the >=64MiB string-alloc bailout inside the rfc1867-init
+   session decode, reliably, and the process SURVIVES (pid+base stable).
+   ALSO learned: huge (>2^26) string allocs do NOT respect memory_limit
+   (c65: 149MB at 128M limit decodes fine in CLI); the 618-class producer
+   needs the >=64MiB alloc-bailout, not a limit-OOOM. 1-byte-short staged
+   files change the class completely (clean "Unexpected end" failure) —
+   session-file staging must be byte-exact (WG gotcha #3 again).
+2. BSS IS CLEAN AFTER THE PRODUCER: full RW-image-segment diff before/
+   after a real producer = 0 changed qwords (reader verified against the
+   zend heap: 373 changed qwords across a benign request). On cli-server
+   the shutdown zeroes BG(unserialize)/PS bss state (differs from fpm,
+   where the stale BG pointer survives per wpbleed's evidence). The
+   surviving corruption lives in HEAP STATE, not bss.
+3. THE POISONED-NEXT-DECODE LAW (24/24 + 4/4 reproducible): after a real
+   producer fire, the NEXT request that session-decodes ANYTHING segfaults
+   the process: trivial k|i:42;, plain strings/arrays, and every R:1..R:24
+   — all 502 with process death (keepalive restart ~3.2s). On a FRESH
+   process the same consumers fail cleanly (200, warning, session
+   destroyed). So the producer leaves a heap corruption that the next
+   session init/decode walks into. This IS the 618 "shutdown reads/branches
+   on invalid state" made visible: on cli-server the corrupted state is
+   NOT rideable as a passive remnant (bss-clean) — it CRASHES the next
+   decode unless the chunk it walks is OURS (groomed). The SEGV-vs-resolve
+   is a steerable primitive: shape the recycled chunk => the walk reads
+   attacker bytes (the WP lane's a2/a3 session-file-groom chain is the
+   built machinery for exactly this; its remaining "per-child calibration"
+   problem is DISSOLVED on cli-server: one process, stable heap, and the
+   process survives the producer).
+4. Consequence for Q1's zero-fatal phasing: the producer fatal is free
+   (server survives, bias stable), but the consumer is exactly ONE
+   request: the next session decode either walks our groom (prize) or
+   garbage (SEGV + 3.2s restart + bias re-roll). One shot per producer.
+5. Debug-server evidence (in-container php -S :8081, display_errors on):
+   the decode failure path prints "PHP Request Startup: Failed to decode
+   session object. Session has been destroyed" + repeated "Failed to write
+   session data (files)" — post-cancel state is visibly broken (the 619
+   half-mutated globals), yet the request completes 200 (bailout swallowed
+   in request startup, never propagating as a request fatal) on the CLEAN
+   failure path.

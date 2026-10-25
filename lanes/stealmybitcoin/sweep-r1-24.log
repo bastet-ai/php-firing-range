@@ -1,0 +1,27 @@
+
+=== sweep R:1..R:24 (fresh restart + producer per trial) ===
+R: 1: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:1;}', False) hit=False
+R: 2: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:2;}', False) hit=False
+R: 3: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:3;}', False) hit=False
+R: 4: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:4;}', False) hit=False
+R: 5: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:5;}', False) hit=False
+R: 6: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:6;}', False) hit=False
+R: 7: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:7;}', False) hit=False
+R: 8: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:8;}', False) hit=False
+R: 9: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:9;}', False) hit=False
+R:10: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:10;}', False) hit=False
+R:11: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:11;}', False) hit=False
+R:12: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:12;}', False) hit=False
+R:13: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:13;}', False) hit=False
+R:14: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:14;}', False) hit=False
+R:15: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:15;}', False) hit=False
+R:16: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:16;}', False) hit=False
+R:17: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:17;}', False) hit=False
+R:18: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:18;}', False) hit=False
+R:19: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:19;}', False) hit=False
+R:20: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:20;}', False) hit=False
+R:21: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:21;}', False) hit=False
+R:22: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:22;}', False) hit=False
+R:23: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:23;}', False) hit=False
+R:24: prod=500 cons=502 sess=('k|a:2:{i:0;s:9:"WALKOK1!";i:1;R:24;}', False) hit=False
+HITS: []
