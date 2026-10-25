@@ -1,0 +1,30 @@
+
+warning: "target:/proc/12958/exe": could not open as an executable file: I/O error.
+
+warning: `target:/proc/12958/exe': can't open to read symbols: I/O error.
+
+warning: Could not load vsyscall page because no executable was specified
+0x0000f43096573d04 in ?? ()
+
+Program received signal SIGSEGV, Segmentation fault.
+0x0000c40c0a42fe14 in ?? ()
+===CRASH===
+x0             0xf43095269040      268489497940032
+x1             0xf43095269082      268489497940098
+x2             0xf4309527401a      268489497985050
+x9             0xf4309526f0a0      268489497964704
+x19            0xf43095269040      268489497940032
+x20            0xf4309527416f      268489497985391
+x21            0xf4309526f0a0      268489497964704
+pc             0xc40c0a42fe14      0xc40c0a42fe14
+=> 0xc40c0a42fe14:	str	x9, [x0, x1, lsl #3]
+   0xc40c0a42fe18:	ldrb	w10, [x2]
+   0xc40c0a42fe1c:	sub	w0, w10, #0x43
+   0xc40c0a42fe20:	cmp	w0, #0x3a
+   0xc40c0a42fe24:	b.hi	0xc40c0a42fdc4  // b.pmore
+   0xc40c0a42fe28:	adrp	x1, 0xc40c0b020000
+#0  0x0000c40c0a42fe14 in ?? ()
+#1  0x0000c40c0a37ac10 in ?? ()
+#2  0x0000f43095269080 in ?? ()
+Backtrace stopped: not enough registers or memory available to unwind further
+[Inferior 1 (process 12958) detached]
