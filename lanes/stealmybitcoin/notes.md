@@ -296,3 +296,38 @@ WEAPON DESIGN (grounded, glm4-carrier + wpbleed-primitive):
   function -> handler=zif_system -> system("print-flag") in-band).
 NEXT: groom landing test (benign fake-d, expect 502->other = control),
 then the R:n oracle, then offsets (rebuild24 symbols; zif_system etc).
+
+## SMB1 attempt-5 — groom lands at d; remaining problem = ZEND_MM placement churn (a3-class calibration)
+
+Built the self-verifying R:n oracle (scripts/smb_oracle.py + smb_oracle_gdb.py):
+consumer = PHPSESSID + progress + 8192B groom VALUE part (fake
+php_unserialize_data: last=&entries self-ref, dtors NULL, max_depth,
+entries.used_slots=14, data[2] -> fake zval {fake zend_string
+"ORACLEWORKS!!!", IS_STRING_EX 0x106} at groom+0x400/0x440) + file part;
+staged session k|a:2:{...i:1;R:3;} -> R:3 resolves data[2].
+
+GDB-verified facts:
+- THE GROOM LANDS AT d: my fake zval {value=groom+0x440, type=0x106}
+  observed INTACT at d+0x400 in the crash dump. The mechanism works.
+- BUT d's header (d+0..0x40) gets clobbered before the decode nests:
+  the consumer's OWN ps_read session-string zend_string (len=0x23!)
+  landed exactly at d+0 (its gc/h/len overwrote last/first_dtor/
+  last_dtor; its val overwrote used_slots with token text). tmp_var
+  then walked last_dtor = 0x23 = the token length => SEGV.
+- Root cause: d's freed 3-page run sits at the head of ZEND_MM's
+  free-page buckets, so EVERY page-needing allocation between the
+  groom part and the decode splits d: ps_read's bin page (run-1
+  signature), and decoy parts' intermediate erealloc copies (a 16KB
+  decoy's chain realloc'd through the 3-page class and copied 'D's
+  over the groom; even 2-page-only decoys split d for the same reason).
+- => The remaining engineering = EXACTLY the wp lane's a3 page-map
+  calibration problem (read_page_map + simulate_M, scripts/a3_groom_v3):
+  read the chunk map post-producer (memread can do this directly),
+  enumerate free runs + where d sits, and shape consumer parts so the
+  splits/allocs before the decode MISS d's 3 pages, leaving the freed
+  buf1 (my bytes) intact for the nested decode.
+- bg(unserialize) semantics verified in this round: BG = {data, level}
+  at basic_globals+0x348/+0x350 (basic_globals @ ELF+0x12D96A8, target
+  bss-anon @ ELF+0x12D4000); R:N resolves data[N-1] via the EMBEDDED
+  entries chain; the R: handler converts the slot zval in-place to a
+  reference (groom RW = fine).
