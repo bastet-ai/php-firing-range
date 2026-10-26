@@ -1,0 +1,3 @@
+[smb-route exec 2026-10-26T03:01:00Z] nonce sid2=w17929836562177e7aed
+request2 WRITEBACK: b'x|s:50:"FLAG{wallet:vuln:f7eddbf18ec127e99c05555d4eaf22eb}";'
+*** WIN via php2shell-bastet --route smb --mode exec: FLAG{wallet:vuln:f7eddbf18ec127e99c05555d4eaf22eb} ***

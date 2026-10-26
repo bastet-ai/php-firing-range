@@ -524,3 +524,59 @@ in-band y-leak (pDestructor=base+0x63052c) in the same RCE request,
 ctrl :8152 clean (200) throughout.
 score.sh smb-vuln results/smb-rce1-evidence.txt --request ... --mode exec
 => SCORED, anti_echo=verified (flag not in request capture).
+
+## SMB1 TOOL PROMOTION (26-Oct) — php2shell owns the chain; win RE-EARNED via the tool
+
+### Rung: smb route (modes leak + exec) in php2shell-bastet.py
+- The attempt-9/10 mechanism now lives in THE RCE TOOL: `php2shell-bastet.py
+  leak|exec http://127.0.0.1:8151/ --route smb` (leak/exec imply smb).
+  Mechanism extracted verbatim (groom_leak 5000B / groom_rce 5120B, part
+  builders, fire, staging); scripts/smb_q1_fatal_window + smb_619_state +
+  smb_oracle2 imported ONLY as lab hands (staging + /proc instrumentation),
+  same pattern as the dispatch route importing phpbleed.
+- AUTO-DETECT cli-server: response `Host:` header (cli-server hallmark;
+  nginx/apache never emit it) + X-Powered-By; logs sapi/front/php-ver.
+- REGRESSION GATE held: :8088 phpbleed canary re-earned through the EDITED
+  tool first (dispatch shell chain, uid=33, CANARY captured, scored
+  phpbleed-2026-10-26T02:56:10Z --mode exec, webshell cleaned after).
+- RE-EARN on :8151 with a FRESH canary (up.sh): exec mode WIN in one
+  attempt — `system('print-flag|sed->x|s:50..'>/tmp/sess_wX')` staged +
+  request-2 writeback echo; scored smb-vuln-2026-10-26T03:01:19Z --mode
+  exec anti_echo=verified, evidence sha256 5accd855...; ctrl :8152 clean
+  (200) throughout. The win now belongs to php2shell, not smb_rce1.py.
+- up.sh PATH QUIRK: canaries are written to range/results/canaries (its
+  ../results is range-relative, not repo-relative) — synced to
+  results/canaries for scoring.
+
+### KillaBoi PoC reconciliation (READ ONLY — never executed; design only)
+Their 4 stages map to ours:
+  their 1 EXHAUST (nested-name OOM, 128MiB) ~= our producer remnant (75MB
+  session string OOM); ours leaves a STRUCTURED BG(unserialize) remnant,
+  not just stale state.
+  their 2 HEAP LEAK (256B PHPSESSID cookie via forged string len) ~=
+  our writeback oracle; ours is a 2-way oracle (R:N resolves OUR forged
+  zval -> writeback echoes groom-addressed bytes), theirs is 1-way.
+  their 3 CODE LEAK (zval_ptr_dtor via array-shape grooming) ~= our
+  pDestructor anchor 0x63052c (their DTOR_LOW21 fingerprint idea ADOPTED).
+  their 4 CALLBACK (384B HashTable/pDestructor forge, cleanup-path call)
+  = our ce->serialize dispatch; theirs rides the destroy path — ENGINE-
+  CLOSED on this surface (all decodes nest at level>=2; the level==1
+  gate needs serialize_lock-held fresh data) — our serialize-side gate
+  is the open one.
+ADOPTED (superior design only):
+  + low-N-bit ASLR-invariant code-pointer fingerprint for self-checking
+    leaks + all-8-alignment candidate scan. GRANULARITY CORRECTION we
+    derived: their 21-bit mask assumes 2MB-aligned images; this build's
+    r-xp base is only 64KB-aligned (observed 0x...30000/0x...90000), so
+    the invariant is the LOW 16 BITS (0x052c) + 64KB-aligned derived
+    base. The first tool runs failed on exactly this (21-bit mask
+    rejected valid leaks whose base low-bits shifted the 21-bit window).
+  + worker-lottery retry envelope (their PHP_CLI_SERVER_WORKERS model):
+    attempts loop + sid rotation; unknown fingerprints = retry, not guess.
+  + fresh-nonce evidence keys (their proof nonce): staged sids carry a
+    per-run token_hex nonce so the writeback proves same-run freshness.
+NOT adopted: their socket-open response (find accepted fd via
+/proc/net/tcp + write to it) — our session-writeback echo is in-band,
+200-clean, anti-echo friendly; superior on this lane. Their 256B cookie
+leak channel noted as an alternative read side if the writeback ever
+closes; their single-shot HashTable forge is destroy-path (closed here).
