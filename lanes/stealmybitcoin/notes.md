@@ -580,3 +580,33 @@ NOT adopted: their socket-open response (find accepted fd via
 200-clean, anti-echo friendly; superior on this lane. Their 256B cookie
 leak channel noted as an alternative read side if the writeback ever
 closes; their single-shot HashTable forge is destroy-path (closed here).
+
+## SMB1 LANE COMPLETE (26-Oct, resume of tool-promotion brief)
+
+- writeup.md now covers the full chain end-to-end (producer remnant ->
+  writeback oracle -> PIE base leak 0x63052c -> ce->serialize=zif_system
+  dispatch -> writeback echo), the KillaBoi convergence table (their
+  stage <-> our rung, adopted/rejected design with the 16-bit vs 21-bit
+  fingerprint granularity correction), and hardening notes:
+  (1) php>=8.4.27 closes the entry wound (ctrl never falls - patched
+  bailout strands no BG(unserialize) remnant; every rung keys on nesting
+  into it); (2) session.upload_progress.enabled=Off removes the whole
+  surface (progress path is what drags ps_read/ps_write into request
+  parsing); (3) serialize_handler changes do NOT close the oracle
+  (every var_unserialize-reaching handler shares BG(unserialize);
+  php_serialize would base64-wrap the echo, blinding the channel while
+  leaving the memory bug); (4) why root-less cli-server fell: single-
+  worker LIFO arena = deterministic groom law (fpm churn kills the
+  window - smb2 lane), nobody-exec + setuid print-flag crosses to
+  root read, writeback = the output channel.
+- up.sh canary-path quirk FIXED (separate commit): canaries now write
+  to repo ../../results/canaries (was ../results = the range tree);
+  verified live: file == container wallet key for BOTH vuln and ctrl,
+  fresh rotation as the lane-complete state.
+- COLD-REVIVAL STATE: range up via `bash range/stealmybitcoin/up.sh`
+  (fresh canaries auto-sync to repo results/canaries); tool =
+  `php2shell-bastet.py leak|exec http://127.0.0.1:8151/` (route smb
+  auto-implied by mode; cli-server auto-detect; worker-lottery
+  retries; nonce evidence keys). Score: `scripts/score.sh smb-vuln
+  <evidence> --request <capture> --mode exec`. Lane COMPLETE - no
+  open rungs; ctrl canary must stay uncracked.
